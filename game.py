@@ -76,7 +76,7 @@ class Game:
         pygame.display.flip()
 
     def main_loop(self):
-        dt = self.clock.tick(60)/1000 * 60
+        dt = self.clock.tick(240)/1000 * 60
         self.get_events()
         self.update(dt)
         self.draw(self.screen)

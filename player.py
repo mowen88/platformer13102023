@@ -23,9 +23,8 @@ class Player(pygame.sprite.Sprite):
 		self.vel = pygame.math.Vector2()
 		self.speed = 3
 		self.max_fall_speed = 6
-		self.parent_platform = None
-		self.relative_pos = pygame.math.Vector2()
-		self.platform_vel = pygame.math.Vector2()
+		self.platform = None
+		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
 		self.on_platform = False
 
@@ -78,7 +77,6 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(sprite.hitbox) or self.hitbox.colliderect(platform_raycast): 
 				if self.old_hitbox.bottom <= sprite.hitbox.top + sprite.hitbox.height * 0.2 and self.hitbox.bottom + sprite.hitbox.height * 0.2 >= sprite.hitbox.top and self.vel.y >= 0:
 
-					self.platform_vel = sprite.pos - sprite.old_pos
 					self.hitbox.bottom = sprite.rect.top
 					self.on_ground = True
 					self.vel.y = 0
@@ -86,21 +84,17 @@ class Player(pygame.sprite.Sprite):
 					self.rect.centery = self.hitbox.centery
 					self.pos.y = self.hitbox.centery
 
-					self.parent_platform = sprite
-					self.relative_pos = self.pos - self.parent_platform.pos
+					self.platform = sprite
+					self.relative_position = self.pos - self.platform.pos
 
 
 	def physics_x(self, dt):
 			
-		print("player: " + str(self.vel.x - self.platform_vel.x))
-
-		
-
 		self.acc.x += self.vel.x * self.fric
 		self.vel.x += self.acc.x * dt
 
-		if self.parent_platform and self.on_ground:
-			self.pos.x = round(self.parent_platform.pos.x) + round(self.relative_pos.x)
+		if self.platform:
+			self.pos.x = round(self.platform.pos.x) + round(self.relative_position.x)
 
 		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * (dt*dt)
 
@@ -126,6 +120,7 @@ class Player(pygame.sprite.Sprite):
 
 		if abs(self.vel.y) >= 0.5: 
 			self.on_ground = False
+			self.platform = None
 
 	# 	# limit max fall speed
 	# 	if self.vel.y >= self.max_fall_speed: 
