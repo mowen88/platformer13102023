@@ -23,21 +23,24 @@ class Player(pygame.sprite.Sprite):
 		self.vel = pygame.math.Vector2()
 		self.speed = 3
 		self.max_fall_speed = 6
-		self.platform = None
+		self.parent_platform = None
+		self.relative_pos = pygame.math.Vector2()
+		self.platform_vel = pygame.math.Vector2()
+		self.on_ground = False
 		self.on_platform = False
 
 	def jump(self):
-		self.vel.y = -6
+		self.vel.y = -4.5
 
 	def input(self):
 		keys = pygame.key.get_pressed()
 
 		if keys[pygame.K_LEFT]:
 			self.acc.x = -self.acc_rate
-			print('left!!!')
+			
 		elif keys[pygame.K_RIGHT]:
 			self.acc.x = self.acc_rate
-			print('right!!!!!!')
+
 
 		if ACTIONS['up']:
 			self.jump()
@@ -60,34 +63,53 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(sprite.hitbox):
 				if self.hitbox.bottom >= sprite.hitbox.top and self.old_hitbox.bottom <= sprite.old_hitbox.top:
 					self.hitbox.bottom = sprite.hitbox.top
+					self.on_ground = True
 					self.vel.y = 0
+
 				elif self.hitbox.top <= sprite.hitbox.bottom and self.old_hitbox.top >= sprite.old_hitbox.bottom:
 					self.hitbox.top = sprite.hitbox.bottom
-					self.vel.y = 1
+					self.vel.y = 0
 				self.rect.centery = self.hitbox.centery
 				self.pos.y = self.hitbox.centery
 
-	def collide_platforms(self):
-		for sprite in self.scene.platform_sprites:
-			platform_raycast = pygame.Rect(sprite.rect.x, sprite.rect.y - 2, sprite.rect.width, sprite.rect.height)
-			if self.hitbox.colliderect(platform_raycast) and self.vel.y >= 0:
-				if self.hitbox.bottom <= sprite.hitbox.top + 2 and self.old_hitbox.bottom <= sprite.old_hitbox.top +2:
-					self.hitbox.bottom = sprite.hitbox.top +1
-					self.pos.x += sprite.pos.x - sprite.old_pos.x			
+	def collide_platforms(self, group, dt):
+		for sprite in group:
+			platform_raycast = pygame.Rect(sprite.hitbox.x, sprite.hitbox.y - sprite.hitbox.height * 0.2, sprite.hitbox.width, sprite.hitbox.height)
+			if self.hitbox.colliderect(sprite.hitbox) or self.hitbox.colliderect(platform_raycast): 
+				if self.old_hitbox.bottom <= sprite.hitbox.top + sprite.hitbox.height * 0.2 and self.hitbox.bottom + sprite.hitbox.height * 0.2 >= sprite.hitbox.top and self.vel.y >= 0:
+
+					self.platform_vel = sprite.pos - sprite.old_pos
+					self.hitbox.bottom = sprite.rect.top
+					self.on_ground = True
 					self.vel.y = 0
-					
-				self.rect.centery = self.hitbox.centery
-				self.pos.y = self.hitbox.centery
+
+					self.rect.centery = self.hitbox.centery
+					self.pos.y = self.hitbox.centery
+
+					self.parent_platform = sprite
+					self.relative_pos = self.pos - self.parent_platform.pos
 
 
 	def physics_x(self, dt):
+			
+		print("player: " + str(self.vel.x - self.platform_vel.x))
+
+		
 
 		self.acc.x += self.vel.x * self.fric
 		self.vel.x += self.acc.x * dt
+
+		if self.parent_platform and self.on_ground:
+			self.pos.x = round(self.parent_platform.pos.x) + round(self.relative_pos.x)
+
 		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * (dt*dt)
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
+
+		self.collisions_x(self.scene.block_sprites)
+
+		self.collide_platforms(self.scene.platform_sprites, dt)
 
 	def physics_y(self, dt):
 
@@ -97,25 +119,30 @@ class Player(pygame.sprite.Sprite):
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
 
-		# limit max fall speed
+		self.collisions_y(self.scene.block_sprites)
+
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed
 
-		# # Make the npc off ground if moving in y direction
-		# if abs(self.vel.y) >= 0.5: 
-		# 	self.on_ground = False
+		if abs(self.vel.y) >= 0.5: 
+			self.on_ground = False
+
+	# 	# limit max fall speed
+	# 	if self.vel.y >= self.max_fall_speed: 
+	# 		self.vel.y = self.max_fall_speed
 
 	def update(self, dt):
+		
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 
 		self.acc.x = 0
 		self.input()
 		self.physics_x(dt)
-		self.collisions_x(self.scene.block_sprites)
 		self.physics_y(dt)
-		self.collisions_y(self.scene.block_sprites)
-		self.collide_platforms()
+		
+		
+		
 
 
 

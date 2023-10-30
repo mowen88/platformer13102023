@@ -25,16 +25,18 @@ class Scene(State):
 
 		tmx_data = load_pygame('scenes/0/0.tmx')
 
-		self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (100,100), 'player', LAYERS['player'])
+		
 
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
-			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.04, 0), 80)
+			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.05, 0), 80)
 			if obj.name == '2': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 64)
-			if obj.name == '3': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 64)
+			if obj.name == '3': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.01, 0), 64)
 
+
+		self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (100,100), 'player', LAYERS['player'])
 
 	def update(self, dt):
 
@@ -55,7 +57,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL Y: '+str(round(self.player.vel.y,3))),
+					str('PLATFORM: '+str(self.player.on_ground)),
 
-					None, None, None, None])
+					None])
 
 

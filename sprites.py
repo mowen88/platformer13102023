@@ -30,14 +30,19 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.vel += self.direction * dt
 
 		self.pos.x = self.start_pos.x + self.amplitude * math.sin(self.vel.x)
-		self.rect.centerx = round(self.pos.x)
+		self.hitbox.centerx = round(self.pos.x)
+		self.rect.centerx = self.hitbox.centerx
 
 		self.pos.y = self.start_pos.y + self.amplitude * math.sin(self.vel.y)
-		self.rect.centery = round(self.pos.y)
+		self.hitbox.centery = round(self.pos.y)
+		self.rect.centery = self.hitbox.centery
 
 	def update(self, dt):
 		#get pos before it is updated to get the displacement of movement per frame and pass it to the player platform_speed
 		self.old_pos = self.pos.copy()
+		self.old_hitbox = self.hitbox.copy()
 		self.move(dt)
-		self.hitbox.center = self.rect.center
+		
+
+		
 

@@ -18,7 +18,8 @@ class Camera(pygame.sprite.Group):
     def offset_draw(self, target):
         self.game.screen.fill((255,200,255))
 
-        self.offset += (target - RES//2 - self.offset)
+        self.offset = target - RES//2
+        #self.offset.x += (target[0] - WIDTH/2 - self.offset.x)
 
         for layer in LAYERS.values():
             for sprite in self.scene.drawn_sprites:
