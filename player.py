@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.gravity = 0.15
 		self.acc_rate = 0.5
-		self.fric = -0.12
+		self.fric = -0.15
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
 		self.speed = 3
@@ -26,7 +26,14 @@ class Player(pygame.sprite.Sprite):
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
-		self.on_platform = False
+		self.drop_through = False
+
+		self.jump_counter = 0
+		self.cyote_timer = 0
+		self.cyote_timer_threshold = 6
+		self.jump_buffer_active = False
+		self.jump_buffer = 0
+		self.jump_buffer_threshold = 6
 
 	def jump(self):
 		self.vel.y = -4.5
@@ -40,6 +47,9 @@ class Player(pygame.sprite.Sprite):
 		elif keys[pygame.K_RIGHT]:
 			self.acc.x = self.acc_rate
 
+		if ACTIONS['down']:
+			self.drop_through = True
+			ACTIONS['down'] = False
 
 		if ACTIONS['up']:
 			self.jump()
@@ -54,6 +64,7 @@ class Player(pygame.sprite.Sprite):
 				elif self.hitbox.left <= sprite.hitbox.right and self.old_hitbox.left >= sprite.old_hitbox.right:
 					self.hitbox.left = sprite.hitbox.right
 					self.vel.x = 0
+
 				self.rect.centerx = self.hitbox.centerx
 				self.pos.x = self.hitbox.centerx
 
@@ -68,24 +79,28 @@ class Player(pygame.sprite.Sprite):
 				elif self.hitbox.top <= sprite.hitbox.bottom and self.old_hitbox.top >= sprite.old_hitbox.bottom:
 					self.hitbox.top = sprite.hitbox.bottom
 					self.vel.y = 0
+
 				self.rect.centery = self.hitbox.centery
 				self.pos.y = self.hitbox.centery
 
 	def collide_platforms(self, group, dt):
+
 		for sprite in group:
-			platform_raycast = pygame.Rect(sprite.hitbox.x, sprite.hitbox.y - sprite.hitbox.height * 0.2, sprite.hitbox.width, sprite.hitbox.height)
-			if self.hitbox.colliderect(sprite.hitbox) or self.hitbox.colliderect(platform_raycast): 
-				if self.old_hitbox.bottom <= sprite.hitbox.top + sprite.hitbox.height * 0.2 and self.hitbox.bottom + sprite.hitbox.height * 0.2 >= sprite.hitbox.top and self.vel.y >= 0:
+			if self.hitbox.colliderect(sprite.raycast_box): 
+				if self.old_hitbox.bottom <= sprite.hitbox.top + 4 and self.hitbox.bottom + 4 >= sprite.hitbox.top:
+					if self.vel.y >= 0 and not self.drop_through:
+						self.hitbox.bottom = sprite.rect.top
+						self.on_ground = True
+						self.vel.y = 0
 
-					self.hitbox.bottom = sprite.rect.top
-					self.on_ground = True
-					self.vel.y = 0
+						self.rect.centery = self.hitbox.centery
+						self.pos.y = self.hitbox.centery
 
-					self.rect.centery = self.hitbox.centery
-					self.pos.y = self.hitbox.centery
+						self.platform = sprite
+						self.relative_position = self.pos - self.platform.pos
+				else:
+					self.drop_through = False
 
-					self.platform = sprite
-					self.relative_position = self.pos - self.platform.pos
 
 
 	def physics_x(self, dt):
@@ -93,8 +108,8 @@ class Player(pygame.sprite.Sprite):
 		self.acc.x += self.vel.x * self.fric
 		self.vel.x += self.acc.x * dt
 
-		if self.platform:
-			self.pos.x = round(self.platform.pos.x) + round(self.relative_position.x)
+		if self.platform and self.platform.vel.x != 0:
+			self.pos.x = round(self.platform.pos.x) +round(self.relative_position.x)
 
 		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * (dt*dt)
 
@@ -126,6 +141,30 @@ class Player(pygame.sprite.Sprite):
 	# 	if self.vel.y >= self.max_fall_speed: 
 	# 		self.vel.y = self.max_fall_speed
 
+	def handle_jumping(self, dt):
+		# Double the gravity if not holding jump key to allow variale jump height
+		if not pygame.key.get_pressed()[pygame.K_UP] and self.vel.y < 0:
+			self.acc.y = self.gravity * 2
+		else:
+			self.acc.y = self.gravity
+
+		# incrememnt cyote timer when not on ground
+		if not self.on_ground: 
+			self.cyote_timer += dt
+		else: 
+			self.cyote_timer = 0
+
+		# # if falling, this gives the player one jump if they have double jump
+		# if self.jump_counter == 0 and self.cyote_timer < self.cyote_timer_threshold:
+		# 	self.jump_counter = 1
+
+		# jump buffer activated if pressing jump in air
+		if self.jump_buffer_active:
+			self.jump_buffer += dt
+			if self.jump_buffer >= self.jump_buffer_threshold:
+				self.jump_buffer = 0
+				self.jump_buffer_active = False
+
 	def update(self, dt):
 		
 		self.old_pos = self.pos.copy()
@@ -135,6 +174,8 @@ class Player(pygame.sprite.Sprite):
 		self.input()
 		self.physics_x(dt)
 		self.physics_y(dt)
+		self.handle_jumping(dt)
+
 		
 		
 		

@@ -10,13 +10,15 @@ class Tile(pygame.sprite.Sprite):
 		self.z = z
 
 class MovingPlatform(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, surf, z, direction, amplitude):
+	def __init__(self, groups, pos, surf, z, direction, amplitude, circular=None):
 		super().__init__(groups)
 
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)	
 		self.z = z
+		self.circular = circular
 		self.hitbox = self.rect.copy()
+		self.raycast_box = self.hitbox.copy().inflate(0,2)
 		self.old_hitbox = self.hitbox.copy()
 		self.pos = pygame.math.Vector2(self.rect.topleft)
 		
@@ -30,12 +32,17 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.vel += self.direction * dt
 
 		self.pos.x = self.start_pos.x + self.amplitude * math.sin(self.vel.x)
-		self.hitbox.centerx = round(self.pos.x)
-		self.rect.centerx = self.hitbox.centerx
 
-		self.pos.y = self.start_pos.y + self.amplitude * math.sin(self.vel.y)
+		if self.circular:
+			self.pos.y = self.start_pos.y + self.amplitude * math.cos(self.vel.y)
+		else:
+			self.pos.y = self.start_pos.y + self.amplitude * math.sin(self.vel.y)
+
+		self.hitbox.centerx = round(self.pos.x)
 		self.hitbox.centery = round(self.pos.y)
-		self.rect.centery = self.hitbox.centery
+		self.rect.center = self.hitbox.center
+		self.raycast_box.midbottom = self.hitbox.midtop
+
 
 	def update(self, dt):
 		#get pos before it is updated to get the displacement of movement per frame and pass it to the player platform_speed

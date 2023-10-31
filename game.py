@@ -32,6 +32,8 @@ class Game:
                     ACTIONS['space'] = True
                 elif event.key == pygame.K_UP:
                     ACTIONS['up'] = True
+                elif event.key == pygame.K_DOWN:
+                    ACTIONS['down'] = True
                 elif event.key == pygame.K_z:
                     ACTIONS['z'] = True
                
@@ -40,6 +42,8 @@ class Game:
                     ACTIONS['space'] = False
                 elif event.key == pygame.K_UP:
                     ACTIONS['up'] = False
+                elif event.key == pygame.K_DOWN:
+                    ACTIONS['down'] = False
                 elif event.key == pygame.K_z:
                     ACTIONS['z'] = False
 
@@ -61,7 +65,6 @@ class Game:
 
         return surf_list
 
-
     def render_text(self, text, colour, font, pos):
         surf = font.render(str(text), False, colour)
         rect = surf.get_rect(topleft = pos)
@@ -76,7 +79,7 @@ class Game:
         pygame.display.flip()
 
     def main_loop(self):
-        dt = self.clock.tick(240)/1000 * 60
+        dt = self.clock.tick(60)/1000 * 60
         self.get_events()
         self.update(dt)
         self.draw(self.screen)
