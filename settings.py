@@ -9,7 +9,8 @@ HALF_WIDTH, HALF_HEIGHT = RES/2
 ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False}
 
 LAYERS = {'blocks':0,
-		  'player':1}
+		  'player':1,
+		  'particles':2}
 
 FONT = 'fonts/homespun.ttf'
 

@@ -17,12 +17,12 @@ class Player(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 
 		self.gravity = 0.15
-		self.acc_rate = 0.5
-		self.fric = -0.15
+		self.acc_rate = 0.6
+		self.fric = -0.2
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
-		self.speed = 3
 		self.max_fall_speed = 6
+
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
@@ -34,6 +34,8 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer_active = False
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
+
+		self.gun = 'gun1'
 
 	def jump(self):
 		self.vel.y = -4.5

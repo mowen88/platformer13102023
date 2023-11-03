@@ -7,6 +7,7 @@ from pytmx.util_pygame import load_pygame
 from camera import Camera
 from player import Player
 from sprites import Tile, MovingPlatform
+from weapons import Gun
 
 class Scene(State):
 	def __init__(self, game):
@@ -17,6 +18,7 @@ class Scene(State):
 
 		self.block_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
+		self.gun_sprites = pygame.sprite.Group()
 		
 
 		self.create_map()
@@ -48,6 +50,15 @@ class Scene(State):
 
 		self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (100,100), 'player', LAYERS['player'])
 
+		self.create_guns()
+
+	def create_guns(self):
+		for sprite in self.drawn_sprites:
+			if sprite == self.player:
+				self.gun_sprite = Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
+			elif hasattr(sprite, 'gun'):
+				Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
+
 	def update(self, dt):
 
 		if ACTIONS['space']:
@@ -68,7 +79,6 @@ class Scene(State):
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					str('CYOTE TIMER: '+str(self.player.cyote_timer)),
-
 					None])
 
 
