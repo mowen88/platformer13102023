@@ -6,6 +6,7 @@ from pytmx.util_pygame import load_pygame
 
 from camera import Camera
 from player import Player
+from enemy import Guard
 from sprites import Tile, MovingPlatform
 from weapons import Gun
 
@@ -18,6 +19,8 @@ class Scene(State):
 
 		self.block_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
+		
+		self.enemy_sprites = pygame.sprite.Group()
 		self.gun_sprites = pygame.sprite.Group()
 		
 
@@ -43,12 +46,15 @@ class Scene(State):
 			if obj.name == '7': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0), 16)
 
-
-
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (100,100), 'player', LAYERS['player'])
+
+		self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (200,100), 'guard', LAYERS['player'])
+		self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (150,100), 'sg_guard', LAYERS['player'])
+		self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (500,150), 'guard', LAYERS['player'])
+		self.guard4 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (700,150), 'sg_guard', LAYERS['player'])
 
 		self.create_guns()
 
@@ -75,10 +81,18 @@ class Scene(State):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 
+		if self.guard.muzzle_pos is not None:
+			pygame.draw.circle(screen, WHITE, self.guard.muzzle_pos, 5)
+			pygame.draw.line(screen, WHITE, self.guard.rect.center - pygame.math.Vector2(0, 5) - self.drawn_sprites.offset, self.guard.muzzle_pos)
+
+			pygame.draw.circle(screen, WHITE, self.guard2.muzzle_pos, 5)
+			pygame.draw.line(screen, WHITE, self.guard2.rect.center - pygame.math.Vector2(0, 5) - self.drawn_sprites.offset, self.guard2.muzzle_pos)
+
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.player.cyote_timer)),
+					str('CYOTE TIMER: '+str(self.guard.has_los())),
 					None])
+
 
 

@@ -8,7 +8,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.running = True
 
         self.font = pygame.font.Font(FONT, int(TILESIZE)) 
@@ -24,7 +24,6 @@ class Game:
                 sys.exit()
                 
             if event.type == pygame.KEYDOWN:
-
                 if event.key == pygame.K_ESCAPE:
                     ACTIONS['escape'] = True
                     self.running = False

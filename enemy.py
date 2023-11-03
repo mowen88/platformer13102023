@@ -1,7 +1,7 @@
 import pygame
 from settings import *
 
-class Player(pygame.sprite.Sprite):
+class Guard(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, name, z):
 		super().__init__(groups)
 
@@ -27,35 +27,14 @@ class Player(pygame.sprite.Sprite):
 		self.on_ground = False
 		self.drop_through = False
 
-		self.jump_counter = 0
-		self.cyote_timer = 0
-		self.cyote_timer_threshold = 6
-		self.jump_buffer_active = False
-		self.jump_buffer = 0
-		self.jump_buffer_threshold = 6
-
-		self.gun_index = 0
-		self.gun = list(DATA['guns'].keys())[self.gun_index]
+		# enemy specific
+		self.gun = DATA['enemy_guns'][self.name]
+		self.muzzle_pos = None
+		self.vision_box = pygame.Rect(0, 0, 300, 200)
+		
 
 	def jump(self):
 		self.vel.y = -4.5
-
-	def input(self):
-		keys = pygame.key.get_pressed()
-
-		if keys[pygame.K_LEFT]:
-			self.acc.x = -self.acc_rate
-			
-		elif keys[pygame.K_RIGHT]:
-			self.acc.x = self.acc_rate
-
-		if ACTIONS['down']:
-			self.drop_through = True
-			ACTIONS['down'] = False
-
-		if ACTIONS['up']:
-			self.jump()
-			ACTIONS['up'] = False
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -103,7 +82,27 @@ class Player(pygame.sprite.Sprite):
 				else:
 					self.drop_through = False
 
+	def lerp(self, v0, v1, t):
+		return v0 + t * (v1 - v0)
 
+	def get_equidistant_points(self, point_1, point_2, num_of_points):
+		return [(self.lerp(point_1[0], point_2[0], 1./num_of_points * i), self.lerp(point_1[1], point_2[1], 1./num_of_points * i)) for i in range(num_of_points + 1)]
+
+	def get_distance(self, point_1, point_2):
+		distance = (pygame.math.Vector2(point_2) - pygame.math.Vector2(point_1))
+		return distance
+
+
+	def has_los(self):
+		x = self.scene.player.rect.center - self.scene.drawn_sprites.offset
+		y = self.rect.center - self.scene.drawn_sprites.offset - pygame.math.Vector2(0, 5)
+		distance = int(self.get_distance(y, x).magnitude()//5)
+		if distance != 0 and distance < 100:
+			for point in self.get_equidistant_points(y, x, distance):
+				for sprite in self.scene.block_sprites:
+					if sprite.rect.collidepoint(point + self.scene.drawn_sprites.offset):
+						return False
+		return True
 
 	def physics_x(self, dt):
 			
@@ -139,44 +138,16 @@ class Player(pygame.sprite.Sprite):
 			self.on_ground = False
 			self.platform = None
 
-	# 	# limit max fall speed
-	# 	if self.vel.y >= self.max_fall_speed: 
-	# 		self.vel.y = self.max_fall_speed
-
-	def handle_jumping(self, dt):
-		# Double the gravity if not holding jump key to allow variale jump height
-		if not pygame.key.get_pressed()[pygame.K_UP] and self.vel.y < 0:
-			self.acc.y = self.gravity * 2
-		else:
-			self.acc.y = self.gravity
-
-		# incrememnt cyote timer when not on ground
-		if not self.on_ground: 
-			self.cyote_timer += dt
-		else: 
-			self.cyote_timer = 0
-
-		# # if falling, this gives the player one jump if they have double jump
-		# if self.jump_counter == 0 and self.cyote_timer < self.cyote_timer_threshold:
-		# 	self.jump_counter = 1
-
-		# jump buffer activated if pressing jump in air
-		if self.jump_buffer_active:
-			self.jump_buffer += dt
-			if self.jump_buffer >= self.jump_buffer_threshold:
-				self.jump_buffer = 0
-				self.jump_buffer_active = False
-
 	def update(self, dt):
 		
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 
+		self.vision_box.center = self.rect.center
+
 		self.acc.x = 0
-		self.input()
 		self.physics_x(dt)
 		self.physics_y(dt)
-		self.handle_jumping(dt)
 
 		
 		
