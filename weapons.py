@@ -53,14 +53,23 @@ class Gun(pygame.sprite.Sprite):
 	    return muzzle_pos
 
 	def update(self, dt):
+
 		if self.owner != self.scene.player: 
-			if self.scene.player.rect.colliderect(self.owner.vision_box) and self.owner.has_los(): 
+			if self.scene.player.hitbox.colliderect(self.owner.vision_box) and self.owner.has_los(): 
 				self.get_angle(self.rect.center + self.scene.drawn_sprites.offset, self.scene.player.hitbox.center)
-			else:
+
+			elif self.owner.facing == 0:
 				self.angle = 270
+			else:
+				self.angle = 90
 		else: 
 			self.get_angle(self.rect.center, pygame.mouse.get_pos())
+
+		# change facing direction of player based on which way the gun is pointing
+		
+		self.owner.facing = 1 if self.angle < 180 else 0
+
 		self.rotate()
-		self.rect.center = (self.owner.hitbox.centerx, self.owner.hitbox.centery - 4)
+		self.rect.center = (self.owner.hitbox.centerx, self.owner.hitbox.centery)
 
 		self.owner.muzzle_pos = self.get_muzzle_pos()

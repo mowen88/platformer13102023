@@ -1,18 +1,24 @@
 import pygame
 from settings import *
+from enemy_fsm import Fall
 
 class Guard(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, name, z):
 		super().__init__(groups)
 
+		self.game = game
 		self.scene = scene
 		self.name = name
 		self.z = z
-		self.image = pygame.image.load(f'assets/characters/{self.name}/0.png').convert_alpha()
+		self.state = Fall(self)
+		self.animations = {'idle':[], 'run':[], 'land':[], 'jump':[], 'fall':[]}
+		self.import_images(self.animations)
+		self.frame_index = 0
+		self.image = self.animations['fall'][self.frame_index].convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
 		self.pos = pygame.math.Vector2(self.rect.center)
 		self.old_pos = self.pos.copy()
-		self.hitbox = self.rect.copy().inflate(0,0)
+		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.5,- self.rect.height * 0.5)
 		self.old_hitbox = self.hitbox.copy()
 
 		self.gravity = 0.15
@@ -21,20 +27,41 @@ class Guard(pygame.sprite.Sprite):
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
 		self.max_fall_speed = 6
+		self.jump_height = 4
+		self.facing = 1
+
 
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
 		self.drop_through = False
 
-		# enemy specific
 		self.gun = DATA['enemy_guns'][self.name]
 		self.muzzle_pos = None
 		self.vision_box = pygame.Rect(0, 0, 300, 200)
-		
 
-	def jump(self):
-		self.vel.y = -4.5
+	def import_images(self, animation_states):
+
+		path = f'assets/characters/{self.name}/'
+
+		for animation in animation_states.keys():
+			full_path = path + animation
+			animation_states[animation] = self.game.get_folder_images(full_path)
+
+	def animate(self, state, speed, loop=True):
+
+		self.frame_index += speed
+
+		if self.frame_index >= len(self.animations[state]):
+			if loop: 
+				self.frame_index = 0
+			else:
+				self.frame_index = len(self.animations[state]) -1
+		
+		self.image = pygame.transform.flip(self.animations[state][int(self.frame_index)], self.facing, False)
+		
+	def jump(self, height):
+		self.vel.y = -height
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -138,17 +165,30 @@ class Guard(pygame.sprite.Sprite):
 			self.on_ground = False
 			self.platform = None
 
-	def update(self, dt):
+	# def update(self, dt):
 		
+	# 	self.old_pos = self.pos.copy()
+	# 	self.old_hitbox = self.hitbox.copy()
+
+	# 	self.vision_box.center = self.rect.center
+
+	# 	self.acc.x = 0
+	# 	self.physics_x(dt)
+	# 	self.physics_y(dt)
+
+	def state_logic(self):
+		new_state = self.state.state_logic(self)
+		if new_state: self.state = new_state
+		else: self.state
+
+	def update(self, dt):
+
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
-
 		self.vision_box.center = self.rect.center
 
-		self.acc.x = 0
-		self.physics_x(dt)
-		self.physics_y(dt)
-
+		self.state_logic()
+		self.state.update(self, dt)
 		
 		
 		

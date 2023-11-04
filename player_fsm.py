@@ -11,10 +11,6 @@ class Fall:
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return AirDash(player)
-
 		if ACTIONS['up']:
 			player.jump_buffer_active = True
 			ACTIONS['up'] = False
@@ -33,11 +29,11 @@ class Fall:
 
 	def update(self, player, dt):
 		player.acc.x = 0
-		player.move_logic()
+		player.input()
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('fall', 0.2 * dt, False)
+		player.animate('fall', 0.25 * dt, False)
 
 class Idle:
 	def __init__(self, player):
@@ -53,31 +49,20 @@ class Idle:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return Roll(player)
-
 		if ACTIONS['up']:
 			ACTIONS['up'] = False
 			return Jumping(player)
 
-		if player.move['right']:
-			player.acc.x += 0.5
-			player.facing = 0
-			return Move(player)
-
-		elif player.move['left']:
-			player.acc.x -= 0.5
-			player.facing = 1
+		if abs(player.vel.x) >= 0.1:
 			return Move(player)
 
 	def update(self, player, dt):
 
 		player.acc.x = 0
-		player.move_logic()
+		player.input()
 		player.physics_x(dt)
 		player.physics_y(dt)
-		player.animate('idle', 0.2 * dt)
+		player.animate('idle', 0.25 * dt)
 
 class Move:
 	def __init__(self, player):
@@ -93,28 +78,51 @@ class Move:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return Roll(player)
+		if ACTIONS['up']:
+			ACTIONS['up'] = False
+			return Jumping(player)
+
+		if not ACTIONS['left'] and not ACTIONS['right']:
+			return Skid(player, player.vel.x)
+
+	def update(self, player, dt):
+	
+		player.acc.x = 0
+		player.input()
+		player.physics_x(dt)
+		player.physics_y(dt)
+
+		player.animate('run', 0.25 * dt)
+
+class Skid:
+	def __init__(self, player, vel_x):
+		
+		player.jump_counter = 1
+		player.frame_index = 0
+		self.vel_x = vel_x
+
+	def state_logic(self, player):
+
+		if not player.alive:
+			return Death(player)
+
+		if not player.on_ground:
+			return Fall(player)
 
 		if ACTIONS['up']:
 			ACTIONS['up'] = False
 			return Jumping(player)
 
-		if not (player.move['right'] or player.move['left']) and abs(player.vel.x) <= 0.1:
+		if abs(player.vel.x) <= 0.1:
 			return Idle(player)
 
 	def update(self, player, dt):
 
 		player.acc.x = 0
-		player.move_logic()
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		if (player.vel.x > 0 and not player.move['right']) or (player.vel.x < 0 and not player.move['left']):
-			player.animate('skid', 0.2 * dt)
-		else:
-			player.animate('run', 0.2 * dt)
+		player.animate('skid', 0.25 * dt, False)
 
 class Landing:
 	def __init__(self, player):
@@ -127,10 +135,6 @@ class Landing:
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return Roll(player)
-
 		if ACTIONS['up']:
 			ACTIONS['up'] = False
 			return Jumping(player)
@@ -141,11 +145,11 @@ class Landing:
 	def update(self, player, dt):
 
 		player.acc.x = 0
-		player.move_logic()
+		player.input()
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('land', 0.2 * dt)
+		player.animate('land', 0.25 * dt)
 
 class WakeUp:
 	def __init__(self, player):
@@ -163,7 +167,7 @@ class WakeUp:
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('death', 0.2 * dt)
+		player.animate('death', 0.25 * dt)
 
 class Death(Fall):
 	def __init__(self, player):
@@ -181,11 +185,12 @@ class Death(Fall):
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('death', 0.2 * dt, False)
+		player.animate('death', 0.25 * dt, False)
 
 class Jumping(Fall):
 	def __init__(self, player):
 
+		player.frame_index = 0
 		player.jump(player.jump_height)
 
 	def state_logic(self, player):
@@ -196,9 +201,6 @@ class Jumping(Fall):
 		if player.vel.y > 0:
 			return Fall(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return AirDash(player)
 
 		if ACTIONS['up'] and player.jump_counter > 0:
 			ACTIONS['up'] = False
@@ -207,16 +209,17 @@ class Jumping(Fall):
 	def update(self, player, dt):
 
 		player.acc.x = 0
-		player.move_logic()
+		player.input()
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('fall', 0.2 * dt)
+		player.animate('jump', 0.25 * dt, False)
 
 class DoubleJumping(Fall):
 	def __init__(self, player):
 
 		player.jump_counter = 0
+		player.frame_index = 0
 		player.jump(player.jump_height)
 
 	def state_logic(self, player):
@@ -227,72 +230,12 @@ class DoubleJumping(Fall):
 		if player.vel.y > 0:
 			return Fall(player)
 
-		if ACTIONS['left_click']:
-			ACTIONS['left_click'] = False
-			return AirDash(player)
 
 	def update(self, player, dt):
 		
 		player.acc.x = 0
-		player.move_logic()
+		player.input()
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('double_jump', 0.2 * dt)
-		
-class Roll(Fall):
-	def __init__(self, player):
-		
-		self.speed = 10 * self.direction(player)
-		player.vel.x = self.speed
-
-	def direction(self, player):
-		if player.facing == 0:
-			return 1
-		else:
-			return -1
-
-	def state_logic(self, player):
-
-		if not player.alive:
-			return Death(player)
-
-		if abs(player.vel.x) <= 5 and (ACTIONS['left'] or ACTIONS['right']):
-			return Move(player)
-
-		if abs(player.vel.x) <= 0.5:
-			return Idle(player)
-
-
-	def update(self, player, dt):
-
-		player.acc.x = 0
-
-		player.vel.x = self.speed
-		self.speed -= self.direction(player) * dt * 0.4
-		player.physics_x(dt)
-
-		player.animate('double_jump', 0.2 * dt)
-
-class AirDash(Roll):
-
-	def state_logic(self, player):
-
-		if not player.alive:
-			return Death(player)
-
-		if abs(player.vel.x) <= 5 and (ACTIONS['left'] or ACTIONS['right']):
-			return Fall(player)
-
-		if abs(player.vel.x) <= 0.5:
-			return Fall(player)
-
-	def update(self, player, dt):
-
-		player.acc.x = 0
-
-		player.vel.x = self.speed
-		self.speed -= self.direction(player) * dt * 0.4
-		player.physics_x(dt)
-
-		player.animate('idle', 0.2 * dt)
+		player.animate('double_jump', 0.25 * dt, False)

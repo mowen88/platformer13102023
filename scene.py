@@ -32,7 +32,7 @@ class Scene(State):
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.03, 0), 80)
+				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 80)
 			if obj.name == '2': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 48)
 			if obj.name == '3': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -49,13 +49,11 @@ class Scene(State):
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
-		self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (100,100), 'player', LAYERS['player'])
-
-		self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (200,100), 'guard', LAYERS['player'])
-		self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (150,100), 'sg_guard', LAYERS['player'])
-		self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (500,150), 'guard', LAYERS['player'])
-		self.guard4 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (700,150), 'sg_guard', LAYERS['player'])
-
+		for obj in tmx_data.get_layer_by_name('entities'):
+			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
+			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			
 		self.create_guns()
 
 	def create_guns(self):
@@ -81,17 +79,17 @@ class Scene(State):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 
-		if self.guard.muzzle_pos is not None:
-			pygame.draw.circle(screen, WHITE, self.guard.muzzle_pos, 5)
-			pygame.draw.line(screen, WHITE, self.guard.rect.center - pygame.math.Vector2(0, 5) - self.drawn_sprites.offset, self.guard.muzzle_pos)
+		# if self.guard.muzzle_pos is not None:
+		# 	pygame.draw.circle(screen, WHITE, self.guard.muzzle_pos, 5)
+		# 	pygame.draw.line(screen, WHITE, self.guard.rect.center - self.drawn_sprites.offset, self.guard.muzzle_pos)
 
-			pygame.draw.circle(screen, WHITE, self.guard2.muzzle_pos, 5)
-			pygame.draw.line(screen, WHITE, self.guard2.rect.center - pygame.math.Vector2(0, 5) - self.drawn_sprites.offset, self.guard2.muzzle_pos)
+		# 	pygame.draw.circle(screen, WHITE, self.guard2.muzzle_pos, 5)
+		# 	pygame.draw.line(screen, WHITE, self.guard2.rect.center - self.drawn_sprites.offset, self.guard2.muzzle_pos)
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.guard.has_los())),
+					str('CYOTE TIMER: '+str(self.guard.state)),
 					None])
 
 

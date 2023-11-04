@@ -1,4 +1,5 @@
 import pygame, sys
+from os import walk
 from intro import Intro
 from settings import *
 
@@ -29,6 +30,10 @@ class Game:
                     self.running = False
                 elif event.key == pygame.K_SPACE:
                     ACTIONS['space'] = True
+                elif event.key == pygame.K_LEFT:
+                    ACTIONS['left'] = True
+                elif event.key == pygame.K_RIGHT:
+                    ACTIONS['right'] = True
                 elif event.key == pygame.K_UP:
                     ACTIONS['up'] = True
                 elif event.key == pygame.K_DOWN:
@@ -39,6 +44,10 @@ class Game:
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     ACTIONS['space'] = False
+                elif event.key == pygame.K_LEFT:
+                    ACTIONS['left'] = False
+                elif event.key == pygame.K_RIGHT:
+                    ACTIONS['right'] = False
                 elif event.key == pygame.K_UP:
                     ACTIONS['up'] = False
                 elif event.key == pygame.K_DOWN:
@@ -78,7 +87,7 @@ class Game:
         pygame.display.flip()
 
     def main_loop(self):
-        dt = self.clock.tick()/1000 * 60
+        dt = self.clock.tick(60)/1000 * 60
         self.get_events()
         self.update(dt)
         self.draw(self.screen)
