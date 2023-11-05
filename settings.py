@@ -21,13 +21,13 @@ RED = (255, 100, 100)
 
 DATA = {
 	'guns':{
-			'blaster': {'ammo_type': None, 'bullet_type': 'projectile', 'cooldown': 10, 'speed': 4, 'damage': 50, 'path': '../assets/weapons/blaster.png'},
-			'shotgun': {'ammo_type': 'shells', 'bullet_type': 'bullet', 'cooldown': 20, 'speed': 0, 'damage': 100, 'path': '../assets/weapons/shotgun.png'},
-			'machine_gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 2, 'speed': 0, 'damage': 20, 'path': '../assets/weapons/machine_gun.png'},
-			'grenade': {'ammo_type': 'grenades', 'bullet_type': 'grenade', 'cooldown': 40, 'speed': 4, 'damage': 250, 'path': '../assets/weapons/grenade.png'},
-			'rocket_launcher': {'ammo_type': 'rockets', 'bullet_type': 'rocket', 'cooldown': 50, 'speed': 2, 'damage': 400, 'path': '../assets/weapons/rocket_launcher.png'},
-			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 50, 'speed': 0, 'damage': 600, 'path': '../assets/weapons/railgun.png'},
-			'hyper_blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png'},
+			'blaster': {'ammo_type': None, 'bullet_type': 'projectile', 'cooldown': 10, 'speed': 4, 'damage': 50, 'path': '../assets/weapons/blaster.png', 'length':18},
+			'shotgun': {'ammo_type': 'shells', 'bullet_type': 'bullet', 'cooldown': 20, 'speed': 0, 'damage': 100, 'path': '../assets/weapons/shotgun.png', 'length':20},
+			'machine_gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 2, 'speed': 0, 'damage': 20, 'path': '../assets/weapons/machine_gun.png', 'length':20},
+			'grenade': {'ammo_type': 'grenades', 'bullet_type': 'grenade', 'cooldown': 40, 'speed': 4, 'damage': 250, 'path': '../assets/weapons/grenade.png', 'length':20},
+			'rocket_launcher': {'ammo_type': 'rockets', 'bullet_type': 'rocket', 'cooldown': 50, 'speed': 2, 'damage': 400, 'path': '../assets/weapons/rocket_launcher.png', 'length':20},
+			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 50, 'speed': 0, 'damage': 600, 'path': '../assets/weapons/railgun.png', 'length':20},
+			'hyper_blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20},
 			},
 	'enemy_guns':{
 			'guard': 'blaster',

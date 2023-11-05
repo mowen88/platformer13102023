@@ -45,8 +45,10 @@ class Player(pygame.sprite.Sprite):
 
 		self.gun_index = 1
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
+		self.muzzle_pos = None
 
 		self.state = Fall(self)
+
 
 	def import_images(self, animation_states):
 
@@ -83,6 +85,10 @@ class Player(pygame.sprite.Sprite):
 		if ACTIONS['down']:
 			self.drop_through = True
 			ACTIONS['down'] = False
+
+		if ACTIONS['left_click']:
+			self.scene.create_player_bullet()
+			ACTIONS['left_click'] = False
 
 
 	def collisions_x(self, group):

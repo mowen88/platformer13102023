@@ -100,16 +100,24 @@ class Game:
         rect = surf.get_rect(topleft = pos)
         self.screen.blit(surf, rect)
 
+    def custom_cursor(self, screen):
+        surf = pygame.image.load('assets/crosshair.png').convert_alpha()
+        rect = surf.get_rect(center = pygame.mouse.get_pos())
+        pygame.mouse.set_visible(False)
+        surf.set_alpha(150)
+        screen.blit(surf, rect)
+
     def update(self, dt):
         pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
         self.stack[-1].update(dt)
  
     def draw(self, screen):
         self.stack[-1].draw(screen)
+        self.custom_cursor(screen)
         pygame.display.flip()
 
     def main_loop(self):
-        dt = self.clock.tick(60)/1000 * 60
+        dt = self.clock.tick()/1000 * 60
         self.get_events()
         self.update(dt)
         self.draw(self.screen)

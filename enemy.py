@@ -30,7 +30,6 @@ class Guard(pygame.sprite.Sprite):
 		self.jump_height = 4
 		self.facing = 1
 
-
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False

@@ -9,6 +9,37 @@ class Tile(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.z = z
 
+class AnimatedTile(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, z, path):
+		super().__init__(groups)
+
+		self.game = game
+		self.scene = scene
+		self.z = z
+		self.frames = self.game.get_folder_images(path)
+		self.frame_index = 0
+		self.image = self.frames[self.frame_index]
+		self.rect = self.image.get_rect(center = pos)
+
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.alive = True
+
+	def animate(self, animation_speed, loop=True):
+
+		self.frame_index += animation_speed
+
+		if loop:
+			self.frame_index = self.frame_index % len(self.frames)	
+		else:
+			if self.frame_index > len(self.frames)-1:	
+				self.frame_index = len(self.frames)-1
+
+		self.image = self.frames[int(self.frame_index)]
+
+	def update(self, dt):
+		self.animate(0.2 * dt, False)
+
+
 class MovingPlatform(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, surf, z, direction, amplitude, circular=None):
 		super().__init__(groups)
