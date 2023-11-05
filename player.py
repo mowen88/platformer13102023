@@ -193,6 +193,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centery = self.hitbox.centery
 
 		self.collisions_y(self.scene.block_sprites)
+		self.vel.x *= 0.5
 
 
 	def handle_jumping(self, dt):

@@ -102,6 +102,7 @@ class OnLadderIdle:
 		player.acc.x = 0
 		player.input()
 		player.ladder_physics(dt)
+
 		player.animate('on_ladder_idle', 0.25 * dt, False)
 
 class OnLadderMove:
