@@ -146,7 +146,7 @@ class Player(pygame.sprite.Sprite):
 		if self.platform and self.platform.vel.x != 0:
 			self.pos.x = round(self.platform.pos.x) +round(self.relative_position.x)
 
-		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * (dt*dt)
+		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * dt
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
@@ -158,7 +158,7 @@ class Player(pygame.sprite.Sprite):
 	def physics_y(self, dt):
 
 		self.vel.y += self.acc.y * dt
-		self.pos.y += self.vel.y * dt + (0.5 * self.acc.y) * (dt*dt)
+		self.pos.y += self.vel.y * dt + (0.5 * self.acc.y) * dt
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
@@ -174,10 +174,10 @@ class Player(pygame.sprite.Sprite):
 
 	def ladder_physics(self, dt):
 
-		# x direction
-		self.acc.x += self.vel.x * self.fric
+		# x direction (multiply friction by 4 so easier to manage x direction on ladders)
+		self.acc.x += self.vel.x * self.fric * 4
 		self.vel.x += self.acc.x * dt
-		self.pos.x += self.vel.x * dt + (0.5 * self.vel.x) * (dt*dt)
+		self.pos.x += self.vel.x * dt + (0.5 * self.vel.x) * dt
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
@@ -185,16 +185,14 @@ class Player(pygame.sprite.Sprite):
 		self.collisions_x(self.scene.block_sprites)
 		
 		#y direction
-		self.acc.y += self.vel.y * self.fric
+		self.acc.y += self.vel.y * self.fric * 2
 		self.vel.y += self.acc.y * dt
-		self.pos.y += self.vel.y * dt + (0.5 * self.vel.y) * (dt*dt)
+		self.pos.y += self.vel.y * dt + (0.5 * self.vel.y) * dt
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
 
 		self.collisions_y(self.scene.block_sprites)
-		self.vel.x *= 0.5
-
 
 	def handle_jumping(self, dt):
 		# Double the gravity if not holding jump key to allow variale jump height

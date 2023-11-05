@@ -139,7 +139,7 @@ class Guard(pygame.sprite.Sprite):
 		if self.platform and self.platform.vel.x != 0:
 			self.pos.x = round(self.platform.pos.x) +round(self.relative_position.x)
 
-		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * (dt*dt)
+		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * dt
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
@@ -151,7 +151,7 @@ class Guard(pygame.sprite.Sprite):
 	def physics_y(self, dt):
 
 		self.vel.y += self.acc.y * dt
-		self.pos.y += self.vel.y * dt + (0.5 * self.acc.y) * (dt*dt)
+		self.pos.y += self.vel.y * dt + (0.5 * self.acc.y) * dt
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
