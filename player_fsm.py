@@ -8,22 +8,25 @@ class Fall:
 
 	def state_logic(self, player):
 
+		if player.collide_ladders() and player.vel.y > 0:
+			return OnLadderIdle(player)
+
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['up']:
+		if ACTIONS['right_click']:
 			player.jump_buffer_active = True
-			ACTIONS['up'] = False
+			ACTIONS['right_click'] = False
 			if player.jump_counter > 0:
 				if player.cyote_timer < player.cyote_timer_threshold:
-					return Jumping(player)
+					return Jump(player)
 				else:
-					return DoubleJumping(player)
+					return DoubleJump(player)
 
 		if player.on_ground:
 			if player.jump_buffer > 0:
 				player.jump_counter = 1
-				return Jumping(player)
+				return Jump(player)
 			else:
 				return Landing(player)
 
@@ -49,9 +52,12 @@ class Idle:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['up']:
-			ACTIONS['up'] = False
-			return Jumping(player)
+		if ACTIONS['right_click']:
+			ACTIONS['right_click'] = False
+			return Jump(player)
+
+		if ACTIONS['up'] and player.collide_ladders():
+			return OnLadderIdle(player)
 
 		if abs(player.vel.x) >= 0.1:
 			return Move(player)
@@ -63,6 +69,75 @@ class Idle:
 		player.physics_x(dt)
 		player.physics_y(dt)
 		player.animate('idle', 0.25 * dt)
+
+class OnLadderIdle:
+	def __init__(self, player):
+		
+		player.jump_counter = 1
+		player.on_ground = True
+
+		player.scene.gun_sprite.kill()
+
+	def state_logic(self, player):
+		keys = pygame.key.get_pressed()
+
+		if keys[pygame.K_UP]:
+			player.acc.y = -player.acc_rate * 0.5
+			return OnLadderMove(player)
+		elif keys[pygame.K_DOWN]:
+			player.acc.y = player.acc_rate * 0.5
+			return OnLadderMove(player)
+		else:
+			player.acc.y = 0
+
+		if not player.alive:
+			return Death(player)
+
+		if not player.collide_ladders():
+			player.scene.create_player_gun()
+			return Fall(player)
+
+	def update(self, player, dt):
+
+		player.acc.x = 0
+		player.input()
+		player.ladder_physics(dt)
+		player.animate('on_ladder_idle', 0.25 * dt, False)
+
+class OnLadderMove:
+	def __init__(self, player):
+		
+		player.jump_counter = 1
+		player.frame_index = 0
+		player.on_ground = True
+
+	def state_logic(self, player):
+		keys = pygame.key.get_pressed()
+
+		if keys[pygame.K_UP]:
+			player.acc.y = -player.acc_rate * 0.5
+		elif keys[pygame.K_DOWN]:
+			player.acc.y = player.acc_rate * 0.5
+		else:
+			player.acc.y = 0
+
+		if player.vel.magnitude() <= 0.1:
+			return OnLadderIdle(player)
+
+		if not player.alive:
+			return Death(player)
+
+		if not player.collide_ladders():
+			player.scene.create_player_gun()
+			return Fall(player)
+
+	def update(self, player, dt):
+
+		player.acc.x = 0
+		player.input()
+		player.ladder_physics(dt)
+
+		player.animate('on_ladder_move', 0.25 * dt)
 
 class Move:
 	def __init__(self, player):
@@ -78,12 +153,15 @@ class Move:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['up']:
-			ACTIONS['up'] = False
-			return Jumping(player)
+		if ACTIONS['right_click']:
+			ACTIONS['right_click'] = False
+			return Jump(player)
 
-		if not ACTIONS['left'] and not ACTIONS['right']:
-			return Skid(player, player.vel.x)
+		if ACTIONS['up'] and player.collide_ladders():
+			return OnLadderIdle(player)
+			
+		if not ACTIONS['left'] and not ACTIONS['right'] or (ACTIONS['left'] and ACTIONS['right']):
+			return Skid(player)
 
 	def update(self, player, dt):
 	
@@ -95,11 +173,10 @@ class Move:
 		player.animate('run', 0.25 * dt)
 
 class Skid:
-	def __init__(self, player, vel_x):
+	def __init__(self, player):
 		
 		player.jump_counter = 1
 		player.frame_index = 0
-		self.vel_x = vel_x
 
 	def state_logic(self, player):
 
@@ -109,9 +186,9 @@ class Skid:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['up']:
-			ACTIONS['up'] = False
-			return Jumping(player)
+		if ACTIONS['right_click']:
+			ACTIONS['right_click'] = False
+			return Jump(player)
 
 		if abs(player.vel.x) <= 0.1:
 			return Idle(player)
@@ -121,7 +198,6 @@ class Skid:
 		player.acc.x = 0
 		player.physics_x(dt)
 		player.physics_y(dt)
-
 		player.animate('skid', 0.25 * dt, False)
 
 class Landing:
@@ -135,9 +211,9 @@ class Landing:
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['up']:
-			ACTIONS['up'] = False
-			return Jumping(player)
+		if ACTIONS['right_click']:
+			ACTIONS['right_click'] = False
+			return Jump(player)
 
 		if player.frame_index > len(player.animations['land'])-1:
 			return Idle(player)
@@ -187,7 +263,7 @@ class Death(Fall):
 
 		player.animate('death', 0.25 * dt, False)
 
-class Jumping(Fall):
+class Jump(Fall):
 	def __init__(self, player):
 
 		player.frame_index = 0
@@ -202,9 +278,9 @@ class Jumping(Fall):
 			return Fall(player)
 
 
-		if ACTIONS['up'] and player.jump_counter > 0:
-			ACTIONS['up'] = False
-			return DoubleJumping(player)
+		if ACTIONS['right_click'] and player.jump_counter > 0:
+			ACTIONS['right_click'] = False
+			return DoubleJump(player)
 
 	def update(self, player, dt):
 
@@ -215,7 +291,7 @@ class Jumping(Fall):
 
 		player.animate('jump', 0.25 * dt, False)
 
-class DoubleJumping(Fall):
+class DoubleJump(Fall):
 	def __init__(self, player):
 
 		player.jump_counter = 0

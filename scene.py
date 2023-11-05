@@ -19,6 +19,7 @@ class Scene(State):
 
 		self.block_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
+		self.ladder_sprites = pygame.sprite.Group()
 		
 		self.enemy_sprites = pygame.sprite.Group()
 		self.gun_sprites = pygame.sprite.Group()
@@ -49,19 +50,24 @@ class Scene(State):
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
+		for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
+			Tile([self.ladder_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+
 		for obj in tmx_data.get_layer_by_name('entities'):
 			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			
 		self.create_guns()
+		self.create_player_gun()
+
+	def create_player_gun(self):
+		self.gun_sprite = Gun(self.game, self, self.player.gun, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
+		return
 
 	def create_guns(self):
-		for sprite in self.drawn_sprites:
-			if sprite == self.player:
-				self.gun_sprite = Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
-			elif hasattr(sprite, 'gun'):
-				Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
+		for sprite in self.enemy_sprites:
+			Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
 
 	def update(self, dt):
 
@@ -89,7 +95,7 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.guard.state)),
+					str('CYOTE TIMER: '+str(self.player.cyote_timer)),
 					None])
 
 

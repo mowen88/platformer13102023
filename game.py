@@ -55,6 +55,28 @@ class Game:
                 elif event.key == pygame.K_z:
                     ACTIONS['z'] = False
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+                if event.button == 1:
+                    ACTIONS['left_click'] = True
+                elif event.button == 3:
+                    ACTIONS['right_click'] = True
+                elif event.button == 4:
+                    ACTIONS['scroll_down'] = True
+                elif event.button == 2:
+                    ACTIONS['scroll_up'] = True
+
+            if event.type == pygame.MOUSEBUTTONUP:
+
+                if event.button == 1:
+                    ACTIONS['left_click'] = False
+                elif event.button == 3:
+                    ACTIONS['right_click'] = False
+                elif event.button == 4:
+                    ACTIONS['scroll_down'] = False
+                elif event.button == 2:
+                    ACTIONS['scroll_up'] = False
+
     def reset_keys(self):
         for action in ACTIONS:
             ACTIONS[action] = False
@@ -87,7 +109,7 @@ class Game:
         pygame.display.flip()
 
     def main_loop(self):
-        dt = self.clock.tick(60)/1000 * 60
+        dt = self.clock.tick()/1000 * 60
         self.get_events()
         self.update(dt)
         self.draw(self.screen)

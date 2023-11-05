@@ -10,8 +10,8 @@ class Player(pygame.sprite.Sprite):
 		self.scene = scene
 		self.name = name
 		self.z = z
-		self.state = Fall(self)
-		self.animations = {'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'skid_right':[]}
+		
+		self.animations = {'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
 		self.import_images(self.animations)
 		self.frame_index = 0
 		self.image = self.animations['fall'][self.frame_index].convert_alpha()
@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_height = 4.5
 		self.facing = 1
 
+		self.on_ladder = False
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
@@ -42,8 +43,10 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 0
+		self.gun_index = 1
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
+
+		self.state = Fall(self)
 
 	def import_images(self, animation_states):
 
@@ -71,10 +74,10 @@ class Player(pygame.sprite.Sprite):
 	def input(self):
 		keys = pygame.key.get_pressed()
 
-		if keys[pygame.K_LEFT]:
+		if keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
 			self.acc.x = -self.acc_rate
 			
-		elif keys[pygame.K_RIGHT]:
+		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
 
 		if ACTIONS['down']:
@@ -128,7 +131,12 @@ class Player(pygame.sprite.Sprite):
 				else:
 					self.drop_through = False
 
-
+	def collide_ladders(self):
+		for sprite in self.scene.ladder_sprites:
+			if self.hitbox.colliderect(sprite.hitbox):
+				if self.hitbox.centerx > sprite.hitbox.left and self.hitbox.centerx < sprite.hitbox.right:
+					return True
+		return False
 
 	def physics_x(self, dt):
 			
@@ -156,7 +164,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centery = self.hitbox.centery
 
 		self.collisions_y(self.scene.block_sprites)
-
+	
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed
 
@@ -164,13 +172,32 @@ class Player(pygame.sprite.Sprite):
 			self.on_ground = False
 			self.platform = None
 
-	# 	# limit max fall speed
-	# 	if self.vel.y >= self.max_fall_speed: 
-	# 		self.vel.y = self.max_fall_speed
+	def ladder_physics(self, dt):
+
+		# x direction
+		self.acc.x += self.vel.x * self.fric
+		self.vel.x += self.acc.x * dt
+		self.pos.x += self.vel.x * dt + (0.5 * self.vel.x) * (dt*dt)
+
+		self.hitbox.centerx = round(self.pos.x)
+		self.rect.centerx = self.hitbox.centerx
+
+		self.collisions_x(self.scene.block_sprites)
+		
+		#y direction
+		self.acc.y += self.vel.y * self.fric
+		self.vel.y += self.acc.y * dt
+		self.pos.y += self.vel.y * dt + (0.5 * self.vel.y) * (dt*dt)
+
+		self.hitbox.centery = round(self.pos.y)
+		self.rect.centery = self.hitbox.centery
+
+		self.collisions_y(self.scene.block_sprites)
+
 
 	def handle_jumping(self, dt):
 		# Double the gravity if not holding jump key to allow variale jump height
-		if not pygame.key.get_pressed()[pygame.K_UP] and self.vel.y < 0:
+		if not pygame.mouse.get_pressed()[2] and self.vel.y < 0:
 			self.acc.y = self.gravity * 2
 		else:
 			self.acc.y = self.gravity
@@ -217,6 +244,7 @@ class Player(pygame.sprite.Sprite):
 		self.state_logic()
 		self.state.update(self, dt)
 		self.handle_jumping(dt)
+
 
 	
 
