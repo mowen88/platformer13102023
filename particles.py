@@ -12,7 +12,7 @@ class MuzzleFlash(pygame.sprite.Sprite):
 		self.frames = self.game.get_folder_images(path)
 		self.frame_index = 0
 		self.image = self.frames[self.frame_index]
-		self.rect = self.image.get_rect(center = pos)
+		self.rect = self.image.get_rect()
 
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.alive = True
