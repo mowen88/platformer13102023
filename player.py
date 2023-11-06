@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
 		self.name = name
 		self.z = z
 		
-		self.animations = {'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
+		self.animations = {'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
 		self.import_images(self.animations)
 		self.frame_index = 0
 		self.image = self.animations['fall'][self.frame_index].convert_alpha()
@@ -22,12 +22,12 @@ class Player(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 
 		self.gravity = 0.15
-		self.acc_rate = 0.6
-		self.fric = -0.2
+		self.acc_rate = 0.4
+		self.fric = -0.15
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
 		self.max_fall_speed = 6
-		self.jump_height = 4.5
+		self.jump_height = 4
 		self.facing = 1
 
 		self.on_ladder = False
@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 1
+		self.gun_index = 0
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 
@@ -73,6 +73,10 @@ class Player(pygame.sprite.Sprite):
 	def jump(self, height):
 		self.vel.y = -height
 
+	def get_on_ground(self):
+		self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+		self.hitbox = self.rect.inflate(-self.rect.width * 0.5,- self.rect.height * 0.5)
+
 	def input(self):
 		keys = pygame.key.get_pressed()
 
@@ -81,10 +85,6 @@ class Player(pygame.sprite.Sprite):
 			
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
-
-		if ACTIONS['down']:
-			self.drop_through = True
-			ACTIONS['down'] = False
 
 		if ACTIONS['left_click']:
 			self.scene.create_player_bullet()

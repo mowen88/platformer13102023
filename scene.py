@@ -11,7 +11,7 @@ from enemy import Guard
 from sprites import Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
 from bullets import Bullet
-from particles import MuzzleFlash
+from particles import MuzzleFlash, BlasterParticle
 
 class Scene(State):
 	def __init__(self, game):
@@ -77,12 +77,13 @@ class Scene(State):
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], 'assets/bullets/blaster_flash')
 			Bullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
+	def create_blaster_particle(self, pos):
+		BlasterParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'])
 
 	def get_distance_direction_and_angle(self, point_1, point_2):
 		pos_1 = pygame.math.Vector2(point_1 - self.drawn_sprites.offset)
 		pos_2 = pygame.math.Vector2(point_2)
 		distance = (pos_2 - pos_1).magnitude()
-
 		
 		direction = (pos_2 - pos_1).normalize() if (pos_2 - pos_1).magnitude() != 0 else pygame.math.Vector2(0.1,0.1)
 
@@ -118,10 +119,12 @@ class Scene(State):
 		# 	pygame.draw.circle(screen, WHITE, self.guard2.muzzle_pos, 5)
 		# 	pygame.draw.line(screen, WHITE, self.guard2.rect.center - self.drawn_sprites.offset, self.guard2.muzzle_pos)
 
+		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
+		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.gun_sprite)),
+					str('CYOTE TIMER: '+str(self.player.state)),
 					None])
 
 

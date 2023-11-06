@@ -1,4 +1,5 @@
 import pygame
+from settings import *
 
 class MuzzleFlash(pygame.sprite.Sprite):
 	def __init__(self, game, scene, firer, groups, pos, z, path):
@@ -33,3 +34,25 @@ class MuzzleFlash(pygame.sprite.Sprite):
 		self.animate(0.2 * dt, False)
 
 		self.rect.center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset
+
+class BlasterParticle(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, z):
+		super().__init__(groups)
+
+		self.game = game
+		self.scene = scene
+		self.z = z
+
+		self.image = pygame.Surface((2,2))
+		self.image.fill(YELLOW)
+		self.rect = self.image.get_rect(center = pos)
+
+		self.alpha = 255
+
+	def update(self, dt):
+
+		self.alpha -= 15 * dt
+		if self.alpha < 0:
+			self.kill()
+
+		self.image.set_alpha(self.alpha)

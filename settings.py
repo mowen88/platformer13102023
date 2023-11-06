@@ -15,9 +15,12 @@ LAYERS = {'blocks':0,
 
 FONT = 'fonts/homespun.ttf'
 
-BLACK = (0,0,0)
+BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 100, 100)
+
+YELLOW = (255, 255, 64)
+BROWN = (110, 74, 57)
 
 DATA = {
 	'guns':{

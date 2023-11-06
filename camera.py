@@ -8,6 +8,7 @@ class Camera(pygame.sprite.Group):
         self.game = game
         self.scene = scene
         self.offset = pygame.math.Vector2()
+        self.camera_lag = 40
 
     # def zone_limits(self):
     #     if self.offset[0] <= 0: self.offset[0] = 0
@@ -16,10 +17,13 @@ class Camera(pygame.sprite.Group):
     #     elif self.offset[1] >= self.zone.size[1] - HEIGHT: self.offset[1] = self.zone.size[1] - HEIGHT
 
     def offset_draw(self, target):
-        self.game.screen.fill((205,225,180))
+        self.game.screen.fill(BROWN)
 
-        self.offset = target - RES//2
-        #self.offset.x += (target[0] - WIDTH/2 - self.offset.x)
+        #self.offset = target - RES//2
+        # self.offset.x += (target[0] - WIDTH/2 - self.offset.x)
+
+        self.offset.x += (target[0] - HALF_WIDTH - (HALF_WIDTH - pygame.mouse.get_pos()[0])/3 - self.offset.x)/self.camera_lag
+        self.offset.y += (target[1] - HALF_HEIGHT - (HALF_HEIGHT - pygame.mouse.get_pos()[1])/3 - self.offset.y)/self.camera_lag
 
         for layer in LAYERS.values():
             for sprite in self.scene.drawn_sprites:

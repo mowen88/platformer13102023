@@ -5,7 +5,7 @@ class Tile(pygame.sprite.Sprite):
 		super().__init__(groups)
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)
-		self.hitbox = self.rect.copy().inflate(0,0)
+		self.hitbox = self.rect.copy().inflate(-2,0)
 		self.old_hitbox = self.hitbox.copy()
 		self.z = z
 
