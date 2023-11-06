@@ -16,7 +16,7 @@ class Camera(pygame.sprite.Group):
     #     elif self.offset[1] >= self.zone.size[1] - HEIGHT: self.offset[1] = self.zone.size[1] - HEIGHT
 
     def offset_draw(self, target):
-        self.game.screen.fill((255,200,255))
+        self.game.screen.fill((205,225,180))
 
         self.offset = target - RES//2
         #self.offset.x += (target[0] - WIDTH/2 - self.offset.x)

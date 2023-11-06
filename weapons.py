@@ -3,17 +3,16 @@ from math import atan2, degrees, pi
 from settings import *
 
 class Gun(pygame.sprite.Sprite):
-	def __init__(self, game, scene, gun_type, owner, groups, pos, z):
+	def __init__(self, game, scene, owner, groups, pos, z):
 		super().__init__(groups)
 
 		self.scene = scene
-		self.gun_type = gun_type
 		self.owner = owner
 		self.z = z
-		self.image = pygame.image.load(f'assets/guns/{self.gun_type}.png').convert_alpha()
+		self.image = pygame.image.load(f'assets/guns/{self.owner.gun}.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)
 
-		self.gun_data = DATA['guns'][self.gun_type]
+		self.gun_data = DATA['guns'][self.owner.gun]
 
 		self.angle = 0
 		self.total_angles = 90
@@ -45,16 +44,19 @@ class Gun(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(center = self.rect.center)
 
 	def get_muzzle_pos(self):
+
 		if self.owner != self.scene.player:
 			target_center = self.scene.player.rect.center - self.scene.drawn_sprites.offset
 		else:
 			target_center = pygame.mouse.get_pos()
+
 		sprite_center = self.rect.center - self.scene.drawn_sprites.offset
 		direction = pygame.math.Vector2(target_center - sprite_center)
 
 		direction.scale_to_length(self.gun_data['length']) if direction.magnitude() != 0 else direction.update(0,0)
 
-		muzzle_pos = sprite_center + direction  # Calculate the muzzle position
+		# Calculate the muzzle position
+		muzzle_pos = sprite_center + direction
 		return muzzle_pos
 
 	def update(self, dt):

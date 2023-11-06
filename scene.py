@@ -61,16 +61,16 @@ class Scene(State):
 			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-			
-		self.create_enemy_guns()
+		
+		for sprite in self.enemy_sprites:
+			self.create_enemy_guns(sprite)
 		self.create_player_gun()
 
 	def create_player_gun(self):
-		self.gun_sprite = Gun(self.game, self, self.player.gun, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
+		self.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
 
-	def create_enemy_guns(self):
-		for sprite in self.enemy_sprites:
-			Gun(self.game, self, sprite.gun, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
+	def create_enemy_guns(self, sprite):
+		Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
 
 	def create_player_bullet(self):
 		if self.gun_sprite in self.gun_sprites:
@@ -83,8 +83,8 @@ class Scene(State):
 		pos_2 = pygame.math.Vector2(point_2)
 		distance = (pos_2 - pos_1).magnitude()
 
-		if (pos_2 - pos_1).magnitude() != 0: direction = (pos_2 - pos_1).normalize()
-		else: direction = pygame.math.Vector2(0.1,0.1)
+		
+		direction = (pos_2 - pos_1).normalize() if (pos_2 - pos_1).magnitude() != 0 else pygame.math.Vector2(0.1,0.1)
 
 		radians = atan2(-(point_1[0] - (pos_2.x + self.drawn_sprites.offset.x)), (point_1[1] - (pos_2.y + self.drawn_sprites.offset.y)))
 		radians %= 2*pi

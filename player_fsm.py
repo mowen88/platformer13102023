@@ -129,7 +129,7 @@ class OnLadderMove:
 			return Death(player)
 
 		if not player.collide_ladders():
-			player.scene.create_player_gun()
+			player.scene.create_gun(player)
 			return Fall(player)
 
 	def update(self, player, dt):

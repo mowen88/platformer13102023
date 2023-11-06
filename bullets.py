@@ -21,7 +21,6 @@ class Bullet(pygame.sprite.Sprite):
 		# self.damage = GUN_DATA[self.zone.player.gun]['damage']
 		# self.knockback_power = GUN_DATA[self.zone.player.gun]['knockback']
 
-
 	def collide(self):
 		for sprite in self.scene.block_sprites:
 			if self.rect.colliderect(sprite.hitbox):
