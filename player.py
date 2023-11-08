@@ -43,12 +43,11 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 0
+		self.gun_index = 1
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 
 		self.state = Fall(self)
-
 
 	def import_images(self, animation_states):
 
@@ -86,8 +85,8 @@ class Player(pygame.sprite.Sprite):
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
 
-		if ACTIONS['left_click']:
-			self.scene.create_player_bullet()
+		if ACTIONS['left_click'] and self.scene.gun_sprite in self.scene.gun_sprites:
+			self.scene.create_bullet(self)
 			ACTIONS['left_click'] = False
 
 

@@ -49,10 +49,29 @@ class BlasterParticle(pygame.sprite.Sprite):
 
 		self.alpha = 255
 
-	def update(self, dt):
-
-		self.alpha -= 15 * dt
+	def update_alpha(self, rate, dt):
+		self.alpha -= rate * dt
 		if self.alpha < 0:
 			self.kill()
-
 		self.image.set_alpha(self.alpha)
+
+	def update(self, dt):
+		self.update_alpha(15, dt)
+
+class RocketParticle(BlasterParticle):
+	def __init__(self, game, scene, groups, pos, z):
+		super().__init__(game, scene, groups, pos, z)
+
+		self.image = pygame.Surface((8,8))
+		self.image.fill(WHITE)
+		self.rect = self.image.get_rect(center = pos)
+
+	def update_alpha(self, rate, dt):
+		self.alpha -= rate * dt
+		if self.alpha < 0:
+			self.kill()
+		self.image.set_alpha(self.alpha)
+
+	def update(self, dt):
+		self.update_alpha(15, dt)
+		

@@ -5,12 +5,14 @@ from settings import *
 
 from pytmx.util_pygame import load_pygame
 
+from scene_instances import CreateInstance
+
 from camera import Camera
 from player import Player
 from enemy import Guard
 from sprites import Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
-from bullets import Bullet
+from bullets import BlasterBullet, ShotgunShot
 from particles import MuzzleFlash, BlasterParticle
 
 class Scene(State):
@@ -27,7 +29,6 @@ class Scene(State):
 		self.enemy_sprites = pygame.sprite.Group()
 		self.gun_sprites = pygame.sprite.Group()
 		self.bullet_sprites = pygame.sprite.Group()
-		
 
 		self.create_map()
 
@@ -71,15 +72,31 @@ class Scene(State):
 
 	def create_enemy_guns(self, sprite):
 		Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
-
-	def create_player_bullet(self):
-		if self.gun_sprite in self.gun_sprites:
+		
+	def create_bullet(self, sprite):
+		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], 'assets/bullets/blaster_flash')
-			Bullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
+			BlasterBullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
-	def create_blaster_particle(self, pos):
-		BlasterParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'])
+		elif sprite.gun == 'shotgun':
+			num_of_shots = 5
+			angle = 0
+			for shot in range(num_of_shots):
+				angle += 1
+				ShotgunShot(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'],  angle * shot - (num_of_shots/2))
 
+		elif sprite.gun == 'rocket_launcher':
+			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], 'assets/bullets/blaster_flash')
+			BlasterBullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
+
+	def create_particle(self, particle_type, pos):
+		if particle_type == 'blaster':
+			BlasterParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'])
+		else:
+			BlasterParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'])
+
+	# function that returns a list of distance, direciton, angle and dot product from a pair of point coordinates
+	# for example, call this aat the index of 0 to return the distance between the player center point and an enemy center point
 	def get_distance_direction_and_angle(self, point_1, point_2):
 		pos_1 = pygame.math.Vector2(point_1 - self.drawn_sprites.offset)
 		pos_2 = pygame.math.Vector2(point_2)
