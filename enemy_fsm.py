@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from settings import *
 
 class Fall:
@@ -23,9 +23,11 @@ class Fall:
 		enemy.animate('fall', 0.25 * dt, False)
 
 class Idle:
-	def __init__(self, enemy):
+	def __init__(self, enemy, vel=None):
 		
 		enemy.frame_index = 0
+		self.timer = random.randint(50, 80)
+		self.vel = vel
 
 	def state_logic(self, enemy):
 
@@ -35,13 +37,21 @@ class Idle:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
-		if abs(enemy.vel.x) >= 0.1:
-			return Move(enemy)
+		if self.timer < 0:
+			if self.vel is not None and self.vel > 0:
+				enemy.move['right'] = True
+			else:
+				enemy.move['left'] = False
+
+			if abs(enemy.vel.x) >= 0.1:
+				return Move(enemy)
 
 	def update(self, enemy, dt):
 
-		enemy.acc.x = 0
+		self.timer -= dt
 
+		enemy.acc.x = 0
+		enemy.move_logic()
 		enemy.physics_x(dt)
 		enemy.physics_y(dt)
 		enemy.animate('idle', 0.25 * dt)
@@ -50,6 +60,7 @@ class Move:
 	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
+		self.timer = random.randint(50, 80)
 
 	def state_logic(self, enemy):
 
@@ -59,13 +70,19 @@ class Move:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
-		if abs(enemy.vel.x) <= 0.1:
-			return Idle(enemy)
+
+		if self.timer < 0:
+			return Idle(enemy, enemy.vel.x)
+
+		enemy.turnaround()
 
 	def update(self, enemy, dt):
+
+		self.timer -= dt
 	
 		enemy.acc.x = 0
-
+		enemy.move_logic()
+		
 		enemy.physics_x(dt)
 		enemy.physics_y(dt)
 

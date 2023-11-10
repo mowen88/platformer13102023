@@ -22,8 +22,8 @@ class Guard(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 
 		self.gravity = 0.15
-		self.acc_rate = 0.6
-		self.fric = -0.2
+		self.acc_rate = 0.05
+		self.fric = -0.05
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
 		self.max_fall_speed = 6
@@ -38,6 +38,32 @@ class Guard(pygame.sprite.Sprite):
 		self.gun = DATA['enemy_guns'][self.name]
 		self.muzzle_pos = None
 		self.vision_box = pygame.Rect(0, 0, 300, 200)
+
+		self.move = {'left':False, 'right':False}
+
+	def move_logic(self):
+		if self.move['right']:
+			self.acc.x = self.acc_rate
+			self.move['left'] = False
+		elif self.move['left']:
+			self.acc.x = -self.acc_rate
+			self.move['right'] = False
+
+
+	def turnaround(self):
+		for sprite in self.scene.collision_sprites:
+			if sprite.hitbox.colliderect(self.hitbox):
+
+				self.vel.x = 0
+
+				if self.move['right']:
+					self.move['right'] = False
+					self.move['left'] = True
+
+				else:	
+					self.move['left'] = False
+					self.move['right'] = True
+
 
 	def import_images(self, animation_states):
 

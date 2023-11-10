@@ -1,7 +1,15 @@
 import pygame, math
+from settings import *
+
+class Collider(pygame.sprite.Sprite):
+	def __init__(self, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE))):
+		super().__init__(groups)
+		self.image = surf
+		self.rect = self.image.get_rect(topleft = pos)
+		self.hitbox = self.rect.copy().inflate(2,0)
 
 class Tile(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, surf, z):
+	def __init__(self, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['blocks']):
 		super().__init__(groups)
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)

@@ -98,15 +98,59 @@ class Crouch:
 		if ACTIONS['right_click'] and player.platform:
 			player.drop_through = True
 
+		if abs(player.vel.x) >= 0.1:
+			return CrouchMove(player)
+
 	def update(self, player, dt):
 
 		player.get_on_ground()
 
 		player.acc.x = 0
+		player.input()
 		player.physics_x(dt)
+
+		# slow the player if moving when crouched
+		player.vel.x = player.vel.x / 2 * dt
+
 		player.physics_y(dt)
 		player.animate('crouch', 0.25 * dt, False)
 
+class CrouchMove:
+	def __init__(self, player):
+		
+		player.frame_index = 0
+
+	def state_logic(self, player):
+
+		if not player.alive:
+			return Death(player)
+
+		if not ACTIONS['down']:
+			return Idle(player)
+
+		if ACTIONS['left_click']:
+			player.scene.create_player_bullet()
+			ACTIONS['left_click'] = False
+
+		if ACTIONS['right_click'] and player.platform:
+			player.drop_through = True
+
+		if not ACTIONS['left'] and not ACTIONS['right'] or (ACTIONS['left'] and ACTIONS['right']):
+			return Crouch(player)
+
+	def update(self, player, dt):
+
+		player.get_on_ground()
+
+		player.acc.x = 0
+		player.input()
+		player.physics_x(dt)
+
+		# slow the player if moving when crouched
+		player.vel.x = player.vel.x / 2 * dt
+
+		player.physics_y(dt)
+		player.animate('crouch', 0.25 * dt, False)
 
 class Move:
 	def __init__(self, player):
@@ -218,7 +262,6 @@ class OnLadderMove:
 
 		player.animate('on_ladder_move', 0.25 * dt)
 
-
 class Skid:
 	def __init__(self, player):
 		
@@ -273,24 +316,6 @@ class Landing:
 		player.physics_y(dt)
 
 		player.animate('land', 0.25 * dt)
-
-class WakeUp:
-	def __init__(self, player):
-
-		player.jump_counter = 1
-		player.frame_index = 0
-
-	def state_logic(self, player):
-		if player.frame_index > len(player.animations['death'])-1:
-			return Idle(player)
-
-	def update(self, player, dt):
-
-		player.acc.x = 0
-		player.physics_x(dt)
-		player.physics_y(dt)
-
-		player.animate('death', 0.25 * dt)
 
 class Death(Fall):
 	def __init__(self, player):

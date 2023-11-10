@@ -5,12 +5,10 @@ from settings import *
 
 from pytmx.util_pygame import load_pygame
 
-from scene_instances import CreateInstance
-
 from camera import Camera
 from player import Player
 from enemy import Guard
-from sprites import Tile, AnimatedTile, MovingPlatform
+from sprites import Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, ShotgunShot
 from particles import MuzzleFlash, BlasterParticle
@@ -29,6 +27,7 @@ class Scene(State):
 		self.enemy_sprites = pygame.sprite.Group()
 		self.gun_sprites = pygame.sprite.Group()
 		self.bullet_sprites = pygame.sprite.Group()
+		self.collision_sprites = pygame.sprite.Group()
 
 		self.create_map()
 
@@ -59,6 +58,7 @@ class Scene(State):
 			Tile([self.ladder_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		for obj in tmx_data.get_layer_by_name('entities'):
+			if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
 			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
@@ -141,7 +141,7 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.player.state)),
+					str('CYOTE TIMER: '+str(self.guard.state)),
 					None])
 
 
