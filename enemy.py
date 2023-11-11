@@ -43,18 +43,26 @@ class Guard(pygame.sprite.Sprite):
 
 	def move_logic(self):
 		if self.move['right']:
-			self.acc.x = self.acc_rate
 			self.move['left'] = False
+			self.acc.x = self.acc_rate
+			self.facing = 0
+
 		elif self.move['left']:
-			self.acc.x = -self.acc_rate
+
 			self.move['right'] = False
+			self.acc.x = -self.acc_rate
+			self.facing = 1
+
+		else:
+			self.move['right'] = False
+			self.move['left'] = False
 
 
 	def turnaround(self):
 		for sprite in self.scene.collision_sprites:
 			if sprite.hitbox.colliderect(self.hitbox):
 
-				self.vel.x = 0
+				self.vel.x *= -1
 
 				if self.move['right']:
 					self.move['right'] = False
@@ -63,7 +71,6 @@ class Guard(pygame.sprite.Sprite):
 				else:	
 					self.move['left'] = False
 					self.move['right'] = True
-
 
 	def import_images(self, animation_states):
 
@@ -143,7 +150,6 @@ class Guard(pygame.sprite.Sprite):
 	def get_distance(self, point_1, point_2):
 		distance = (pygame.math.Vector2(point_2) - pygame.math.Vector2(point_1))
 		return distance
-
 
 	def has_los(self):
 		x = self.scene.player.rect.center - self.scene.drawn_sprites.offset

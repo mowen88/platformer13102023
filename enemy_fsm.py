@@ -23,13 +23,23 @@ class Fall:
 		enemy.animate('fall', 0.25 * dt, False)
 
 class Idle:
-	def __init__(self, enemy, vel=None):
+	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
-		self.timer = random.randint(50, 80)
-		self.vel = vel
+		self.timer = random.randint(50, 200)
+
+	def start_stop(self, enemy):
+		# when this is called, if enemy is still, it will start moving, otherwise it will stop
+		if self.timer <= 0:
+
+			if enemy.facing == 0:
+				enemy.move['right'] = True
+			else:
+				enemy.move['left'] = True
 
 	def state_logic(self, enemy):
+
+		self.start_stop(enemy)
 
 		if not enemy.alive:
 			return Death(enemy)
@@ -37,14 +47,9 @@ class Idle:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
-		if self.timer < 0:
-			if self.vel is not None and self.vel > 0:
-				enemy.move['right'] = True
-			else:
-				enemy.move['left'] = False
+		if enemy.move['left'] or enemy.move['right']:
+			return Move(enemy)
 
-			if abs(enemy.vel.x) >= 0.1:
-				return Move(enemy)
 
 	def update(self, enemy, dt):
 
@@ -62,6 +67,10 @@ class Move:
 		enemy.frame_index = 0
 		self.timer = random.randint(50, 80)
 
+	def stop(self, enemy):
+		if self.timer <= 0:
+			enemy.move.update({key: False for key in enemy.move})
+
 	def state_logic(self, enemy):
 
 		if not enemy.alive:
@@ -70,13 +79,23 @@ class Move:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
+		self.stop(enemy)
 
-		if self.timer < 0:
-			return Idle(enemy, enemy.vel.x)
+		if 0 < enemy.vel.x < 0.1:
+			enemy.facing = 0
+			return Idle(enemy)
+		elif -0.1 < enemy.vel.x < 0:
+			enemy.facing = 1
+			return Idle(enemy) 
 
 		enemy.turnaround()
 
 	def update(self, enemy, dt):
+
+		# if enemy.vel.x > 0:
+		# 	enemy.facing = 1
+		# else:
+		# 	enemy.facing = 0
 
 		self.timer -= dt
 	

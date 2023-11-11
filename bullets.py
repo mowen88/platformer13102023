@@ -15,7 +15,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 		self.image.fill(YELLOW)
 		self.rect = self.image.get_rect(center = pos)
 
-		self.speed = 5
+		self.speed = 6
 		self.timer = 0
 		self.pos = pygame.math.Vector2(self.rect.center)
 		self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
@@ -31,9 +31,10 @@ class BlasterBullet(pygame.sprite.Sprite):
 
 	def particles(self, dt):
 		self.timer += dt
-		if self.timer > 2:
-			self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
-			self.timer = 0
+		self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
+		# if self.timer > 2:
+		# 	self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
+		# 	self.timer = 0
 
 	def move(self, dt):
 		self.pos += self.vel * dt
@@ -44,29 +45,6 @@ class BlasterBullet(pygame.sprite.Sprite):
 		#self.animate(0.25 * dt)
 		self.move(dt)
 		self.particles(dt)
-
-class ShotgunShot(BlasterBullet):
-	def __init__(self, game, scene, firer, groups, pos, z, angle):
-		super().__init__(game, scene, firer, groups, pos, z)
-
-		self.image = pygame.Surface((2,2))
-		self.image.fill((255, 255 ,255))
-		self.rect = self.image.get_rect(center = pos)
-		self.speed = 12
-		self.alpha = 255
-		self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
-		self.vel = self.vel.rotate(angle)
-
-	def update_alpha(self, rate, dt):
-		self.alpha += rate * dt
-		if self.alpha <= 0:
-			self.alpha == 0
-		self.image.set_alpha(self.alpha)
-
-	def update(self, dt):
-		self.collide()
-		self.update_alpha(-30, dt)
-		self.move(dt)
 
 class Rocket(BlasterBullet):
 	def __init__(self, game, scene, firer, groups, pos, z):
