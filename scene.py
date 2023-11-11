@@ -150,6 +150,10 @@ class Scene(State):
 					if sprite.hitbox.collidepoint(point):
 						ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
 						return True
+				for sprite in self.enemy_sprites:
+					if sprite.hitbox.collidepoint(point):
+						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+						return True
 
 		elif gun == 'railgun':
 
@@ -160,6 +164,9 @@ class Scene(State):
 				for sprite in self.block_sprites:
 					if sprite.hitbox.collidepoint(point):
 						return True
+				for sprite in self.enemy_sprites:
+					if sprite.hitbox.collidepoint(point):
+						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 
 	def update(self, dt):
 

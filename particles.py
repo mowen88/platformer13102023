@@ -14,7 +14,6 @@ class MuzzleFlash(pygame.sprite.Sprite):
 		self.image = self.frames[self.frame_index]
 		self.rect = self.image.get_rect(center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset)
 
-		
 		self.alpha = 255
 
 	def animate(self, animation_speed, loop=True):
