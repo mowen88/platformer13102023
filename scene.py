@@ -75,12 +75,15 @@ class Scene(State):
 
 	def create_bullet(self, sprite, auto=False):
 		# reset the firing button if the weapon is not an automatic
-		if sprite == self.player and not auto:
-			ACTIONS['left_click'] = False
+		if sprite == self.player:
+			if not auto:
+				ACTIONS['left_click'] = False
+		else:
+			sprite.shooting = False
 
 		if sprite.gun == 'blaster':
-			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
-			BlasterBullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
+			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
 		elif sprite.gun in ['grenade', 'grenade launcher']:
 
@@ -88,7 +91,7 @@ class Scene(State):
 			Grenade(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
-			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			
 			lower = -2 # if sprite.gun == 'shotgun' else -4
 			upper = 3 # if sprite.gun == 'shotgun' else 6 
@@ -156,11 +159,14 @@ class Scene(State):
 
 			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/3))
 			for num, point in enumerate(point_list):
+
 				if num > 6:
 
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point):
-						self.player.reduce_health(round(gun_damage/(num * 0.1)))
+						if gun in ['shotgun', 'super shotgun']:
+							gun_damage = round(gun_damage/(num * 0.1))
+						self.player.reduce_health(gun_damage)
 
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):
@@ -169,8 +175,10 @@ class Scene(State):
 
 					for sprite in self.enemy_sprites:
 						if sprite.hitbox.collidepoint(point):
-							sprite.reduce_health(round(gun_damage/(num * 0.2)))
-							if round(gun_damage/(num * 0.2)) > 0:
+							if gun in ['shotgun', 'super shotgun']:
+								gun_damage = round(gun_damage/(num * 0.1))
+							sprite.reduce_health(gun_damage)
+							if gun_damage > 0:
 								AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 							return True
 
@@ -229,7 +237,7 @@ class Scene(State):
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					str('PLAYER HEALTH: '+str(self.player.health)),
-					str('GUARD HEALTH: '+str(self.guard.health)),
+					str('GUARD HEALTH: '+str(self.guard.state)),
 					None])
 
 

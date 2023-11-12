@@ -43,12 +43,12 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 4
+		self.gun_index = 6
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 		self.cooldown = 0
 
-		self.health = 30
+		self.health = 100
 
 		self.state = Fall(self)
 
@@ -244,9 +244,9 @@ class Player(pygame.sprite.Sprite):
 
 	def reduce_health(self, amount):
 		# if not self.invincible:
-		self.game.current_health -= amount
-		if self.game.current_health <= 0:
-			self.alive = False
+		self.health -= amount
+		if self.health <= 0:
+			pass#self.alive = False
 			# set new zone to the current one to re-enter after death
 			#self.zone.new_zone = self.zone.name
 			# self.zone.create_zone(self.zone.name)
@@ -266,6 +266,7 @@ class Player(pygame.sprite.Sprite):
 		self.handle_jumping(dt)
 		self.cooldown_timer(dt)
 		self.chain_gun_spin_up(dt)
+		self.hit_by_bullet()
 
 
 	

@@ -50,6 +50,8 @@ class Idle:
 		if enemy.move['left'] or enemy.move['right']:
 			return Move(enemy)
 
+		if enemy.alerted:
+			return Shoot(enemy)
 
 	def update(self, enemy, dt):
 
@@ -79,6 +81,9 @@ class Move:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
+		if enemy.alerted:
+			return Shoot(enemy)
+
 		self.stop(enemy)
 
 		if 0 < enemy.vel.x < 0.1:
@@ -92,11 +97,6 @@ class Move:
 
 	def update(self, enemy, dt):
 
-		# if enemy.vel.x > 0:
-		# 	enemy.facing = 1
-		# else:
-		# 	enemy.facing = 0
-
 		self.timer -= dt
 	
 		enemy.acc.x = 0
@@ -107,6 +107,33 @@ class Move:
 
 		enemy.animate('run', 0.25 * dt)
 
+class Shoot(Move):
+	def __init__(self, enemy):
+		
+		enemy.frame_index = 0
+		self.timer = enemy.data['cooldown']
+		enemy.scene.create_bullet(enemy, True)
+
+	def state_logic(self, enemy):
+		self.stop(enemy)
+
+		if self.timer < 0:
+			enemy.alerted = False
+			enemy.shooting = True
+			return Idle(enemy)
+
+	def update(self, enemy, dt):
+
+		enemy.shooting = True
+
+		self.timer -= dt
+	
+		enemy.acc.x = 0
+		
+		enemy.physics_x(dt)
+		enemy.physics_y(dt)
+
+		enemy.animate('land', 0.25 * dt)
 
 class Landing:
 	def __init__(self, enemy):

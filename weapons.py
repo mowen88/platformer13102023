@@ -59,10 +59,18 @@ class Gun(pygame.sprite.Sprite):
 		muzzle_pos = sprite_center + direction
 		return muzzle_pos
 
+	def owner_alerted(self):
+		if self.owner != self.scene.player:
+			if self.scene.player.hitbox.colliderect(self.owner.vision_box) and self.owner.has_los():
+				if (self.scene.player.rect.right < self.owner.rect.left and self.owner.facing == 1) or\
+				(self.scene.player.rect.left > self.owner.rect.right and self.owner.facing == 0):
+					self.owner.alerted = True
+
 	def update(self, dt):
+		self.owner_alerted()
 
 		if self.owner != self.scene.player: 
-			if self.scene.player.hitbox.colliderect(self.owner.vision_box) and self.owner.has_los(): 
+			if self.owner.alerted:
 				self.get_angle(self.rect.center + self.scene.drawn_sprites.offset, self.scene.player.hitbox.center)
 
 			elif self.owner.facing == 0:

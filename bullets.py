@@ -19,7 +19,10 @@ class BlasterBullet(pygame.sprite.Sprite):
 		self.speed = 6
 		self.timer = 0
 		self.pos = pygame.math.Vector2(self.rect.center)
-		self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
+		if self.firer == self.scene.player:
+			self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
+		else:
+			self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, self.scene.player.rect.center - self.scene.drawn_sprites.offset)[1] * self.speed
 		#self.vel = self.vel.rotate(random.randrange(-10, 10))
 		
 		# self.damage = GUN_DATA[self.zone.player.gun]['damage']

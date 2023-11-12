@@ -29,6 +29,8 @@ class Guard(pygame.sprite.Sprite):
 		self.max_fall_speed = 6
 		self.jump_height = 4
 		self.facing = 1
+		self.alerted = False
+		self.shooting = False
 
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
@@ -216,6 +218,17 @@ class Guard(pygame.sprite.Sprite):
 		if self.cooldown > 0:
 			self.cooldown -= dt
 
+	def chain_gun_spin_up(self, dt):
+		if self.gun == 'chain gun':
+			if ACTIONS['left_click'] and not self.on_ladder:
+				DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
+			else:
+				DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
+
+		DATA['guns']['chain gun']['cooldown'] = max(2, min(DATA['guns']['chain gun']['cooldown'], 10))
+
+		return DATA['guns']['chain gun']['cooldown']
+
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
 		if new_state: self.state = new_state
@@ -230,6 +243,7 @@ class Guard(pygame.sprite.Sprite):
 		self.state_logic()
 		self.state.update(self, dt)
 		self.cooldown_timer(dt)
+		self.chain_gun_spin_up(dt)
 		self.hit_by_bullet()
 		
 		

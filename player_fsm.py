@@ -212,6 +212,9 @@ class OnLadderIdle:
 		# remove gun sprite from player when using ladder
 		player.scene.gun_sprite.kill()
 
+		# stop auto weapons firing
+		ACTIONS['left_click'] = False
+
 	def state_logic(self, player):
 		keys = pygame.key.get_pressed()
 
