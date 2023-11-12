@@ -90,15 +90,13 @@ class Scene(State):
 				self.hitscan(sprite.gun, shot)
 
 		elif sprite.gun == 'machine gun':
-
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			self.hitscan(sprite.gun, random.uniform(-0.04, 0.04))
 
-			# num_of_shots = 5
-			# angle = 0
-			# for shot in range(num_of_shots):
-			# 	angle += 1
-			# 	ShotgunShot(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'],  angle * shot - (num_of_shots/2))
+		elif sprite.gun == 'chain gun':
+			
+			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			self.hitscan(sprite.gun, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'railgun':
 			self.hitscan('railgun')
@@ -142,7 +140,7 @@ class Scene(State):
 
 		distance = ((x, y) - pygame.math.Vector2(self.gun_sprite.rect.center)).magnitude()
 
-		if gun == 'shotgun' or gun == 'machine gun':
+		if gun == 'shotgun' or gun == 'machine gun' or gun == 'chain gun':
 
 			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/3))
 			for num, point in enumerate(point_list):

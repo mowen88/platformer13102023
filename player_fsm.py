@@ -77,7 +77,6 @@ class Idle:
 
 	def update(self, player, dt):
 
-
 		player.acc.x = 0
 		player.input()
 		player.physics_x(dt)
@@ -91,12 +90,16 @@ class Crouch:
 		
 		player.frame_index = 0
 
+		# slow the player if moving when crouched
+		player.acc_rate = 0.2
+
 	def state_logic(self, player):
 
 		if not player.alive:
 			return Death(player)
 
 		if not ACTIONS['down']:
+			player.acc_rate = 0.4
 			return Idle(player)
 
 		if ACTIONS['left_click'] and player.scene.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
@@ -121,7 +124,7 @@ class Crouch:
 		player.vel.x = player.vel.x / 2 * dt
 
 		player.physics_y(dt)
-		player.animate('crouch', 0.05 * dt, False)
+		player.animate('crouch', 0.2 * dt, False)
 
 class CrouchMove:
 	def __init__(self, player):
@@ -134,6 +137,7 @@ class CrouchMove:
 			return Death(player)
 
 		if not ACTIONS['down']:
+			player.acc_rate = 0.4
 			return Idle(player)
 
 		if ACTIONS['left_click'] and player.scene.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
@@ -152,13 +156,8 @@ class CrouchMove:
 
 		player.acc.x = 0
 		player.input()
-
-		player.acc.x = player.acc.x / 2 * dt
-		player.physics_x(dt)
-
-		# slow the player if moving when crouched
 		
-
+		player.physics_x(dt)
 		player.physics_y(dt)
 		player.animate('crouch', 0.25 * dt, False)
 
@@ -376,6 +375,7 @@ class Jump(Fall):
 
 		if ACTIONS['right_click'] and player.jump_counter > 0:
 			ACTIONS['right_click'] = False
+
 			return DoubleJump(player)
 
 	def update(self, player, dt):
@@ -394,12 +394,16 @@ class DoubleJump(Fall):
 		player.frame_index = 0
 		player.jump(player.jump_height)
 
+		# remove gun sprite from player when using ladder
+		player.scene.gun_sprite.kill()
+
 	def state_logic(self, player):
 
 		if not player.alive:
 			return Death(player)
 
 		if player.vel.y > 0:
+			player.scene.create_player_gun()
 			return Fall(player)
 
 		if ACTIONS['left_click'] and player.scene.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:

@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
 		self.acc = pygame.math.Vector2(0, self.gravity)	
 		self.vel = pygame.math.Vector2()
 		self.max_fall_speed = 6
-		self.jump_height = 4
+		self.jump_height = 3.5
 		self.facing = 1
 
 		self.on_ladder = False
@@ -199,7 +199,7 @@ class Player(pygame.sprite.Sprite):
 	def handle_jumping(self, dt):
 		# Double the gravity if not holding jump key to allow variale jump height
 		if not pygame.mouse.get_pressed()[2] and self.vel.y < 0:
-			self.acc.y = self.gravity * 2
+			self.acc.y = self.gravity * 2.5
 		else:
 			self.acc.y = self.gravity
 
@@ -236,6 +236,18 @@ class Player(pygame.sprite.Sprite):
 		if self.cooldown > 0:
 			self.cooldown -= dt
 
+	def chain_gun_spin_up(self, dt):
+		if self.gun == 'chain gun':
+			if ACTIONS['left_click']:
+				DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
+			else:
+				DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
+
+		DATA['guns']['chain gun']['cooldown'] = max(0, min(DATA['guns']['chain gun']['cooldown'], 10))
+
+		return DATA['guns']['chain gun']['cooldown']
+
+
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
 		if new_state: self.state = new_state
@@ -250,6 +262,7 @@ class Player(pygame.sprite.Sprite):
 		self.state.update(self, dt)
 		self.handle_jumping(dt)
 		self.cooldown_timer(dt)
+		self.chain_gun_spin_up(dt)
 
 
 	
