@@ -21,6 +21,7 @@ RED = (255, 100, 100)
 NEON_BLUE = (176, 255, 241)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
+LIGHT_GREY = (199, 212, 225)
 
 DATA = {
 	'guns':{
@@ -30,7 +31,7 @@ DATA = {
 			'machine gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 8, 'speed': 0, 'damage': 20, 'path': '../assets/weapons/machine gun.png', 'length':20, 'auto':True},
 			'super shotgun': {'ammo_type': 'shells', 'bullet_type': 'bullet', 'cooldown': 80, 'speed': 0, 'damage': 90, 'path': '../assets/weapons/super shotgun.png', 'length':25, 'auto':False},
 			'chain gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 10, 'speed': 0, 'damage': 40, 'path': '../assets/weapons/chain gun.png', 'length':22, 'auto':True},
-			'launcher': {'ammo_type': 'grenade', 'bullet_type': 'projectile', 'cooldown': 70, 'speed': 0, 'damage': 100, 'path': '../assets/weapons/launcher.png', 'length':15, 'auto':False},
+			'grenade launcher': {'ammo_type': 'grenade', 'bullet_type': 'projectile', 'cooldown': 70, 'speed': 0, 'damage': 100, 'path': '../assets/weapons/grenade launcher.png', 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_type': 'rockets', 'bullet_type': 'rocket', 'cooldown': 50, 'speed': 2, 'damage': 400, 'path': '../assets/weapons/rocket launcher.png', 'length':20, 'auto':False},
 			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 120, 'speed': 0, 'damage': 600, 'path': '../assets/weapons/railgun.png', 'length':20, 'auto':False},
 			'hyper blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20, 'auto':True},

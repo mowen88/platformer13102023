@@ -75,16 +75,16 @@ class Scene(State):
 
 	def create_bullet(self, sprite, auto=False):
 		# reset the firing button if the weapon is not an automatic
-		if not auto:
+		if sprite == self.player and not auto:
 			ACTIONS['left_click'] = False
 
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			BlasterBullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
-		elif sprite.gun in ['grenade', 'launcher']:
+		elif sprite.gun in ['grenade', 'grenade launcher']:
 
-			speed = 7 if sprite.gun == 'launcher' else 4
+			speed = 7 if sprite.gun in ['grenade launcher'] else 4
 			Grenade(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
@@ -115,7 +115,7 @@ class Scene(State):
 		if particle_type == 'blaster':
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], YELLOW)
 		else:
-			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], WHITE)
+			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], LIGHT_GREY)
 
 	# function that returns a list of distance, direciton, angle and dot product from a pair of point coordinates
 	# for example, call this aat the index of 0 to return the distance between the player center point and an enemy center point
