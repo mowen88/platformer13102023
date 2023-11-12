@@ -43,10 +43,12 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 6
+		self.gun_index = 4
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 		self.cooldown = 0
+
+		self.health = 30
 
 		self.state = Fall(self)
 
@@ -219,18 +221,6 @@ class Player(pygame.sprite.Sprite):
 				self.jump_buffer = 0
 				self.jump_buffer_active = False
 
-	# def update(self, dt):
-		
-	# 	self.old_pos = self.pos.copy()
-	# 	self.old_hitbox = self.hitbox.copy()
-
-	# 	self.acc.x = 0
-	# 	self.input()
-	# 	self.physics_x(dt)
-	# 	self.physics_y(dt)
-	# 	self.handle_jumping(dt)
-	# 	self.animate(dt)
-
 	def cooldown_timer(self, dt):
 		if self.cooldown > 0:
 			self.cooldown -= dt
@@ -246,6 +236,20 @@ class Player(pygame.sprite.Sprite):
 
 		return DATA['guns']['chain gun']['cooldown']
 
+	def hit_by_bullet(self):
+		for sprite in self.scene.bullet_sprites:
+			if self.hitbox.colliderect(sprite.hitbox):
+				self.reduce_health(sprite.damage)
+				sprite.kill()
+
+	def reduce_health(self, amount):
+		# if not self.invincible:
+		self.game.current_health -= amount
+		if self.game.current_health <= 0:
+			self.alive = False
+			# set new zone to the current one to re-enter after death
+			#self.zone.new_zone = self.zone.name
+			# self.zone.create_zone(self.zone.name)
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)

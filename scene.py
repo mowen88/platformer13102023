@@ -150,32 +150,54 @@ class Scene(State):
 
 		distance = ((x, y) - pygame.math.Vector2(self.gun_sprite.rect.center)).magnitude()
 
+		gun_damage = DATA['guns'][gun]['damage']
+
 		if gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
 
 			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/3))
 			for num, point in enumerate(point_list):
 				if num > 6:
+
+					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
+					if self.player.hitbox.collidepoint(point):
+						self.player.reduce_health(round(gun_damage/(num * 0.1)))
+
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):
 							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
 							return True
+
 					for sprite in self.enemy_sprites:
 						if sprite.hitbox.collidepoint(point):
-							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+							sprite.reduce_health(round(gun_damage/(num * 0.2)))
+							if round(gun_damage/(num * 0.2)) > 0:
+								AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 							return True
 
 		elif gun == 'railgun':
-
+			hit_sprites = set()
 			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/12))
 			for num, point in enumerate(point_list):
+
 				if num >= 3 and num <= len(point_list)-2:
 					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
+					
+					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
+					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
+						self.player.health -= 5
+						hit_sprites.add(self.player)
+
 				for sprite in self.block_sprites:
 					if sprite.hitbox.collidepoint(point):
 						return True
+
 				for sprite in self.enemy_sprites:
-					if sprite.hitbox.collidepoint(point):
+					if sprite.hitbox.collidepoint(point) and sprite not in hit_sprites:
 						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+						sprite.reduce_health(gun_damage)
+						hit_sprites.add(sprite)
+				
+					
 
 	def update(self, dt):
 
@@ -206,7 +228,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.player.gun)),
+					str('PLAYER HEALTH: '+str(self.player.health)),
+					str('GUARD HEALTH: '+str(self.guard.health)),
 					None])
 
 

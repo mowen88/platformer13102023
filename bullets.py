@@ -14,6 +14,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 		self.image = pygame.Surface((2,2))
 		self.image.fill(YELLOW)
 		self.rect = self.image.get_rect(center = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
 
 		self.speed = 6
 		self.timer = 0
@@ -23,6 +24,10 @@ class BlasterBullet(pygame.sprite.Sprite):
 		
 		# self.damage = GUN_DATA[self.zone.player.gun]['damage']
 		# self.knockback_power = GUN_DATA[self.zone.player.gun]['knockback']
+
+		self.data = DATA['guns'][self.firer.gun]
+
+		self.damage = self.data['damage']
 
 	def collide(self):
 		for sprite in self.scene.block_sprites:
@@ -39,6 +44,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 	def move(self, dt):
 		self.pos += self.vel * dt
 		self.rect.center = self.pos
+		self.hitbox.center = self.rect.center
 
 	def update(self, dt):
 		self.collide()
@@ -57,6 +63,7 @@ class Grenade(BlasterBullet):
 
 		self.image = pygame.image.load('assets/particles/grenade.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)
+		
 		self.old_rect = self.rect.copy()
 
 	def collisions_x(self):
@@ -99,14 +106,15 @@ class Grenade(BlasterBullet):
 
 		self.pos.x += self.vel.x * dt
 		self.rect.centerx = self.pos.x
+		self.hitbox.centerx = self.rect.centerx
 		self.collisions_x()
 		
 		self.pos.y += self.vel.y * dt
 		self.rect.centery = self.pos.y
+		self.hitbox.centery = self.rect.centery
 		self.collisions_y()
 
 		self.vel.y += self.gravity * dt
-
 		self.vel.x -= self.vel.x * self.fric * dt
 
 	def update(self, dt):

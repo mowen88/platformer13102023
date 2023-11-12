@@ -35,11 +35,16 @@ class Guard(pygame.sprite.Sprite):
 		self.on_ground = False
 		self.drop_through = False
 
-		self.gun = DATA['enemy_guns'][self.name]
+		self.data = DATA['enemies'][self.name]
+
+		self.health = self.data['health']
+
+		self.gun = self.data['weapon']
 		self.muzzle_pos = None
 		self.vision_box = pygame.Rect(0, 0, 300, 200)
 
 		self.move = {'left':False, 'right':False}
+		self.cooldown = 0
 
 	def move_logic(self):
 		if self.move['right']:
@@ -56,7 +61,6 @@ class Guard(pygame.sprite.Sprite):
 		else:
 			self.move['right'] = False
 			self.move['left'] = False
-
 
 	def turnaround(self):
 		for sprite in self.scene.collision_sprites:
@@ -162,6 +166,18 @@ class Guard(pygame.sprite.Sprite):
 						return False
 		return True
 
+	def hit_by_bullet(self):
+		for sprite in self.scene.bullet_sprites:
+			if self.hitbox.colliderect(sprite.hitbox):
+				self.reduce_health(sprite.damage)
+				sprite.kill()
+
+	def reduce_health(self, amount):
+		# if not self.invincible:
+		self.health -= amount
+		if self.health <= 0:
+			pass#self.alive = False
+
 	def physics_x(self, dt):
 			
 		self.acc.x += self.vel.x * self.fric
@@ -196,16 +212,9 @@ class Guard(pygame.sprite.Sprite):
 			self.on_ground = False
 			self.platform = None
 
-	# def update(self, dt):
-		
-	# 	self.old_pos = self.pos.copy()
-	# 	self.old_hitbox = self.hitbox.copy()
-
-	# 	self.vision_box.center = self.rect.center
-
-	# 	self.acc.x = 0
-	# 	self.physics_x(dt)
-	# 	self.physics_y(dt)
+	def cooldown_timer(self, dt):
+		if self.cooldown > 0:
+			self.cooldown -= dt
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
@@ -220,7 +229,8 @@ class Guard(pygame.sprite.Sprite):
 
 		self.state_logic()
 		self.state.update(self, dt)
-		
+		self.cooldown_timer(dt)
+		self.hit_by_bullet()
 		
 		
 
