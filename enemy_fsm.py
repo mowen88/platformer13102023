@@ -28,6 +28,12 @@ class Idle:
 		enemy.frame_index = 0
 		self.timer = random.randint(50, 200)
 
+	def gun_angle(self, enemy):
+		if enemy.facing == 0:
+			enemy.gun_sprite.angle = 270
+		else:
+			enemy.gun_sprite.angle = 90
+
 	def start_stop(self, enemy):
 		# when this is called, if enemy is still, it will start moving, otherwise it will stop
 		if self.timer <= 0:
@@ -50,10 +56,11 @@ class Idle:
 		if enemy.move['left'] or enemy.move['right']:
 			return Move(enemy)
 
-		if enemy.alerted:
-			return Shoot(enemy)
+		if enemy.player_seen():
+			return Telegraph(enemy)
 
 	def update(self, enemy, dt):
+		self.gun_angle(enemy)
 
 		self.timer -= dt
 
@@ -81,8 +88,8 @@ class Move:
 		if not enemy.on_ground:
 			return Fall(enemy)
 
-		if enemy.alerted:
-			return Shoot(enemy)
+		if enemy.player_seen():
+			return Telegraph(enemy)
 
 		self.stop(enemy)
 
@@ -107,7 +114,35 @@ class Move:
 
 		enemy.animate('run', 0.25 * dt)
 
-class Shoot(Move):
+class Telegraph(Move):
+	def __init__(self, enemy):
+		
+		enemy.frame_index = 0
+		self.timer = 60
+
+	def gun_angle(self, enemy):
+		if enemy.scene.player.hitbox.colliderect(enemy.vision_box) and enemy.has_los():
+			enemy.gun_sprite.get_angle(enemy.rect.center + enemy.scene.drawn_sprites.offset, enemy.scene.player.hitbox.center)
+
+	def state_logic(self, enemy):
+		self.stop(enemy)
+
+		if self.timer < 0:
+			return Shoot(enemy)
+
+	def update(self, enemy, dt):
+		self.gun_angle(enemy)
+
+		self.timer -= dt
+	
+		enemy.acc.x = 0
+		
+		enemy.physics_x(dt)
+		enemy.physics_y(dt)
+
+		enemy.animate('jump', 0.25 * dt)
+
+class Shoot(Telegraph):
 	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
@@ -115,16 +150,15 @@ class Shoot(Move):
 		enemy.scene.create_bullet(enemy, True)
 
 	def state_logic(self, enemy):
-		self.stop(enemy)
 
 		if self.timer < 0:
-			enemy.alerted = False
-			enemy.shooting = True
-			return Idle(enemy)
+			if enemy.player_seen():
+				return Telegraph(enemy)
+			else:
+				return Idle(enemy)
 
 	def update(self, enemy, dt):
-
-		enemy.shooting = True
+		self.gun_angle(enemy)
 
 		self.timer -= dt
 	

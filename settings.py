@@ -38,9 +38,9 @@ DATA = {
 			'hyper blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20, 'auto':True},
 			},
 	'enemies' :{
-			'guard':{'weapon': 'blaster', 'health': 30, 'cooldown': 30},
-			'sg_guard': {'weapon':'shotgun', 'health': 40, 'cooldown': 80},
-			'mg_guard': {'weapon':'machine gun', 'health': 40, 'cooldown': 8},
+			'guard':{'weapon': 'railgun', 'health': 30, 'cooldown': 60, 'burst_count': 3},
+			'sg_guard': {'weapon':'shotgun', 'health': 40, 'cooldown': 80, 'burst_count': 3},
+			'mg_guard': {'weapon':'machine gun', 'health': 40, 'cooldown': 8, 'burst_count': 3},
 			},
 
 	'abilities':{

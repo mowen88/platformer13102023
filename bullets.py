@@ -62,7 +62,10 @@ class Grenade(BlasterBullet):
 		self.gravity = 0.1
 		self.speed = speed
 		self.fric = 0.015
-		self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
+		if self.firer != self.scene.player:
+			self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, self.scene.player.rect.center - self.scene.drawn_sprites.offset)[1] * self.speed
+		else:
+			self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, pygame.mouse.get_pos())[1] * self.speed
 
 		self.image = pygame.image.load('assets/particles/grenade.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)

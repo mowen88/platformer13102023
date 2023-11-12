@@ -68,7 +68,7 @@ class Scene(State):
 		self.create_player_gun()
 
 	def create_player_gun(self):
-		self.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
+		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
 
 	def create_enemy_guns(self, sprite):
 		Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
@@ -88,7 +88,7 @@ class Scene(State):
 		elif sprite.gun in ['grenade', 'grenade launcher']:
 
 			speed = 7 if sprite.gun in ['grenade launcher'] else 4
-			Grenade(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
+			Grenade(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
 			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
@@ -100,19 +100,19 @@ class Scene(State):
 			
 			for pellet in range(lower, upper):
 				pellet *= spread_offset
-				self.hitscan(sprite.gun, pellet)
+				self.hitscan(sprite, pellet)
 
 		elif sprite.gun == 'machine gun':
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
-			self.hitscan(sprite.gun, random.uniform(-0.04, 0.04))
+			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
 			
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
-			self.hitscan(sprite.gun, random.uniform(-0.04, 0.04))
+			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'railgun':
-			self.hitscan('railgun')
+			self.hitscan(sprite, 0)
 
 	def create_particle(self, particle_type, pos):
 		if particle_type == 'blaster':
@@ -144,27 +144,31 @@ class Scene(State):
 	def get_equidistant_points(self, point_1, point_2, num_of_points):
 		return [(self.lerp(point_1[0], point_2[0], 1./num_of_points * i), self.lerp(point_1[1], point_2[1], 1./num_of_points * i)) for i in range(num_of_points + 1)]
 
-	def hitscan(self, gun, offset=0):
-		angle = math.atan2(pygame.mouse.get_pos()[1]-self.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
-				pygame.mouse.get_pos()[0]-self.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
+	def hitscan(self, sprite, offset=0):
+		if sprite == self.player:
+			angle = math.atan2(pygame.mouse.get_pos()[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
+					pygame.mouse.get_pos()[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
+		else:
+			angle = math.atan2(self.player.rect.centery-self.drawn_sprites.offset[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
+					self.player.rect.centerx-self.drawn_sprites.offset[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 
-		x = math.hypot(WIDTH, HEIGHT) * math.cos(angle + offset) + self.gun_sprite.rect.centerx
-		y = math.hypot(WIDTH, HEIGHT) * math.sin(angle + offset) + self.gun_sprite.rect.centery
+		x = math.hypot(WIDTH, HEIGHT) * math.cos(angle + offset) + sprite.gun_sprite.rect.centerx
+		y = math.hypot(WIDTH, HEIGHT) * math.sin(angle + offset) + sprite.gun_sprite.rect.centery
 
-		distance = ((x, y) - pygame.math.Vector2(self.gun_sprite.rect.center)).magnitude()
+		distance = ((x, y) - pygame.math.Vector2(sprite.gun_sprite.rect.center)).magnitude()
 
-		gun_damage = DATA['guns'][gun]['damage']
+		gun_damage = DATA['guns'][sprite.gun]['damage']
 
-		if gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
+		if sprite.gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
 
-			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/3))
+			point_list = self.get_equidistant_points(sprite.gun_sprite.rect.center, (x, y), int(distance/3))
 			for num, point in enumerate(point_list):
 
 				if num > 6:
 
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point):
-						if gun in ['shotgun', 'super shotgun']:
+						if sprite.gun in ['shotgun', 'super shotgun']:
 							gun_damage = round(gun_damage/(num * 0.1))
 						self.player.reduce_health(gun_damage)
 
@@ -175,38 +179,37 @@ class Scene(State):
 
 					for sprite in self.enemy_sprites:
 						if sprite.hitbox.collidepoint(point):
-							if gun in ['shotgun', 'super shotgun']:
+							if sprite.gun in ['shotgun', 'super shotgun']:
 								gun_damage = round(gun_damage/(num * 0.1))
 							sprite.reduce_health(gun_damage)
 							if gun_damage > 0:
 								AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 							return True
 
-		elif gun == 'railgun':
+		elif sprite.gun == 'railgun':
 			hit_sprites = set()
-			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/12))
+			point_list = self.get_equidistant_points(sprite.gun_sprite.rect.center, (x, y), int(distance/12))
 			for num, point in enumerate(point_list):
 
 				if num >= 3 and num <= len(point_list)-2:
-					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
+					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num, sprite) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
 					
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
 						self.player.health -= 5
 						hit_sprites.add(self.player)
 
-				for sprite in self.block_sprites:
-					if sprite.hitbox.collidepoint(point):
-						return True
-
-				for sprite in self.enemy_sprites:
-					if sprite.hitbox.collidepoint(point) and sprite not in hit_sprites:
-						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
-						sprite.reduce_health(gun_damage)
-						hit_sprites.add(sprite)
-				
+					for sprite in self.block_sprites:
+						if sprite.hitbox.collidepoint(point):
+							return True
 					
+					for sprite in self.enemy_sprites:
+						if sprite.hitbox.collidepoint(point) and sprite not in hit_sprites:
+							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+							sprite.reduce_health(gun_damage)
+							hit_sprites.add(sprite)
 
+				
 	def update(self, dt):
 
 		if ACTIONS['space']:
@@ -237,7 +240,7 @@ class Scene(State):
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					str('PLAYER HEALTH: '+str(self.player.health)),
-					str('GUARD HEALTH: '+str(self.guard.state)),
+					str('GUARD HEALTH: '+str(self.guard.gun_sprite.angle)),
 					None])
 
 

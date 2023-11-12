@@ -30,7 +30,6 @@ class Guard(pygame.sprite.Sprite):
 		self.jump_height = 4
 		self.facing = 1
 		self.alerted = False
-		self.shooting = False
 
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
@@ -39,8 +38,8 @@ class Guard(pygame.sprite.Sprite):
 
 		self.data = DATA['enemies'][self.name]
 
+		self.burst_count = self.data['burst_count']
 		self.health = self.data['health']
-
 		self.gun = self.data['weapon']
 		self.muzzle_pos = None
 		self.vision_box = pygame.Rect(0, 0, 300, 200)
@@ -228,6 +227,12 @@ class Guard(pygame.sprite.Sprite):
 		DATA['guns']['chain gun']['cooldown'] = max(2, min(DATA['guns']['chain gun']['cooldown'], 10))
 
 		return DATA['guns']['chain gun']['cooldown']
+
+	def player_seen(self):
+		if self.vision_box.colliderect(self.scene.player.hitbox) and self.has_los():
+			return True
+		else:
+			return False
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
