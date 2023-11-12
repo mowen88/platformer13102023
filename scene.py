@@ -10,7 +10,7 @@ from player import Player
 from enemy import Guard
 from sprites import Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
-from bullets import BlasterBullet
+from bullets import BlasterBullet, Grenade
 from particles import MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle
 
 class Scene(State):
@@ -82,12 +82,22 @@ class Scene(State):
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			BlasterBullet(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
-		elif sprite.gun == 'shotgun':
+		elif sprite.gun in ['grenade', 'launcher']:
+
+			speed = 7 if sprite.gun == 'launcher' else 4
+			Grenade(self.game, self, self.player, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], self.player.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
+
+		elif sprite.gun in ['shotgun', 'super shotgun']:
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
-			spread = 0.04
-			for shot in range(-2, 3, 1):
-				shot *= spread
-				self.hitscan(sprite.gun, shot)
+			
+			lower = -2 # if sprite.gun == 'shotgun' else -4
+			upper = 3 # if sprite.gun == 'shotgun' else 6 
+
+			spread_offset = 0.04 if sprite.gun == 'shotgun' else 0.1
+			
+			for pellet in range(lower, upper):
+				pellet *= spread_offset
+				self.hitscan(sprite.gun, pellet)
 
 		elif sprite.gun == 'machine gun':
 			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
@@ -140,22 +150,23 @@ class Scene(State):
 
 		distance = ((x, y) - pygame.math.Vector2(self.gun_sprite.rect.center)).magnitude()
 
-		if gun == 'shotgun' or gun == 'machine gun' or gun == 'chain gun':
+		if gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
 
 			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/3))
 			for num, point in enumerate(point_list):
-				for sprite in self.block_sprites:
-					if sprite.hitbox.collidepoint(point):
-						ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
-						return True
-				for sprite in self.enemy_sprites:
-					if sprite.hitbox.collidepoint(point):
-						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
-						return True
+				if num > 6:
+					for sprite in self.block_sprites:
+						if sprite.hitbox.collidepoint(point):
+							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
+							return True
+					for sprite in self.enemy_sprites:
+						if sprite.hitbox.collidepoint(point):
+							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+							return True
 
 		elif gun == 'railgun':
 
-			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/8))
+			point_list = self.get_equidistant_points(self.gun_sprite.rect.center, (x, y), int(distance/12))
 			for num, point in enumerate(point_list):
 				if num >= 3 and num <= len(point_list)-2:
 					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
@@ -195,7 +206,7 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('CYOTE TIMER: '+str(self.guard.facing)),
+					str('CYOTE TIMER: '+str(self.player.gun)),
 					None])
 
 

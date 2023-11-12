@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 2
+		self.gun_index = 6
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 		self.cooldown = 0
@@ -85,7 +85,6 @@ class Player(pygame.sprite.Sprite):
 			
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
-
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -243,7 +242,7 @@ class Player(pygame.sprite.Sprite):
 			else:
 				DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
 
-		DATA['guns']['chain gun']['cooldown'] = max(0, min(DATA['guns']['chain gun']['cooldown'], 10))
+		DATA['guns']['chain gun']['cooldown'] = max(2, min(DATA['guns']['chain gun']['cooldown'], 10))
 
 		return DATA['guns']['chain gun']['cooldown']
 

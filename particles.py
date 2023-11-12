@@ -101,15 +101,29 @@ class RailParticle(FadeParticle):
 		super().__init__(game, scene, groups, pos, z)
 
 		self.num = num
-		self.image = pygame.image.load('assets/particles/railgun.png').convert_alpha()
-		self.rect = self.image.get_rect(center = pos)
 		self.angle = self.scene.gun_sprite.angle
+		self.alpha = self.get_initial_alpha(24)
+
+		self.image = self.get_flipped_image(pygame.image.load('assets/particles/railgun.png').convert_alpha())
+		self.rect = self.image.get_rect(center = pos)
+		
+
+
+	def get_initial_alpha(self, rate):
+		alpha = self.num/rate * 255
+		return alpha
+
+	def get_flipped_image(self, image):
+
 		if self.scene.gun_sprite.angle < 180:
-			self.image = pygame.transform.rotate(pygame.transform.flip(self.image, True, False), self.angle)	
+			image = pygame.transform.rotate(pygame.transform.flip(image, True, False), self.angle)	
 		else:
-			self.image = pygame.transform.rotate(self.image, self.angle)
-			
-		self.alpha = self.num/30 * 255
+			image = pygame.transform.rotate(image, self.angle)
+
+		return image
+
+
+				
 
 	def update(self, dt):
 		self.update_alpha(1, dt)
