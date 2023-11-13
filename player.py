@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 8
+		self.gun_index = 6
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 		self.cooldown = 0
@@ -180,7 +180,7 @@ class Player(pygame.sprite.Sprite):
 		# x direction (multiply friction by 4 so easier to manage x direction on ladders)
 		self.acc.x += self.vel.x * self.fric * 4
 		self.vel.x += self.acc.x * dt
-		self.pos.x += self.vel.x * dt + (0.5 * self.vel.x) * (dt * dt)
+		self.pos.x += self.vel.x * dt + (0.5 * self.vel.x) * dt
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
@@ -190,7 +190,7 @@ class Player(pygame.sprite.Sprite):
 		#y direction
 		self.acc.y += self.vel.y * self.fric * 2
 		self.vel.y += self.acc.y * dt
-		self.pos.y += self.vel.y * dt + (0.5 * self.vel.y) * (dt * dt)
+		self.pos.y += self.vel.y * dt + (0.5 * self.vel.y) * dt
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery

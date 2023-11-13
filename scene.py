@@ -11,7 +11,7 @@ from enemy import Guard
 from sprites import Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, Grenade
-from particles import MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle
+from particles import MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
 
 class Scene(State):
 	def __init__(self, game):
@@ -76,6 +76,7 @@ class Scene(State):
 			sprite.gun_sprite = Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
 
 	def create_bullet(self, sprite, auto=False):
+		
 		# reset the firing button if the weapon is not an automatic
 		if sprite == self.player and not auto:
 			ACTIONS['left_click'] = False
@@ -116,6 +117,8 @@ class Scene(State):
 	def create_particle(self, particle_type, pos):
 		if particle_type == 'blaster':
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], YELLOW)
+		if particle_type == 'grenade':
+			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
 		else:
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], LIGHT_GREY)
 
@@ -249,7 +252,7 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('PLAYER HEALTH: '+str(self.player.health)),
+					str('PLAYER H EALTH: '+str(self.player.health)),
 					str('GUARD HEALTH: '+str(self.guard3.health)),
 					None])
 

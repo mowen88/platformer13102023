@@ -1,6 +1,30 @@
 import pygame
 from settings import *
 
+class Explosion(pygame.sprite.Sprite):
+	def __init__(self, game, groups, pos, z, path, damage=0, knockback_power=0):
+		super().__init__(groups)
+		self.game = game
+		self.z = z
+		self.frames = self.game.get_folder_images(path)
+		self.frame_index = 0
+		self.image = self.frames[self.frame_index]
+		self.rect = self.image.get_rect(center = pos)
+
+		self.damage = damage
+		self.knockback_power = knockback_power
+
+	def animate(self, animation_speed):
+
+		self.frame_index += animation_speed
+		self.frame_index = self.frame_index % len(self.frames)	
+		self.image = self.frames[int(self.frame_index)]
+		if self.frame_index > len(self.frames)-1:	
+			self.kill()
+
+	def update(self, dt):
+		self.animate(0.2 * dt)
+
 class MuzzleFlash(pygame.sprite.Sprite):
 	def __init__(self, game, scene, firer, groups, pos, z, path):
 		super().__init__(groups)
@@ -123,6 +147,8 @@ class RailParticle(FadeParticle):
 			
 	def update(self, dt):
 		self.update_alpha(3, dt)
+
+
 
 		
 		

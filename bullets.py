@@ -72,6 +72,10 @@ class Grenade(BlasterBullet):
 		
 		self.old_rect = self.rect.copy()
 
+		for block in self.scene.block_sprites:
+			if block.hitbox.colliderect(self.rect):
+				self.kill()
+
 	def collisions_x(self):
 		for sprite in self.scene.block_sprites:
 			if self.rect.colliderect(sprite.hitbox):
@@ -103,9 +107,18 @@ class Grenade(BlasterBullet):
 
 	def particles(self, dt):
 		self.timer += dt
+
+		if self.timer > 30:
+			self.scene.create_particle('grenade', self.rect.center)
+			self.kill()
+
 		if self.vel.magnitude() > 1 and self.timer > 4:
 			self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
 			self.timer = 0
+
+		for sprite in self.scene.enemy_sprites:
+			if self.rect.colliderect(sprite.hitbox):
+				self.scene.create_particle('grenade', self.rect.center)
 
 	def move(self, dt):
 		self.old_rect = self.rect.copy()
