@@ -97,13 +97,13 @@ class RocketParticle(FadeParticle):
 		self.update_alpha(15, dt)
 
 class RailParticle(FadeParticle):
-	def __init__(self, game, scene, groups, pos, z, num, sprite):
+	def __init__(self, game, scene, groups, pos, z, num, angle):
 		super().__init__(game, scene, groups, pos, z)
 
 		self.num = num
-		self.sprite = sprite
+		#self.sprite = sprite
 
-		self.angle = self.sprite.gun_sprite.angle
+		self.angle = angle
 
 		self.alpha = self.get_initial_alpha(24)
 
@@ -126,6 +126,5 @@ class RailParticle(FadeParticle):
 	def update(self, dt):
 		self.update_alpha(1, dt)
 
-		print(self.sprite.gun)
 		
 		

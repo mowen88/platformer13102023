@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="40">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="41">
  <editorsettings>
   <export target="0.csv" format="csv"/>
  </editorsettings>
@@ -85,7 +85,7 @@
    <point/>
   </object>
   <object id="21" name="collider" x="240" y="112" width="16" height="16"/>
-  <object id="22" name="collider" x="64" y="240" width="16" height="16"/>
+  <object id="22" name="collider" x="112" y="192" width="16" height="16"/>
   <object id="23" name="collider" x="304" y="192" width="16" height="16"/>
   <object id="24" name="collider" x="288" y="160" width="16" height="16"/>
   <object id="25" name="collider" x="480" y="160" width="16" height="16"/>
@@ -107,5 +107,6 @@
   <object id="39" name="gladiator" x="173.5" y="201.5">
    <point/>
   </object>
+  <object id="40" name="collider" x="69.5" y="238" width="16" height="16"/>
  </objectgroup>
 </map>

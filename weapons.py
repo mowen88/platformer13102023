@@ -63,14 +63,14 @@ class Gun(pygame.sprite.Sprite):
 
 	def update(self, dt):
 
-		if self.owner != self.scene.player:
-			pass
+		if self.owner == self.scene.player:
+			self.get_angle(self.rect.center, pygame.mouse.get_pos())
+		#else:
 			# elif self.owner.facing == 0:
 			# 	self.angle = 270
 			# else:
 			# 	self.angle = 90
-		else: 
-			self.get_angle(self.rect.center, pygame.mouse.get_pos())
+		
 
 		# change facing direction of player based on which way the gun is pointing
 		

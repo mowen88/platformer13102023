@@ -119,6 +119,7 @@ class Telegraph(Move):
 		
 		enemy.frame_index = 0
 		self.timer = 60
+		self.angle = enemy.gun_sprite.get_angle(enemy.rect.center, enemy.scene.player.rect.center)
 
 	def gun_angle(self, enemy):
 		if enemy.scene.player.hitbox.colliderect(enemy.vision_box) and enemy.has_los():
@@ -128,6 +129,7 @@ class Telegraph(Move):
 		self.stop(enemy)
 
 		if self.timer < 0:
+			enemy.scene.create_bullet(enemy, True)
 			return Shoot(enemy)
 
 	def update(self, enemy, dt):
@@ -147,7 +149,7 @@ class Shoot(Telegraph):
 		
 		enemy.frame_index = 0
 		self.timer = enemy.data['cooldown']
-		enemy.scene.create_bullet(enemy, True)
+		
 
 	def state_logic(self, enemy):
 

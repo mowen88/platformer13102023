@@ -64,7 +64,7 @@ class Scene(State):
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-		
+
 		self.create_enemy_guns()
 		self.create_player_gun()
 
@@ -170,6 +170,9 @@ class Scene(State):
 						if sprite.gun in ['shotgun', 'super shotgun']:
 							gun_damage = round(gun_damage/(num * 0.1))
 						self.player.reduce_health(gun_damage)
+						if gun_damage > 0:
+							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+						return True
 
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):
@@ -187,16 +190,22 @@ class Scene(State):
 
 		elif sprite.gun == 'railgun':
 			hit_sprites = set()
+	
+			gun_angle = sprite.gun_sprite.angle
 			point_list = self.get_equidistant_points(sprite.gun_sprite.rect.center, (x, y), int(distance/12))
 			for num, point in enumerate(point_list):
 
 				if num >= 3 and num <= len(point_list)-2:
-					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num, sprite) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
+					
+					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num, gun_angle) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
 					
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
 						self.player.reduce_health(gun_damage)
 						hit_sprites.add(self.player)
+
+						
+						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):
@@ -207,6 +216,8 @@ class Scene(State):
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 							sprite.reduce_health(gun_damage)
 							hit_sprites.add(sprite)
+			
+							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 
 				
 	def update(self, dt):
@@ -239,7 +250,7 @@ class Scene(State):
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					str('PLAYER HEALTH: '+str(self.player.health)),
-					str('GUARD HEALTH: '+str(self.guard2.gun_sprite.angle)),
+					str('GUARD HEALTH: '+str(self.guard3.health)),
 					None])
 
 
