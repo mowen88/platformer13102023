@@ -101,8 +101,6 @@ class RailParticle(FadeParticle):
 		super().__init__(game, scene, groups, pos, z)
 
 		self.num = num
-		#self.sprite = sprite
-
 		self.angle = angle
 
 		self.alpha = self.get_initial_alpha(24)
@@ -124,7 +122,7 @@ class RailParticle(FadeParticle):
 		return image
 			
 	def update(self, dt):
-		self.update_alpha(1, dt)
+		self.update_alpha(3, dt)
 
 		
 		

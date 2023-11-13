@@ -34,7 +34,7 @@ DATA = {
 			'chain gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 10, 'speed': 0, 'damage': 4, 'path': '../assets/weapons/chain gun.png', 'length':22, 'auto':True},
 			'grenade launcher': {'ammo_type': 'grenade', 'bullet_type': 'projectile', 'cooldown': 70, 'speed': 0, 'damage': 10, 'path': '../assets/weapons/grenade launcher.png', 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_type': 'rockets', 'bullet_type': 'rocket', 'cooldown': 50, 'speed': 2, 'damage': 400, 'path': '../assets/weapons/rocket launcher.png', 'length':20, 'auto':False},
-			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 120, 'speed': 0, 'damage': 10, 'path': '../assets/weapons/railgun.png', 'length':20, 'auto':False},
+			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 30, 'speed': 0, 'damage': 50, 'path': '../assets/weapons/railgun.png', 'length':20, 'auto':False},
 			'hyper blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20, 'auto':True},
 			},
 	'enemies' :{

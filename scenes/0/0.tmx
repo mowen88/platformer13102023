@@ -75,7 +75,7 @@
   </object>
  </objectgroup>
  <objectgroup id="3" name="entities">
-  <object id="17" name="0" x="176" y="80">
+  <object id="17" name="0" x="688" y="0">
    <point/>
   </object>
   <object id="18" name="guard" x="352" y="128">
@@ -94,9 +94,6 @@
   <object id="28" name="collider" x="576" y="192" width="16" height="16"/>
   <object id="29" name="collider" x="464" y="192" width="16" height="16"/>
   <object id="30" name="collider" x="656" y="192" width="16" height="16"/>
-  <object id="33" name="gladiator" x="272" y="32">
-   <point/>
-  </object>
   <object id="34" name="gladiator" x="80" y="160">
    <point/>
   </object>

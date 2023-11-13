@@ -192,10 +192,10 @@ class Scene(State):
 			hit_sprites = set()
 	
 			gun_angle = sprite.gun_sprite.angle
-			point_list = self.get_equidistant_points(sprite.gun_sprite.rect.center, (x, y), int(distance/12))
+			point_list = self.get_equidistant_points(sprite.gun_sprite.rect.center, (x, y), int(distance/6))
 			for num, point in enumerate(point_list):
 
-				if num >= 3 and num <= len(point_list)-2:
+				if num >= 3 and num <= len(point_list)-2 and num%2==0:
 					
 					RailParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], num, gun_angle) #pygame.draw.circle(self.game.screen, NEON_BLUE, point - self.drawn_sprites.offset, 2)
 					
