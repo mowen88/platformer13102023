@@ -26,7 +26,7 @@ LIGHT_GREY = (199, 212, 225)
 DATA = {
 
 	'guns':{
-			'blaster': {'ammo_type': None, 'bullet_type': 'projectile', 'cooldown': 30, 'speed': 4, 'damage': 5, 'path': '../assets/weapons/blaster.png', 'length':18, 'auto':False},
+			'blaster': {'ammo_type': None, 'bullet_type': 'projectile', 'cooldown': 30, 'speed': 4, 'damage': 3, 'path': '../assets/weapons/blaster.png', 'length':18, 'auto':False},
 			'shotgun': {'ammo_type': 'shells', 'bullet_type': 'bullet', 'cooldown': 80, 'speed': 0, 'damage': 4, 'path': '../assets/weapons/shotgun.png', 'length':25, 'auto':False},
 			'grenade': {'ammo_type': 'grenade', 'bullet_type': 'projectile', 'cooldown': 180, 'speed': 0, 'damage': 20, 'path': '../assets/weapons/grenade.png', 'length':15, 'auto':False},
 			'machine gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 8, 'speed': 0, 'damage': 2, 'path': '../assets/weapons/machine gun.png', 'length':20, 'auto':True},
@@ -34,13 +34,14 @@ DATA = {
 			'chain gun': {'ammo_type': 'bullets', 'bullet_type': 'bullet', 'cooldown': 10, 'speed': 0, 'damage': 4, 'path': '../assets/weapons/chain gun.png', 'length':22, 'auto':True},
 			'grenade launcher': {'ammo_type': 'grenade', 'bullet_type': 'projectile', 'cooldown': 70, 'speed': 0, 'damage': 10, 'path': '../assets/weapons/grenade launcher.png', 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_type': 'rockets', 'bullet_type': 'rocket', 'cooldown': 50, 'speed': 2, 'damage': 400, 'path': '../assets/weapons/rocket launcher.png', 'length':20, 'auto':False},
-			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 120, 'speed': 0, 'damage': 5, 'path': '../assets/weapons/railgun.png', 'length':20, 'auto':False},
+			'railgun': {'ammo_type': 'slugs', 'bullet_type': 'beam', 'cooldown': 120, 'speed': 0, 'damage': 10, 'path': '../assets/weapons/railgun.png', 'length':20, 'auto':False},
 			'hyper blaster': {'ammo_type': 'cells', 'bullet_type': 'projectile', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20, 'auto':True},
 			},
 	'enemies' :{
-			'guard':{'weapon': 'railgun', 'health': 30, 'cooldown': 60, 'burst_count': 3},
-			'sg_guard': {'weapon':'shotgun', 'health': 40, 'cooldown': 80, 'burst_count': 3},
+			'guard':{'weapon': 'blaster', 'health': 30, 'cooldown': 60, 'burst_count': 3},
+			'sg_guard': {'weapon':'shotgun', 'health': 40, 'cooldown': 4, 'burst_count': 3},
 			'mg_guard': {'weapon':'machine gun', 'health': 40, 'cooldown': 8, 'burst_count': 3},
+			'gladiator': {'weapon':'railgun', 'health': 40, 'cooldown': 8, 'burst_count': 3},
 			},
 
 	'abilities':{

@@ -102,8 +102,8 @@ class RailParticle(FadeParticle):
 
 		self.num = num
 		self.sprite = sprite
-	
-		self.angle = self.scene.player.gun_sprite.angle
+
+		self.angle = self.sprite.gun_sprite.angle
 
 		self.alpha = self.get_initial_alpha(24)
 
@@ -125,5 +125,7 @@ class RailParticle(FadeParticle):
 			
 	def update(self, dt):
 		self.update_alpha(1, dt)
+
+		print(self.sprite.gun)
 		
 		

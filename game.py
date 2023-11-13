@@ -106,7 +106,7 @@ class Game:
         pygame.mouse.set_visible(False)
         surf.set_alpha(150)
         screen.blit(surf, rect)
- 
+
     def update(self, dt):
         pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
         self.stack[-1].update(dt)

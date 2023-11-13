@@ -29,8 +29,8 @@ class Guard(pygame.sprite.Sprite):
 		self.max_fall_speed = 6
 		self.jump_height = 4
 		self.facing = 1
-		self.alerted = False
 
+		self.on_ladder = False
 		self.platform = None
 		self.relative_position = pygame.math.Vector2()
 		self.on_ground = False
@@ -177,7 +177,9 @@ class Guard(pygame.sprite.Sprite):
 		# if not self.invincible:
 		self.health -= amount
 		if self.health <= 0:
-			pass#self.alive = False
+			self.gun_sprite.kill()
+			self.kill()
+			#pass#self.alive = False
 
 	def physics_x(self, dt):
 			

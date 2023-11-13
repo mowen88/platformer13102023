@@ -64,10 +64,7 @@ class Gun(pygame.sprite.Sprite):
 	def update(self, dt):
 
 		if self.owner != self.scene.player:
-			pass 
-			# if self.scene.player.hitbox.colliderect(self.owner.vision_box) and self.owner.has_los():
-			# 	self.get_angle(self.rect.center + self.scene.drawn_sprites.offset, self.scene.player.hitbox.center)
-
+			pass
 			# elif self.owner.facing == 0:
 			# 	self.angle = 270
 			# else:

@@ -28,6 +28,7 @@ class Scene(State):
 		self.gun_sprites = pygame.sprite.Group()
 		self.bullet_sprites = pygame.sprite.Group()
 		self.collision_sprites = pygame.sprite.Group()
+		self.railparticle = pygame.sprite.Sprite()
 
 		self.create_map()
 
@@ -62,24 +63,22 @@ class Scene(State):
 			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 		
-		for sprite in self.enemy_sprites:
-			self.create_enemy_guns(sprite)
+		self.create_enemy_guns()
 		self.create_player_gun()
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
 
-	def create_enemy_guns(self, sprite):
-		Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
+	def create_enemy_guns(self):
+		for sprite in self.enemy_sprites:
+			sprite.gun_sprite = Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
 
 	def create_bullet(self, sprite, auto=False):
 		# reset the firing button if the weapon is not an automatic
-		if sprite == self.player:
-			if not auto:
-				ACTIONS['left_click'] = False
-		else:
-			sprite.shooting = False
+		if sprite == self.player and not auto:
+			ACTIONS['left_click'] = False
 
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
@@ -103,16 +102,16 @@ class Scene(State):
 				self.hitscan(sprite, pellet)
 
 		elif sprite.gun == 'machine gun':
-			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
 			
-			MuzzleFlash(self.game, self, self.player, [self.update_sprites, self.drawn_sprites], self.player.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'railgun':
-			self.hitscan(sprite, 0)
+			self.hitscan(sprite)
 
 	def create_particle(self, particle_type, pos):
 		if particle_type == 'blaster':
@@ -196,7 +195,7 @@ class Scene(State):
 					
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
-						self.player.health -= 5
+						self.player.reduce_health(gun_damage)
 						hit_sprites.add(self.player)
 
 					for sprite in self.block_sprites:
@@ -240,7 +239,7 @@ class Scene(State):
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					str('PLAYER HEALTH: '+str(self.player.health)),
-					str('GUARD HEALTH: '+str(self.guard.gun_sprite.angle)),
+					str('GUARD HEALTH: '+str(self.guard2.gun_sprite.angle)),
 					None])
 
 
