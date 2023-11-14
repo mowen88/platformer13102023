@@ -314,6 +314,7 @@ class Landing:
 
 		player.jump_counter = 1
 		player.frame_index = 0
+		player.scene.create_particle('landing', player.hitbox.midbottom)
 
 	def state_logic(self, player):
 
@@ -363,6 +364,7 @@ class Jump(Fall):
 
 		player.frame_index = 0
 		player.jump(player.jump_height)
+		player.scene.create_particle('jump', player.hitbox.midbottom)
 
 	def state_logic(self, player):
 
@@ -396,6 +398,7 @@ class DoubleJump(Fall):
 		player.jump_counter = 0
 		player.frame_index = 0
 		player.jump(player.jump_height)
+		player.scene.create_particle('double_jump', player.hitbox.midbottom)
 
 		# remove gun sprite from player when using ladder
 		player.gun_sprite.kill()

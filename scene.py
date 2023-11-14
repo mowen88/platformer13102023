@@ -11,7 +11,7 @@ from enemy import Guard
 from sprites import Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, Grenade
-from particles import MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
+from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
 
 class Scene(State):
 	def __init__(self, game):
@@ -82,7 +82,7 @@ class Scene(State):
 			ACTIONS['left_click'] = False
 
 		if sprite.gun == 'blaster':
-			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
 			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
 
 		elif sprite.gun in ['grenade', 'grenade launcher']:
@@ -91,7 +91,7 @@ class Scene(State):
 			Grenade(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
-			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
 			
 			lower = -2 # if sprite.gun == 'shotgun' else -4
 			upper = 3 # if sprite.gun == 'shotgun' else 6 
@@ -103,12 +103,12 @@ class Scene(State):
 				self.hitscan(sprite, pellet)
 
 		elif sprite.gun == 'machine gun':
-			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
 			
-			MuzzleFlash(self.game, self, sprite, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}')
+			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'railgun':
@@ -116,8 +116,14 @@ class Scene(State):
 
 	def create_particle(self, particle_type, pos):
 		if particle_type == 'blaster':
-			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], YELLOW)
-		if particle_type == 'grenade':
+			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, YELLOW)
+		elif particle_type == 'landing':
+			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/landing')
+		elif particle_type == 'jump':
+			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/jump')
+		elif particle_type == 'double_jump':
+			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
+		elif particle_type == 'grenade':
 			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
 		else:
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], LIGHT_GREY)

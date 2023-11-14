@@ -25,19 +25,16 @@ class Explosion(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
-class MuzzleFlash(pygame.sprite.Sprite):
-	def __init__(self, game, scene, firer, groups, pos, z, path):
+class DustParticle(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, z, path):
 		super().__init__(groups)
-
 		self.game = game
 		self.scene = scene
-		self.firer = firer
 		self.z = z
 		self.frames = self.game.get_folder_images(path)
 		self.frame_index = 0
 		self.image = self.frames[self.frame_index]
-		self.rect = self.image.get_rect(center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset)
-
+		self.rect = self.image.get_rect(center = pos)
 		self.alpha = 255
 
 	def animate(self, animation_speed, loop=True):
@@ -60,23 +57,45 @@ class MuzzleFlash(pygame.sprite.Sprite):
 		self.image.set_alpha(self.alpha)
 
 	def update(self, dt):
+		self.animate(0.25 * dt, False)
+		self.update_alpha(15, dt)
+
+class MuzzleFlash(DustParticle):
+	def __init__(self, game, scene, groups, pos, z, path, firer):
+		super().__init__(game, scene, groups, pos, z, path)
+
+		self.firer = firer
+		self.rect = self.image.get_rect(center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset)
+
+	def update(self, dt):
 		self.animate(0.2 * dt, False)
 		self.update_alpha(20, dt)
 		self.rect.center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset
 
 
 class FadeParticle(pygame.sprite.Sprite):
-	def __init__(self, game, scene, groups, pos, z, colour=(255,255,255)):
+	def __init__(self, game, scene, groups, pos, z, surf=None, colour=((WHITE))):
 		super().__init__(groups)
 
 		self.game = game
 		self.scene = scene
 		self.z = z
-		self.image = pygame.Surface((2,2))
-		self.image.fill(colour)
+		self.surf = surf
+		self.colour = colour
+		
+		self.image = self.get_image()
+
 		self.rect = self.image.get_rect(center = pos)
 
 		self.alpha = 255
+
+	def get_image(self):
+		if self.surf == None:
+			image = pygame.Surface((2,2))
+			image.fill(self.colour)
+		else:
+			image = self.surf
+		return image
 
 	def update_alpha(self, rate, dt):
 		self.alpha -= rate * dt
@@ -86,6 +105,8 @@ class FadeParticle(pygame.sprite.Sprite):
 
 	def update(self, dt):
 		self.update_alpha(20, dt)
+
+
 
 class ShotgunParticle(FadeParticle):
 	def __init__(self, game, scene, groups, pos, z):
