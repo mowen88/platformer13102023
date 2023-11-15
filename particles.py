@@ -58,7 +58,7 @@ class DustParticle(pygame.sprite.Sprite):
 
 	def update(self, dt):
 		self.animate(0.25 * dt, False)
-		self.update_alpha(15, dt)
+		self.update_alpha(10, dt)
 
 class MuzzleFlash(DustParticle):
 	def __init__(self, game, scene, groups, pos, z, path, firer):
@@ -105,8 +105,6 @@ class FadeParticle(pygame.sprite.Sprite):
 
 	def update(self, dt):
 		self.update_alpha(20, dt)
-
-
 
 class ShotgunParticle(FadeParticle):
 	def __init__(self, game, scene, groups, pos, z):
@@ -167,7 +165,7 @@ class RailParticle(FadeParticle):
 		return image
 			
 	def update(self, dt):
-		self.update_alpha(3, dt)
+		self.update_alpha(4, dt)
 
 
 

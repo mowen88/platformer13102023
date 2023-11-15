@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 0
+		self.gun_index = 6
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.muzzle_pos = None
 		self.cooldown = 0
@@ -52,11 +52,9 @@ class Player(pygame.sprite.Sprite):
 
 		self.max_health = self.data['max_health']
 		self.health = self.data['health']
-		self.armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
 		self.armour_type = self.data['armour_type']
 		self.armour = self.data['armour']
-
-
+		self.armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
 
 		self.state = Fall(self)
 
@@ -248,21 +246,22 @@ class Player(pygame.sprite.Sprite):
 		for sprite in self.scene.bullet_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
 				ammo_type = DATA['guns'][sprite.firer.gun]['ammo_type']
-				self.reduce_health(ammo_type, sprite.damage)
+				self.reduce_health(sprite.damage, ammo_type)
 				sprite.kill()
 
-	def reduce_health(self, ammo_type, amount):
+	def reduce_health(self, amount, ammo_type):
+
 		# determine energy weapon or normal for armour damage coefficient
-		coefficient = self.armour_coefficients.get(self.armour_type[1],1) if ammo_type in ['blaster', 'cells'] else self.armour_coefficients.get(self.armour_type[0], 1)
-		armour_reduction = min(amount * coefficient, int(self.armour))
+		coefficient = self.armour_coefficients[self.armour_type][0] if ammo_type not in ['blaster', 'cells'] else self.armour_coefficients[self.armour_type][1]
+		armour_reduction = min(amount * coefficient, self.armour)
 		health_reduction = amount - armour_reduction
 
-		self.armour -= armour_reduction
+		self.armour -= round(armour_reduction)
 		if self.armour < 0:
-			self.health -= abs(self.armour)
+			self.health += self.armour
 			self.armour = 0
 
-		self.health -= health_reduction
+		self.health -= round(health_reduction)
 		self.health = max(0, self.health)
 
 
@@ -272,6 +271,7 @@ class Player(pygame.sprite.Sprite):
 		else: self.state
 
 	def update(self, dt):
+
 
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()

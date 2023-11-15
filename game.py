@@ -95,9 +95,9 @@ class Game:
 
         return surf_list
 
-    def render_text(self, text, colour, font, pos):
+    def render_text(self, text, colour, font, pos, topleft=False):
         surf = font.render(str(text), False, colour)
-        rect = surf.get_rect(topleft = pos)
+        rect = surf.get_rect(topleft = pos) if topleft else surf.get_rect(center = pos)
         self.screen.blit(surf, rect)
 
     def custom_cursor(self, screen):

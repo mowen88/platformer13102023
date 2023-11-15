@@ -126,7 +126,7 @@ class Scene(State):
 		elif particle_type == 'grenade':
 			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
 		else:
-			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], LIGHT_GREY)
+			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, LIGHT_GREY)
 
 	# function that returns a list of distance, direciton, angle and dot product from a pair of point coordinates
 	# for example, call this aat the index of 0 to return the distance between the player center point and an enemy center point
@@ -153,6 +153,7 @@ class Scene(State):
 		return [(self.lerp(point_1[0], point_2[0], 1./num_of_points * i), self.lerp(point_1[1], point_2[1], 1./num_of_points * i)) for i in range(num_of_points + 1)]
 
 	def hitscan(self, sprite, offset=0):
+
 		if sprite == self.player:
 			angle = math.atan2(pygame.mouse.get_pos()[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					pygame.mouse.get_pos()[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
@@ -228,8 +229,7 @@ class Scene(State):
 							hit_sprites.add(sprite)
 			
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
-
-				
+		
 	def update(self, dt):
 
 		if ACTIONS['space']:
@@ -240,7 +240,7 @@ class Scene(State):
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
-			self.game.render_text(name, BLACK, self.game.font, (10, 15 * index))
+			self.game.render_text(name, WHITE, self.game.font, (10, 15 * index), True)
 
 	def draw(self, screen):
 
@@ -259,8 +259,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('PLAYER H EALTH: '+str(self.player.health)),
-					str('GUARD HEALTH: '+str(self.guard3.health)),
+					str('PLAYER ARMOUR: '+str(self.player.armour)),
+					str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 
 

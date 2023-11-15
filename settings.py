@@ -24,10 +24,10 @@ BROWN = (110, 74, 57)
 LIGHT_GREY = (199, 212, 225)
 
 DATA = {
-	'player':{'armour_type':'Jacket', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100},
+	'player':{'armour_type':'Body', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100},
 
 	'guns':{
-			'blaster': {'ammo_type': None, 'cooldown': 30, 'speed': 4, 'damage': 3, 'path': '../assets/weapons/blaster.png', 'length':18, 'auto':False},
+			'blaster': {'ammo_type': 'cells', 'cooldown': 30, 'speed': 4, 'damage': 3, 'path': '../assets/weapons/blaster.png', 'length':18, 'auto':False},
 			'shotgun': {'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 4, 'path': '../assets/weapons/shotgun.png', 'length':25, 'auto':False},
 			'grenade': {'ammo_type': 'grenade','cooldown': 180, 'speed': 0, 'damage': 20, 'path': '../assets/weapons/grenade.png', 'length':15, 'auto':False},
 			'machine gun': {'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'path': '../assets/weapons/machine gun.png', 'length':20, 'auto':True},
@@ -39,10 +39,10 @@ DATA = {
 			'hyper blaster': {'ammo_type': 'cells', 'cooldown': 1, 'speed': 5, 'damage': 50, 'path': '../assets/weapons/hyper_blaster.png', 'length':20, 'auto':True},
 			},
 	'enemies' :{
-			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 50, 'cooldown': 60, 'burst_count': 3},
-			'sg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 50, 'cooldown': 80, 'burst_count': 2},
-			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 50, 'cooldown': 8, 'burst_count': 8},
-			'gladiator': {'weapon':'railgun', 'damage': 5, 'health': 40, 'telegraph_time': 50, 'cooldown': 30, 'burst_count': 3},
+			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
+			'sg_guard': {'weapon':'machine gun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
+			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
+			'gladiator': {'weapon':'railgun', 'damage': 60, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
 			},
 
 	'abilities':{
