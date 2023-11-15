@@ -165,7 +165,8 @@ class Scene(State):
 
 		distance = ((x, y) - pygame.math.Vector2(sprite.gun_sprite.rect.center)).magnitude()
 
-		gun_damage = DATA['guns'][sprite.gun]['damage']
+		gun_damage = DATA['enemies'][sprite.name]['damage']
+		ammo_type = DATA['guns'][sprite.gun]['ammo_type']
 
 		if sprite.gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
 
@@ -178,7 +179,7 @@ class Scene(State):
 					if self.player.hitbox.collidepoint(point):
 						if sprite.gun in ['shotgun', 'super shotgun']:
 							gun_damage = round(gun_damage/(num * 0.1))
-						self.player.reduce_health(gun_damage)
+						self.player.reduce_health(gun_damage, ammo_type)
 						if gun_damage > 0:
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 						return True
@@ -192,7 +193,7 @@ class Scene(State):
 						if sprite.hitbox.collidepoint(point):
 							if sprite.gun in ['shotgun', 'super shotgun']:
 								gun_damage = round(gun_damage/(num * 0.1))
-							sprite.reduce_health(gun_damage)
+							sprite.reduce_health(gun_damage, ammo_type)
 							if gun_damage > 0:
 								AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 							return True
@@ -210,7 +211,7 @@ class Scene(State):
 					
 					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
-						self.player.reduce_health(gun_damage)
+						self.player.reduce_health(gun_damage, ammo_type)
 						hit_sprites.add(self.player)
 
 						
@@ -223,7 +224,7 @@ class Scene(State):
 					for sprite in self.enemy_sprites:
 						if sprite.hitbox.collidepoint(point) and sprite not in hit_sprites:
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
-							sprite.reduce_health(gun_damage)
+							sprite.reduce_health(gun_damage, ammo_type)
 							hit_sprites.add(sprite)
 			
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')

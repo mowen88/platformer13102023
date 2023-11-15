@@ -48,7 +48,15 @@ class Player(pygame.sprite.Sprite):
 		self.muzzle_pos = None
 		self.cooldown = 0
 
-		self.health = 100
+		self.data = DATA['player']
+
+		self.max_health = self.data['max_health']
+		self.health = self.data['health']
+		self.armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
+		self.armour_type = self.data['armour_type']
+		self.armour = self.data['armour']
+
+
 
 		self.state = Fall(self)
 
@@ -239,17 +247,24 @@ class Player(pygame.sprite.Sprite):
 	def hit_by_bullet(self):
 		for sprite in self.scene.bullet_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
-				self.reduce_health(sprite.damage)
+				ammo_type = DATA['guns'][sprite.firer.gun]['ammo_type']
+				self.reduce_health(ammo_type, sprite.damage)
 				sprite.kill()
 
-	def reduce_health(self, amount):
-		# if not self.invincible:
-		self.health -= amount
-		if self.health <= 0:
-			pass#self.alive = False
-			# set new zone to the current one to re-enter after death
-			#self.zone.new_zone = self.zone.name
-			# self.zone.create_zone(self.zone.name)
+	def reduce_health(self, ammo_type, amount):
+		# determine energy weapon or normal for armour damage coefficient
+		coefficient = self.armour_coefficients.get(self.armour_type[1],1) if ammo_type in ['blaster', 'cells'] else self.armour_coefficients.get(self.armour_type[0], 1)
+		armour_reduction = min(amount * coefficient, int(self.armour))
+		health_reduction = amount - armour_reduction
+
+		self.armour -= armour_reduction
+		if self.armour < 0:
+			self.health -= abs(self.armour)
+			self.armour = 0
+
+		self.health -= health_reduction
+		self.health = max(0, self.health)
+
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)

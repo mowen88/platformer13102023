@@ -173,7 +173,7 @@ class Guard(pygame.sprite.Sprite):
 				self.reduce_health(sprite.damage)
 				sprite.kill()
 
-	def reduce_health(self, amount):
+	def reduce_health(self, amount, ammo_type=None):
 		# if not self.invincible:
 		self.health -= amount
 		if self.health <= 0:
@@ -252,6 +252,7 @@ class Guard(pygame.sprite.Sprite):
 		self.cooldown_timer(dt)
 		self.chain_gun_spin_up(dt)
 		self.hit_by_bullet()
+		self.turnaround()
 		
 		
 

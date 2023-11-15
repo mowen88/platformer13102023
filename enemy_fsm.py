@@ -100,8 +100,6 @@ class Move:
 			enemy.facing = 1
 			return Idle(enemy) 
 
-		enemy.turnaround()
-
 	def update(self, enemy, dt):
 
 		self.timer -= dt
@@ -118,7 +116,7 @@ class Telegraph(Move):
 	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
-		self.timer = 60
+		self.timer = enemy.data['telegraph_time']
 		self.angle = enemy.gun_sprite.get_angle(enemy.rect.center, enemy.scene.player.rect.center)
 
 	def gun_angle(self, enemy):
@@ -142,22 +140,41 @@ class Telegraph(Move):
 		enemy.physics_x(dt)
 		enemy.physics_y(dt)
 
-		enemy.animate('jump', 0.25 * dt)
+		enemy.animate('land', 0.25 * dt)
 
 class Shoot(Telegraph):
 	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
 		self.timer = enemy.data['cooldown']
-		
 
 	def state_logic(self, enemy):
 
 		if self.timer < 0:
-			if enemy.player_seen():
-				return Telegraph(enemy)
-			else:
-				return Idle(enemy)
+			self.timer = enemy.data['cooldown']
+			enemy.scene.create_bullet(enemy, True)
+			enemy.burst_count -= 1
+			if enemy.burst_count <= 1:
+				return Wait(enemy)
+
+		if not enemy.player_seen():
+			return Idle(enemy)
+
+class Wait(Shoot):
+	def __init__(self, enemy):
+		
+		enemy.frame_index = 0
+		enemy.burst_count = DATA['enemies'][enemy.name]['burst_count']
+		self.timer = 50
+
+	def state_logic(self, enemy):
+
+		if self.timer < 0:
+			return Telegraph(enemy)
+
+		if not enemy.player_seen():
+			return Idle(enemy)
+
 
 	def update(self, enemy, dt):
 		self.gun_angle(enemy)
@@ -169,7 +186,7 @@ class Shoot(Telegraph):
 		enemy.physics_x(dt)
 		enemy.physics_y(dt)
 
-		enemy.animate('land', 0.25 * dt)
+		enemy.animate('idle', 0.25 * dt)
 
 class Landing:
 	def __init__(self, enemy):
