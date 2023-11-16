@@ -87,12 +87,26 @@ class Player(pygame.sprite.Sprite):
 
 	def input(self):
 		keys = pygame.key.get_pressed()
+		
 
 		if keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
 			self.acc.x = -self.acc_rate
 			
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
+
+	def change_weapon(self):	
+
+		num_of_guns = len(list(DATA['guns'].keys()))
+		print(num_of_guns)
+		self.gun_index += 1
+
+		if self.gun_index >= num_of_guns:
+			self.gun_index = 0
+		
+		self.gun = list(DATA['guns'].keys())[self.gun_index]
+		self.gun_sprite.kill()
+		self.scene.create_player_gun()
 
 	def collisions_x(self, group):
 		for sprite in group:

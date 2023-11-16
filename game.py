@@ -9,7 +9,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.running = True
 
         self.font = pygame.font.Font(FONT, int(TILESIZE)) 
@@ -43,7 +43,7 @@ class Game:
                
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    ACTIONS['space'] = False
+                    ACTIONS['space'] = False 
                 elif event.key == pygame.K_LEFT:
                     ACTIONS['left'] = False
                 elif event.key == pygame.K_RIGHT:

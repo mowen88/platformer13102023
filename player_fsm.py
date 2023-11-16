@@ -52,6 +52,10 @@ class Idle:
 
 	def state_logic(self, player):
 
+		if ACTIONS['space']:
+			player.change_weapon()
+			ACTIONS['space'] = False
+
 		if not player.alive:
 			return Death(player)
 

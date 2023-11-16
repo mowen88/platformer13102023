@@ -146,7 +146,7 @@ class MainMenu(State):
 			#self.game.quit_write_data()
 			self.game.running = False
 		elif state == 'start_game':
-			Scene(self.game).enter_state()
+			Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 
 		# elif state == 'slot_menu':
 		# 	SlotMenu(self.game).enter_state()
@@ -187,7 +187,7 @@ class MainMenu(State):
 			box.draw(screen)
 
 		for name, values in self.buttons.items():
-			self.render_button(screen, name, values[1], WHITE, BROWN, NEON_BLUE, values[0])
+			self.render_button(screen, name, values[1], WHITE, BROWN, RED, values[0])
 
 		self.draw_bounding_box(screen)
 

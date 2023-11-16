@@ -1,4 +1,4 @@
-import pygame, math, random
+import pygame, csv, math, random
 from math import atan2, degrees, pi
 from state import State
 from settings import *
@@ -8,19 +8,28 @@ from pytmx.util_pygame import load_pygame
 from camera import Camera
 from player import Player
 from enemy import Guard
-from sprites import Collider, Tile, AnimatedTile, MovingPlatform
+from sprites import FadeSurf, Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, Grenade
 from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
 
 class Scene(State):
-	def __init__(self, game):
+	def __init__(self, game, scene_num, entry_point):
 		State.__init__(self, game)
+
+
+		self.scene_num = scene_num
+		self.entry_point = entry_point
+		self.scene_size = self.get_scene_size()
+		SAVE_DATA.update({'current_scene': self.scene_num, 'entry_pos': self.entry_point})
+		# if self.scene_num not in COMPLETED_DATA['visited_zones']:
+		# 	COMPLETED_DATA['visited_zones'].append(self.scene_num)
 
 		self.update_sprites = pygame.sprite.Group()
 		self.drawn_sprites = Camera(self.game, self)
 
 		self.block_sprites = pygame.sprite.Group()
+		self.exit_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
 		self.ladder_sprites = pygame.sprite.Group()
 		
@@ -30,11 +39,37 @@ class Scene(State):
 		self.collision_sprites = pygame.sprite.Group()
 		self.railparticle = pygame.sprite.Sprite()
 
-		self.create_map()
+		# fade screen and exit flag
+		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
+		self.exiting = False
+		
+		# create all objects in the scene using tmx data
+		self.create_scene_instances()
 
-	def create_map(self):
+	def create_scene(self, scene):
+		Scene(self.game, scene, self.entry_point).enter_state()
 
-		tmx_data = load_pygame('scenes/0/0.tmx')
+	def get_scene_size(self):
+		with open(f'scenes/{self.scene_num}/{self.scene_num}_blocks.csv', newline='') as csvfile:
+		    reader = csv.reader(csvfile, delimiter=',')
+		    for row in reader:
+		        rows = (sum (1 for row in reader) + 1)
+		        cols = len(row)
+		return (cols * TILESIZE, rows * TILESIZE)
+
+	def create_scene_instances(self):
+
+		tmx_data = load_pygame(f'scenes/{self.scene_num}/{self.scene_num}.tmx')
+
+		#if 'entries' in self.layers:
+		# add the player
+		for obj in tmx_data.get_layer_by_name('entries'):
+			if obj.name == self.entry_point:
+				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
+
+		for obj in tmx_data.get_layer_by_name('exits'):
+				if obj.name == '1': Collider([self.exit_sprites, self.update_sprites, self.collision_sprites], (obj.x, obj.y), obj.name)
+
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -60,13 +95,21 @@ class Scene(State):
 
 		for obj in tmx_data.get_layer_by_name('entities'):
 			if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
-			if obj.name == '0': self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 			if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 
+		# create gun objects for the enemies and player
 		self.create_enemy_guns()
 		self.create_player_gun()
+
+	def exit_scene(self):
+		for exit in self.exit_sprites:
+			if self.player.hitbox.colliderect(exit.rect):
+				self.exiting = True
+				self.new_scene = SCENE_DATA[self.scene_num][exit.name]
+				self.entry_point = exit.name
+				return
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
@@ -76,6 +119,7 @@ class Scene(State):
 			sprite.gun_sprite = Gun(self.game, self, sprite, [self.gun_sprites, self.update_sprites, self.drawn_sprites], sprite.hitbox.center, LAYERS['particles'])
 
 	def create_bullet(self, sprite, auto=False):
+
 		
 		# reset the firing button if the weapon is not an automatic
 		if sprite == self.player and not auto:
@@ -155,9 +199,11 @@ class Scene(State):
 	def hitscan(self, sprite, offset=0):
 
 		if sprite == self.player:
+			gun_damage = DATA['guns'][self.player.gun]['damage']
 			angle = math.atan2(pygame.mouse.get_pos()[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					pygame.mouse.get_pos()[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 		else:
+			gun_damage = DATA['enemies'][sprite.name]['damage']
 			angle = math.atan2(self.player.rect.centery-self.drawn_sprites.offset[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					self.player.rect.centerx-self.drawn_sprites.offset[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 
@@ -166,7 +212,7 @@ class Scene(State):
 
 		distance = ((x, y) - pygame.math.Vector2(sprite.gun_sprite.rect.center)).magnitude()
 
-		gun_damage = DATA['enemies'][sprite.name]['damage']
+		
 		ammo_type = DATA['guns'][sprite.gun]['ammo_type']
 
 		if sprite.gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
@@ -231,10 +277,7 @@ class Scene(State):
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 		
 	def update(self, dt):
-
-		if ACTIONS['space']:
-			self.exit_state()
-			ACTIONS['space'] = False
+		self.exit_scene()
 
 		self.update_sprites.update(dt)
 
@@ -245,6 +288,8 @@ class Scene(State):
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
+
+		self.fade_surf.draw(screen)
 
 		#self.hitscan()
 		# if self.player.muzzle_pos is not None:
@@ -257,8 +302,9 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('VEL_X: '+ str(round(self.player.vel.x,3))), 
-					str('VEL_Y: '+str(round(self.player.vel.y,3))),
+					# str('VEL_X: '+ str(round(self.player.vel.x,3))), 
+					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
+					str('GUN: '+ str(self.player.gun_index)), 
 					str('PLAYER ARMOUR: '+str(self.player.armour)),
 					str('PLAYER HEALTH: '+str(self.player.health)),
 					None])

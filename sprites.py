@@ -1,12 +1,52 @@
 import pygame, math
 from settings import *
 
-class Collider(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE))):
+class FadeSurf(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
 		super().__init__(groups)
-		self.image = surf
+
+		self.game = game
+		self.scene = scene
+		self.image = pygame.Surface((self.scene.scene_size))
+		self.alpha = alpha
+		self.loading_text = True
+		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/10 # makes load time relative to zone size
+		self.fade_duration = 5
+		self.z = z
+		self.rect = self.image.get_rect(topleft = pos)
+
+	def update(self, dt):
+
+		if self.scene.exiting:
+			self.alpha += self.fade_duration * dt
+			if self.alpha >= 255: 
+				self.alpha = 255
+				self.scene.exit_state()
+				self.scene.create_scene(self.scene.new_scene)
+			
+		else:
+			self.timer -= dt
+			if self.timer <= 0:
+				self.scene.entering = False
+				self.loading_text = False
+				self.alpha -= self.fade_duration * dt
+				if self.alpha <= 0:
+					self.alpha = 0
+
+	def draw(self, screen):
+		self.image.set_alpha(self.alpha)
+		screen.blit(self.image, (0,0))
+
+		if self.loading_text:
+			self.game.render_text('Loading...', WHITE, self.game.font, (RES/2 * 1.75))
+
+class Collider(pygame.sprite.Sprite):
+	def __init__(self, groups, pos, name=None):
+		super().__init__(groups)
+		self.image = pygame.Surface((TILESIZE, TILESIZE))
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.copy().inflate(2,0)
+		self.name = name
 
 class Tile(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['blocks']):
