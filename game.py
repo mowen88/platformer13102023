@@ -1,6 +1,6 @@
 import pygame, sys
 from os import walk
-from intro import Intro
+from menu import Intro
 from settings import *
 
 class Game:
@@ -9,7 +9,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.running = True
 
         self.font = pygame.font.Font(FONT, int(TILESIZE)) 
@@ -55,8 +55,14 @@ class Game:
                 elif event.key == pygame.K_z:
                     ACTIONS['z'] = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEWHEEL:
+                if event.y == 1:
+                    ACTIONS['scroll_up'] = True
+                elif event.y == -1:
+                    ACTIONS['scroll_down'] = True
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                
                 if event.button == 1:
                     ACTIONS['left_click'] = True
                 elif event.button == 3:

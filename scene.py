@@ -62,14 +62,6 @@ class Scene(State):
 		tmx_data = load_pygame(f'scenes/{self.scene_num}/{self.scene_num}.tmx')
 
 		#if 'entries' in self.layers:
-		# add the player
-		for obj in tmx_data.get_layer_by_name('entries'):
-			if obj.name == self.entry_point:
-				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
-
-		for obj in tmx_data.get_layer_by_name('exits'):
-				if obj.name == '1': Collider([self.exit_sprites, self.update_sprites, self.collision_sprites], (obj.x, obj.y), obj.name)
-
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -86,6 +78,14 @@ class Scene(State):
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
 			if obj.name == '7': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0), 16)
+
+		# add the player
+		for obj in tmx_data.get_layer_by_name('entries'):
+			if obj.name == self.entry_point:
+				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
+
+		for obj in tmx_data.get_layer_by_name('exits'):
+				if obj.name == '1': Collider([self.exit_sprites, self.update_sprites, self.collision_sprites], (obj.x, obj.y), obj.name)
 
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])

@@ -72,7 +72,7 @@ class MenuBG(pygame.sprite.Sprite):
 
 		self.menu = menu
 		self.image = pygame.Surface((random.random()*TILESIZE, random.random()*TILESIZE))
-		self.image.fill(BLACK)
+		self.image.fill(BROWN)
 		self.rect = self.image.get_rect()
 		self.alpha = 255
 
@@ -129,11 +129,13 @@ class MainMenu(State):
 		colour = text_colour
 
 		surf = self.game.font.render(current_menu, False, colour)
-		rect = pygame.Rect(0,0, HALF_WIDTH, surf.get_height() * 1.5)
+		rect = pygame.Rect(0,0, HALF_WIDTH, surf.get_height() * 2)
 		rect.center = pos
 
 		if rect.collidepoint(mx, my) and not self.transitioning:
-			pygame.draw.rect(screen, hover_colour, rect)#int(HEIGHT * 0.05))
+			pygame.draw.rect(screen, hover_colour, rect, 2)#int(HEIGHT * 0.05))
+			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery))
+			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.next_menu = next_menu
@@ -142,33 +144,18 @@ class MainMenu(State):
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 
 	def go_to(self, state):
-		if state == 'quit':
+		if state == 'quit_game':
 			#self.game.quit_write_data()
 			self.game.running = False
+ 
 		elif state == 'start_game':
 			Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 
-		# elif state == 'slot_menu':
-		# 	SlotMenu(self.game).enter_state()
-		# elif state == 'options_menu':
-		# 	OptionsMenu(self.game).enter_state()
-		# elif state == 'main_menu':
-		# 	MainMenu(self.game).enter_state()
-		# elif state in '123':
-		# 	StartGameMenu(self.game).enter_state()
-		# elif state == 'DELETE_SLOT':
-		# 	AreYouSureMenu(self.game).enter_state()
-		# elif state == 'delete_confirmed':
-		# 	Confirmation(self.game).enter_state()
-		# else:
-		# 	Zone(self.game, PLAYER_DATA['current_zone'], PLAYER_DATA['entry_pos']).enter_state()
-
-		# Scene(self.game).enter_state()
 
 	def draw_bounding_box(self, screen):
 		box = pygame.Rect(0,0,HALF_WIDTH, HEIGHT - 20)
 		box.center = RES/2
-		pygame.draw.rect(screen, WHITE, (box), 2)
+		pygame.draw.rect(screen, NEON_GREEN, (box), 2)
 
 
 	def update(self, dt):
@@ -187,8 +174,8 @@ class MainMenu(State):
 			box.draw(screen)
 
 		for name, values in self.buttons.items():
-			self.render_button(screen, name, values[1], WHITE, BROWN, RED, values[0])
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
 
-		self.draw_bounding_box(screen)
+		#self.draw_bounding_box(screen)
 
 		self.transition_screen.draw(screen)

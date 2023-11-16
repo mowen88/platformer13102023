@@ -95,18 +95,21 @@ class Player(pygame.sprite.Sprite):
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
 
-	def change_weapon(self):	
+	def change_weapon(self, direction):	
 
 		num_of_guns = len(list(DATA['guns'].keys()))
 		print(num_of_guns)
-		self.gun_index += 1
+		self.gun_index += direction
 
 		if self.gun_index >= num_of_guns:
 			self.gun_index = 0
+		elif self.gun_index < 0:
+			self.gun_index = num_of_guns-1
 		
 		self.gun = list(DATA['guns'].keys())[self.gun_index]
 		self.gun_sprite.kill()
 		self.scene.create_player_gun()
+		self.cooldown = 0
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -141,7 +144,7 @@ class Player(pygame.sprite.Sprite):
 		for sprite in group:
 			if self.hitbox.colliderect(sprite.raycast_box): 
 				if self.old_hitbox.bottom <= sprite.hitbox.top + 4 and self.hitbox.bottom + 4 >= sprite.hitbox.top:
-					if self.vel.y > 0 and not self.drop_through:
+					if self.vel.y >= 0 and not self.drop_through:
 						self.hitbox.bottom = sprite.rect.top
 						self.on_ground = True
 						self.vel.y = 0
@@ -292,6 +295,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.state_logic()
 		self.state.update(self, dt)
+		
 		self.handle_jumping(dt)
 		self.cooldown_timer(dt)
 		self.chain_gun_spin_up(dt)
