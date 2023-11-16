@@ -11,7 +11,7 @@ class FadeSurf(pygame.sprite.Sprite):
 		self.alpha = alpha
 		self.loading_text = True
 		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/10 # makes load time relative to zone size
-		self.fade_duration = 5
+		self.fade_duration = 255/20
 		self.z = z
 		self.rect = self.image.get_rect(topleft = pos)
 
@@ -38,7 +38,7 @@ class FadeSurf(pygame.sprite.Sprite):
 		screen.blit(self.image, (0,0))
 
 		if self.loading_text:
-			self.game.render_text('Loading...', WHITE, self.game.font, (RES/2 * 1.75))
+			self.game.render_text('Loading...', NEON_GREEN, self.game.font, (RES/2))
 
 class Collider(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, name=None):

@@ -27,7 +27,7 @@ LIGHT_GREY = (199, 212, 225)
 
 SCENE_DATA = {
 			'0':{'1':'1'},
-			'1':{'1':'1'}
+			'1':{'1':'0'}
 			}
 
 SAVE_DATA = {'current_scene':'0', 'entry_pos':'0', 'armour_type':'Body', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100}

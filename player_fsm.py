@@ -227,12 +227,15 @@ class OnLadderIdle:
 
 		if keys[pygame.K_UP]:
 			player.acc.y = -player.acc_rate * 0.5
-			return OnLadderMove(player)
+			
 		elif keys[pygame.K_DOWN]:
 			player.acc.y = player.acc_rate * 0.5
-			return OnLadderMove(player)
+			
 		else:
 			player.acc.y = 0
+
+		if player.vel.magnitude() >= 0.1:
+			return OnLadderMove(player)
 
 		if not player.alive:
 			return Death(player)

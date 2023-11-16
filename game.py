@@ -62,7 +62,6 @@ class Game:
                     ACTIONS['scroll_down'] = True
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                
                 if event.button == 1:
                     ACTIONS['left_click'] = True
                 elif event.button == 3:
@@ -73,7 +72,6 @@ class Game:
                     ACTIONS['scroll_up'] = True
 
             if event.type == pygame.MOUSEBUTTONUP:
-
                 if event.button == 1:
                     ACTIONS['left_click'] = False
                 elif event.button == 3:

@@ -42,7 +42,7 @@ class Guard(pygame.sprite.Sprite):
 		self.health = self.data['health']
 		self.gun = self.data['weapon']
 		self.muzzle_pos = None
-		self.vision_box = pygame.Rect(0, 0, 300, 200)
+		self.vision_box = pygame.Rect(0, 0, 320, 160)
 
 		self.move = {'left':False, 'right':False}
 		self.cooldown = 0
