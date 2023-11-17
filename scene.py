@@ -122,7 +122,6 @@ class Scene(State):
 
 	def create_bullet(self, sprite, auto=False):
 
-		
 		# reset the firing button if the weapon is not an automatic
 		if sprite == self.player and not auto:
 			ACTIONS['left_click'] = False

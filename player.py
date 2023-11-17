@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 from settings import *
 from player_fsm import Fall
 
@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
 		self.health = self.data['health']
 		self.armour_type = self.data['armour_type']
 		self.armour = self.data['armour']
-		self.armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
+		
 
 		self.state = Fall(self)
 
@@ -267,19 +267,19 @@ class Player(pygame.sprite.Sprite):
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type):
-
+		armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
 		# determine energy weapon or normal for armour damage coefficient
-		coefficient = self.armour_coefficients[self.armour_type][0] if ammo_type not in ['blaster', 'cells'] else self.armour_coefficients[self.armour_type][1]
-		armour_reduction = min(amount * coefficient, self.armour)
+		coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
+		armour_reduction = min(amount * coefficient, self.data['armour'])
 		health_reduction = amount - armour_reduction
 
-		self.armour -= round(armour_reduction)
-		if self.armour < 0:
-			self.health += self.armour
-			self.armour = 0
+		self.data['armour'] -= armour_reduction
+		if self.data['armour'] < 0:
+			self.data['health'] += self.data['armour']
+			self.data['armour'] = 0
 
-		self.health -= round(health_reduction)
-		self.health = max(0, self.health)
+		self.data['health'] -= health_reduction
+		self.data['health'] = max(0, self.data['health'])
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)

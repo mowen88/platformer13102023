@@ -30,7 +30,7 @@ SCENE_DATA = {
 			'1':{'1':'0'}
 			}
 
-SAVE_DATA = {'current_scene':'0', 'entry_pos':'0', 'armour_type':'Body', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100}
+SAVE_DATA = {'current_scene':'0', 'entry_pos':'0', 'armour_type':'Combat', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100}
 
 DATA = {
 	'player':{'current_scene':0, 'entry_pos':0, 'armour_type':'Body', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100},
@@ -52,7 +52,7 @@ DATA = {
 			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
 			'sg_guard': {'weapon':'machine gun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
 			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
-			'gladiator': {'weapon':'railgun', 'damage': 60, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
+			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
 			},
 
 	'abilities':{
