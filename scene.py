@@ -180,7 +180,7 @@ class Scene(State):
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/jump')
 		elif particle_type == 'double_jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
-		elif particle_type == 'grenade':
+		elif particle_type == 'explosion':
 			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
 		else:
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, LIGHT_GREY)

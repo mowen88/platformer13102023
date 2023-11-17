@@ -108,7 +108,7 @@ class Grenade(BlasterBullet):
 		self.timer += dt
 
 		if self.timer > 30:
-			self.scene.create_particle('grenade', self.rect.center)
+			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()
 
 		if self.vel.magnitude() > 1 and self.timer > 4:
@@ -117,7 +117,7 @@ class Grenade(BlasterBullet):
 
 		for sprite in self.scene.enemy_sprites:
 			if self.rect.colliderect(sprite.hitbox):
-				self.scene.create_particle('grenade', self.rect.center)
+				self.scene.create_particle('explosion', self.rect.center)
 
 	def move(self, dt):
 		self.old_rect = self.rect.copy()
