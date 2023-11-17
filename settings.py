@@ -18,8 +18,8 @@ FONT = 'fonts/homespun.ttf'
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-RED = (255, 100, 100)
-NEON_BLUE = (176, 255, 241)
+RED = (212, 30, 60)
+NEON_BLUE = (120, 215, 225)
 NEON_GREEN = (61, 255, 110)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)

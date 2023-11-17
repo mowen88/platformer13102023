@@ -6,6 +6,7 @@ from settings import *
 from pytmx.util_pygame import load_pygame
 
 from camera import Camera
+from hud import HUD
 from player import Player
 from enemy import Guard
 from sprites import FadeSurf, Collider, Tile, AnimatedTile, MovingPlatform
@@ -45,6 +46,7 @@ class Scene(State):
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
+		self.hud = HUD(self.game, self)
 
 	def create_scene(self, scene):
 		Scene(self.game, scene, self.entry_point).enter_state()
@@ -278,8 +280,8 @@ class Scene(State):
 		
 	def update(self, dt):
 		self.exit_scene()
-
 		self.update_sprites.update(dt)
+		self.hud.update(dt)
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -288,7 +290,7 @@ class Scene(State):
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
-
+		self.hud.draw(screen)
 		self.fade_surf.draw(screen)
 
 		#self.hitscan()

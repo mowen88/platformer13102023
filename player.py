@@ -281,14 +281,12 @@ class Player(pygame.sprite.Sprite):
 		self.health -= round(health_reduction)
 		self.health = max(0, self.health)
 
-
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
 		if new_state: self.state = new_state
 		else: self.state
 
 	def update(self, dt):
-
 
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
