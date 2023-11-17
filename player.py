@@ -43,18 +43,9 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun_index = 6
-		self.gun = list(DATA['guns'].keys())[self.gun_index]
+		self.gun = list(DATA['guns'].keys())[SAVE_DATA['gun_index']]
 		self.muzzle_pos = None
 		self.cooldown = 0
-
-		self.data = DATA['player']
-
-		self.max_health = self.data['max_health']
-		self.health = self.data['health']
-		self.armour_type = self.data['armour_type']
-		self.armour = self.data['armour']
-		
 
 		self.state = Fall(self)
 
@@ -98,15 +89,16 @@ class Player(pygame.sprite.Sprite):
 	def change_weapon(self, direction):	
 
 		num_of_guns = len(list(DATA['guns'].keys()))
-		print(num_of_guns)
-		self.gun_index += direction
+		SAVE_DATA['gun_index'] += direction
 
-		if self.gun_index >= num_of_guns:
-			self.gun_index = 0
-		elif self.gun_index < 0:
-			self.gun_index = num_of_guns-1
+		if SAVE_DATA['gun_index'] >= num_of_guns:
+			SAVE_DATA['gun_index'] = 0
+		elif SAVE_DATA['gun_index'] < 0:
+			SAVE_DATA['gun_index'] = num_of_guns-1
 		
-		self.gun = list(DATA['guns'].keys())[self.gun_index]
+		self.gun = list(DATA['guns'].keys())[SAVE_DATA['gun_index']]
+		SAVE_DATA.update({'ammo':AMMO_DATA[DATA['guns'][self.gun]['ammo_type']][0]})
+
 		self.gun_sprite.kill()
 		self.scene.create_player_gun()
 		self.cooldown = 0
@@ -267,19 +259,19 @@ class Player(pygame.sprite.Sprite):
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type):
-		armour_coefficients = {'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
+		armour_coefficients = {None:[0.0, 0.0], 'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
 		# determine energy weapon or normal for armour damage coefficient
 		coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
-		armour_reduction = min(amount * coefficient, self.data['armour'])
+		armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
 		health_reduction = amount - armour_reduction
 
-		self.data['armour'] -= armour_reduction
-		if self.data['armour'] < 0:
-			self.data['health'] += self.data['armour']
-			self.data['armour'] = 0
+		SAVE_DATA['armour'] -= armour_reduction
+		if SAVE_DATA['armour'] < 0:
+			SAVE_DATA['health'] += SAVE_DATA['armour']
+			SAVE_DATA['armour'] = 0
 
-		self.data['health'] -= health_reduction
-		self.data['health'] = max(0, self.data['health'])
+		SAVE_DATA['health'] -= health_reduction
+		SAVE_DATA['health'] = max(0, SAVE_DATA['health'])
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)

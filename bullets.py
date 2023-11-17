@@ -60,7 +60,7 @@ class Grenade(BlasterBullet):
 		self.gravity = 0.1
 		self.speed = speed
 		self.fric = 0.015
-		
+
 		if self.firer != self.scene.player:
 			self.vel = self.scene.get_distance_direction_and_angle(self.firer.rect.center, self.scene.player.rect.center - self.scene.drawn_sprites.offset)[1] * self.speed
 		else:
@@ -138,6 +138,29 @@ class Grenade(BlasterBullet):
 	def update(self, dt):
 		self.move(dt)
 		self.particles(dt)
+
+class HyperBlasterBullet(BlasterBullet):
+	def __init__(self, game, scene, firer, groups, pos, z, sprite):
+		super().__init__(game, scene, firer, groups, pos, z)
+
+		self.angle = sprite.gun_sprite.angle
+		self.image = self.get_flipped_image(pygame.image.load('assets/particles/hyper_bullet.png').convert_alpha())
+		self.rect = self.image.get_rect(center = pos)
+
+	def get_flipped_image(self, image):
+
+		if self.angle < 180:
+			image = pygame.transform.rotate(pygame.transform.flip(image, True, False), self.angle)	
+		else:
+			image = pygame.transform.rotate(image, self.angle)
+
+		return image
+
+	def update(self, dt):
+		self.collide()
+		#self.animate(0.25 * dt)
+		self.move(dt)
+
 		
 class Rocket(BlasterBullet):
 	def __init__(self, game, scene, firer, groups, pos, z):

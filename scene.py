@@ -11,7 +11,7 @@ from player import Player
 from enemy import Guard
 from sprites import FadeSurf, Collider, Tile, AnimatedTile, MovingPlatform
 from weapons import Gun 
-from bullets import BlasterBullet, Grenade
+from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
 
 class Scene(State):
@@ -123,12 +123,24 @@ class Scene(State):
 	def create_bullet(self, sprite, auto=False):
 
 		# reset the firing button if the weapon is not an automatic
-		if sprite == self.player and not auto:
-			ACTIONS['left_click'] = False
+		if sprite == self.player:
+
+			ammo_type = DATA['guns'][sprite.gun]['ammo_type']
+			ammo_used = DATA['guns'][sprite.gun]['ammo_used']
+
+			AMMO_DATA[ammo_type][0] -= ammo_used
+			SAVE_DATA.update({'ammo': max(0, AMMO_DATA[ammo_type][0])})
+
+			if not auto:
+				ACTIONS['left_click'] = False
 
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
 			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
+
+		if sprite.gun == 'hyper blaster':
+			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
+			HyperBlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], sprite)
 
 		elif sprite.gun in ['grenade', 'grenade launcher']:
 
@@ -305,9 +317,9 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					# str('VEL_X: '+ str(round(self.player.vel.x,3))), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('GUN: '+ str(self.player.gun_index)), 
-					str('PLAYER ARMOUR: '+str(self.player.armour)),
-					str('PLAYER HEALTH: '+str(self.player.health)),
+					str('GUN: '+ str(SAVE_DATA['gun_index'])), 
+					str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
+					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 
 
