@@ -14,14 +14,26 @@ class Inventory(State):
 
 	def get_list(self):
 		buttons = {}
+
 		for num, item in enumerate(SAVE_DATA['items']):
-			pos = (HALF_WIDTH, HALF_HEIGHT - self.padding//2 + self.padding * num)
+			pos = (HALF_WIDTH, HALF_HEIGHT - self.padding * 1.5 + self.padding * num)
 			buttons.update({item:[pos, item]})
+		
+		if not SAVE_DATA['items']:
+			no_item_msg_pos = (HALF_WIDTH, HALF_HEIGHT - self.padding + self.padding * len(SAVE_DATA['items']))
+			buttons.update({'No items collected': [no_item_msg_pos, 'exit']})
+			back_pos = (HALF_WIDTH, HALF_HEIGHT - self.padding + self.padding * 1.5)
+		else:
+			# Add the 'back' button at the end of the list
+			back_pos = (HALF_WIDTH, HALF_HEIGHT - self.padding + self.padding * len(SAVE_DATA['items']))
+		buttons.update({'back': [back_pos, 'exit']})
+
 		return buttons
 
 	def show_title(self, title_name, colour):
-		pos = (HALF_WIDTH, HALF_HEIGHT - self.padding * 2)
+		pos = (HALF_WIDTH, HALF_HEIGHT - self.padding * 3)
 		self.game.render_text(title_name, colour, self.game.font, pos)
+
 
 	def render_button(self, screen, current_menu, activated, text_colour, button_colour, hover_colour, pos):
 		mx, my = pygame.mouse.get_pos()
@@ -45,14 +57,15 @@ class Inventory(State):
 
 
 	def update(self, dt):
-		if ACTIONS['enter']:
+		if ACTIONS['enter'] or self.activated == 'exit':
 			self.activated = None 
 			self.exit_state()
 			self.game.reset_keys()
 
 		elif self.activated == 'quad damage':
+			SAVE_DATA['items'].remove('quad damage')
+			self.buttons = self.get_list()
 			self.activated = None 
-			#self.game.quit_write_data()
 			self.exit_state()
 			self.game.reset_keys()
 
