@@ -25,14 +25,13 @@ class PauseMenu(State):
 		rect.center = pos
 
 		if rect.collidepoint(mx, my):
-			pygame.draw.rect(screen, hover_colour, rect, 2)#int(HEIGHT * 0.05))
+			pygame.draw.rect(screen, hover_colour, rect, 2)
 			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery))
 			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.next_menu = next_menu
 		else:
-			#pygame.draw.rect(screen, button_colour, rect)#int(HEIGHT * 0.05))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 
 	def update(self, dt):
@@ -59,8 +58,3 @@ class PauseMenu(State):
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])
-
-		#self.draw_bounding_box(screen)
-
-
-

@@ -21,7 +21,7 @@ class Inventory(State):
 		
 		if not SAVE_DATA['items']:
 			no_item_msg_pos = (HALF_WIDTH, HALF_HEIGHT - self.padding + self.padding * len(SAVE_DATA['items']))
-			buttons.update({'No items collected': [no_item_msg_pos, 'exit']})
+			buttons.update({'No items collected': [no_item_msg_pos, '']})
 			back_pos = (HALF_WIDTH, HALF_HEIGHT - self.padding + self.padding * 1.5)
 		else:
 			# Add the 'back' button at the end of the list
@@ -57,17 +57,17 @@ class Inventory(State):
 
 
 	def update(self, dt):
-		if ACTIONS['enter'] or self.activated == 'exit':
-			self.activated = None 
+		if ACTIONS['enter'] or self.activated == 'back':
 			self.exit_state()
 			self.game.reset_keys()
 
-		elif self.activated == 'quad damage':
-			SAVE_DATA['items'].remove('quad damage')
+		elif self.activated in ['quad damage','rebreather','envirosuit','invulnerability']:
+			SAVE_DATA['items'].remove(self.activated)
 			self.buttons = self.get_list()
 			self.activated = None 
 			self.exit_state()
 			self.game.reset_keys()
+
 
 	def draw(self, screen):
 		self.prev_state.draw(screen)
