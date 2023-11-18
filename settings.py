@@ -30,13 +30,16 @@ SCENE_DATA = {
 			'1':{'1':'0'}
 			}
 
+
+
 SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'guns_collected':['blaster'], 'gun_index':0, 'ammo':'Bandolier', 'ammo': 100, 
 			'armour_type':'Combat', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
-			'items':{'envirosuit':0, 'rebreather':0, 'quad damage':0, 'invulnerability':0}
+			'items':['envirosuit','rebreather','quad damage','invulnerability']
 			}
 
-AMMO_DATA = {'infinite': [1,[0,0,0]], 'cells':[100,[200, 250, 300]], 'shells':[50,[100, 150, 200]], 'bullets':[100,[200, 250, 300]], 'grenade':[50,[50, 50, 100]], 'slugs':[50,[50, 75, 100]], 'rockets':[50,[50, 50, 100]]}
+AMMO_DATA = {'infinite': [1,[0,0,0]], 'cells':[100,[200, 250, 300]], 'shells':[50,[100, 150, 200]], 'bullets':[100,[200, 250, 300]],
+			'grenade':[50,[50, 50, 100]], 'slugs':[50,[50, 75, 100]], 'rockets':[50,[50, 50, 100]]}
 
 DATA = {
 	'guns':{
@@ -49,7 +52,7 @@ DATA = {
 			'grenade launcher': {'ammo_used': 1, 'ammo_type': 'grenade', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_used': 1, 'ammo_type': 'rockets', 'cooldown': 50, 'speed': 2, 'damage': 400, 'length':20, 'auto':False},
 			'railgun': {'ammo_used': 2, 'ammo_type': 'slugs', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':20, 'auto':False},
-			'hyper blaster': {'ammo_used': 1, 'ammo_type': 'cells', 'cooldown': 8, 'speed': 5, 'damage': 50, 'length':23, 'auto':True},
+			'hyper blaster': {'ammo_used': 1, 'ammo_type': 'cells', 'cooldown': 8, 'speed': 5, 'damage': 5, 'length':23, 'auto':True},
 			'BFG': {'ammo_used': 50, 'ammo_type': 'cells', 'cooldown': 200, 'speed': 4, 'damage': 100, 'length':20, 'auto':False},
 			},
 	'enemies' :{

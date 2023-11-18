@@ -251,6 +251,11 @@ class Player(pygame.sprite.Sprite):
 
 		return DATA['guns']['chain gun']['cooldown']
 
+	def fire(self):
+		if self.gun_sprite in self.scene.gun_sprites and self.cooldown <= 0 and DATA['guns'][self.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
+			self.scene.create_bullet(self, DATA['guns'][self.gun]['auto'])
+			self.cooldown = DATA['guns'][self.gun]['cooldown']
+
 	def hit_by_bullet(self):
 		for sprite in self.scene.bullet_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):

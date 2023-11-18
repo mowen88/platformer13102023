@@ -5,17 +5,25 @@ class Inventory(State):
 	def __init__(self, game):
 		State.__init__(self, game)
 
-		self.next_menu = None
+		self.activated = None
 		self.padding = 24
 
-		self.buttons = {
-						'Continue': [(HALF_WIDTH, HALF_HEIGHT), 'unpause'],
-						'Quit to Menu': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'main_menu']
-						}
+		self.buttons = self.get_list()
 		self.fade_surf = pygame.Surface((RES))
 		self.fade_surf.fill(BLACK)
 
-	def render_button(self, screen, current_menu, next_menu, text_colour, button_colour, hover_colour, pos):
+	def get_list(self):
+		buttons = {}
+		for num, item in enumerate(SAVE_DATA['items']):
+			pos = (HALF_WIDTH, HALF_HEIGHT - self.padding//2 + self.padding * num)
+			buttons.update({item:[pos, item]})
+		return buttons
+
+	def show_title(self, title_name, colour):
+		pos = (HALF_WIDTH, HALF_HEIGHT - self.padding * 2)
+		self.game.render_text(title_name, colour, self.game.font, pos)
+
+	def render_button(self, screen, current_menu, activated, text_colour, button_colour, hover_colour, pos):
 		mx, my = pygame.mouse.get_pos()
 
 		colour = text_colour
@@ -30,23 +38,22 @@ class Inventory(State):
 			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
-				self.next_menu = next_menu
+				self.activated = activated
 		else:
 			#pygame.draw.rect(screen, button_colour, rect)#int(HEIGHT * 0.05))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 
+
 	def update(self, dt):
-		if ACTIONS['space'] or self.next_menu == 'unpause':
-			self.next_menu = None 
+		if ACTIONS['enter']:
+			self.activated = None 
 			self.exit_state()
 			self.game.reset_keys()
 
-		elif self.next_menu == 'main_menu':
-			self.next_menu = None 
+		elif self.activated == 'quad damage':
+			self.activated = None 
 			#self.game.quit_write_data()
 			self.exit_state()
-			self.prev_state.exit_state()
-			self.prev_state.prev_state.exit_state()
 			self.game.reset_keys()
 
 	def draw(self, screen):
@@ -55,7 +62,7 @@ class Inventory(State):
 		self.fade_surf.set_alpha(180)
 		screen.blit(self.fade_surf, (0,0))
 
-		self.game.render_text('Paused', WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 1.5))
+		self.show_title('Inventory', WHITE)
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])

@@ -14,10 +14,8 @@ class Fall:
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0 \
-		and DATA['guns'][player.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click']:
 			player.jump_buffer_active = True
@@ -66,10 +64,8 @@ class Idle:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0 \
-		and DATA['guns'][player.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['down']:
 			return Crouch(player)
@@ -111,10 +107,8 @@ class Crouch:
 			player.acc_rate = 0.4
 			return Idle(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0 \
-		and DATA['guns'][player.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click'] and player.platform:
 			player.drop_through = True
@@ -150,10 +144,8 @@ class CrouchMove:
 			player.acc_rate = 0.4
 			return Idle(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0 \
-		and DATA['guns'][player.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click'] and player.platform:
 			player.drop_through = True
@@ -186,10 +178,8 @@ class Move:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0 \
-		and DATA['guns'][player.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click']:
 			ACTIONS['right_click'] = False
@@ -306,9 +296,8 @@ class Skid:
 		if not player.on_ground:
 			return Fall(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click']:
 			ACTIONS['right_click'] = False
@@ -336,9 +325,8 @@ class Landing:
 		if not player.alive:
 			return Death(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click']:
 			ACTIONS['right_click'] = False
@@ -389,9 +377,8 @@ class Jump(Fall):
 		if player.vel.y > 0:
 			return Fall(player)
 
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
+		if ACTIONS['left_click']:
+			player.fire()
 
 		if ACTIONS['right_click'] and player.jump_counter > 0:
 			ACTIONS['right_click'] = False
@@ -426,10 +413,6 @@ class DoubleJump(Fall):
 		if player.vel.y > 0:
 			player.scene.create_player_gun()
 			return Fall(player)
-
-		if ACTIONS['left_click'] and player.gun_sprite in player.scene.gun_sprites and player.cooldown <= 0:
-			player.scene.create_bullet(player, DATA['guns'][player.gun]['auto'])
-			player.cooldown = DATA['guns'][player.gun]['cooldown']
 
 
 	def update(self, player, dt):
