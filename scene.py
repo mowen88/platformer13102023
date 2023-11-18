@@ -6,6 +6,8 @@ from settings import *
 from pytmx.util_pygame import load_pygame
 
 from camera import Camera
+from pause import PauseMenu
+from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
@@ -46,6 +48,8 @@ class Scene(State):
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
+		self.pause = PauseMenu(self.game)
+		self.inventory = Inventory(self.game)
 		self.hud = HUD(self.game, self)
 
 	def create_scene(self, scene):
@@ -136,11 +140,11 @@ class Scene(State):
 
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
-			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'])
+			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], 6)
 
 		if sprite.gun == 'hyper blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
-			HyperBlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], sprite)
+			HyperBlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], 10, sprite)
 
 		elif sprite.gun in ['grenade', 'grenade launcher']:
 
@@ -289,7 +293,14 @@ class Scene(State):
 			
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 		
+	def pause_or_inventory(self, action, menu_type):
+		if action:
+			menu_type.enter_state()
+			self.game.reset_keys()
+
 	def update(self, dt):
+		self.pause_or_inventory(ACTIONS['space'], self.pause)
+		self.pause_or_inventory(ACTIONS['enter'], self.inventory)
 		self.exit_scene()
 		self.update_sprites.update(dt)
 		self.hud.update(dt)

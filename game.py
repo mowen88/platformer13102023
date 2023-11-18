@@ -38,8 +38,8 @@ class Game:
                     ACTIONS['up'] = True
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = True
-                elif event.key == pygame.K_z:
-                    ACTIONS['z'] = True
+                elif event.key == pygame.K_RETURN:
+                    ACTIONS['enter'] = True
                
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
@@ -52,8 +52,8 @@ class Game:
                     ACTIONS['up'] = False
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = False
-                elif event.key == pygame.K_z:
-                    ACTIONS['z'] = False
+                elif event.key == pygame.K_RETURN:
+                    ACTIONS['enter'] = False
 
             if event.type == pygame.MOUSEWHEEL:
                 if event.y == 1:

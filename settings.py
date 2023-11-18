@@ -6,7 +6,7 @@ RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 1
 
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
-ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False,
+ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False, 'enter':False,
 			'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
 
 LAYERS = {'blocks':0,
@@ -30,7 +30,11 @@ SCENE_DATA = {
 			'1':{'1':'0'}
 			}
 
-SAVE_DATA = {'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo':'Bandolier', 'ammo': 100, 'armour_type':'Combat', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100}
+SAVE_DATA = {
+			'current_scene':'0', 'entry_pos':'0', 'guns_collected':['blaster'], 'gun_index':0, 'ammo':'Bandolier', 'ammo': 100, 
+			'armour_type':'Combat', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
+			'items':{'envirosuit':0, 'rebreather':0, 'quad damage':0, 'invulnerability':0}
+			}
 
 AMMO_DATA = {'infinite': [1,[0,0,0]], 'cells':[100,[200, 250, 300]], 'shells':[50,[100, 150, 200]], 'bullets':[100,[200, 250, 300]], 'grenade':[50,[50, 50, 100]], 'slugs':[50,[50, 75, 100]], 'rockets':[50,[50, 50, 100]]}
 

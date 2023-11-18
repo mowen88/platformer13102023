@@ -165,7 +165,7 @@ class RailParticle(FadeParticle):
 		return image
 			
 	def update(self, dt):
-		self.update_alpha(4, dt)
+		self.update_alpha(2, dt)
 
 
 

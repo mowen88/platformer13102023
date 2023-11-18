@@ -4,7 +4,7 @@ from settings import *
 
 
 class BlasterBullet(pygame.sprite.Sprite):
-	def __init__(self, game, scene, firer, groups, pos, z):
+	def __init__(self, game, scene, firer, groups, pos, z, speed):
 		super().__init__(groups)
 
 		self.scene = scene
@@ -16,7 +16,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(center = pos)
 		self.hitbox = self.rect.copy().inflate(0,0)
 
-		self.speed = 6
+		self.speed = speed
 		self.timer = 0
 		self.pos = pygame.math.Vector2(self.rect.center)
 		if self.firer == self.scene.player:
@@ -55,10 +55,9 @@ class BlasterBullet(pygame.sprite.Sprite):
 
 class Grenade(BlasterBullet):
 	def __init__(self, game, scene, firer, groups, pos, z, speed):
-		super().__init__(game, scene, firer, groups, pos, z)
+		super().__init__(game, scene, firer, groups, pos, z, speed)
 
 		self.gravity = 0.1
-		self.speed = speed
 		self.fric = 0.015
 
 		if self.firer != self.scene.player:
@@ -140,8 +139,8 @@ class Grenade(BlasterBullet):
 		self.particles(dt)
 
 class HyperBlasterBullet(BlasterBullet):
-	def __init__(self, game, scene, firer, groups, pos, z, sprite):
-		super().__init__(game, scene, firer, groups, pos, z)
+	def __init__(self, game, scene, firer, groups, pos, z, speed, sprite):
+		super().__init__(game, scene, firer, groups, pos, z, speed)
 
 		self.angle = sprite.gun_sprite.angle
 		self.image = self.get_flipped_image(pygame.image.load('assets/particles/hyper_bullet.png').convert_alpha())
