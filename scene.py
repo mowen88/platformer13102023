@@ -68,14 +68,12 @@ class Scene(State):
 		tmx_data = load_pygame(f'scenes/{self.scene_num}/{self.scene_num}.tmx')
 
 		#if 'entries' in self.layers:
+		gun_list = list(CONSTANT_DATA['guns'].keys())
 
 		for obj in tmx_data.get_layer_by_name('pickups'):
-			if obj.name == 'shotgun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
-			if obj.name == 'machine gun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
-			if obj.name == 'railgun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
+			for gun in gun_list:
+				if obj.name == gun: Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\

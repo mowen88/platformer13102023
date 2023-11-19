@@ -39,8 +39,8 @@ AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenade':0, 'slugs':0, 'rockets':0}
 
 SAVE_DATA = {
-			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 100, 'ammo_capacity':'normal',
-			'armour_type':'Combat', 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':None, 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
 			'guns_collected':['blaster'],
 			}
