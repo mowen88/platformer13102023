@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
 		self.muzzle_pos = None
 		self.cooldown = 0
 		self.underwater = False
-		self.max_underwater_time = 120
+		self.max_underwater_time = 300
 		self.underwater_timer = self.max_underwater_time
 
 		self.state = Fall(self)
@@ -178,6 +178,13 @@ class Player(pygame.sprite.Sprite):
 			self.scene.create_player_gun()
 			self.cooldown = 0
 
+	def exit_scene(self):
+		for door in self.scene.exit_sprites:
+			if self.hitbox.colliderect(door.rect) and ACTIONS['up']:
+				self.scene.exiting = True
+				self.scene.new_scene = SCENE_DATA[self.scene.scene_num][door.name]
+				self.scene.entry_point = door.name
+
 	def hit_liquid(self, dt):
 	    for sprite in self.scene.liquid_sprites:
 	        if self.hitbox.colliderect(sprite.hitbox):
@@ -189,11 +196,11 @@ class Player(pygame.sprite.Sprite):
 	            self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 	            self.underwater = False
 
+	    # breathing / drowning logic
 	    if self.underwater:
 	    	self.underwater_timer -= dt
 	    else:
 	    	self.underwater_timer = self.max_underwater_time
-
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -281,6 +288,12 @@ class Player(pygame.sprite.Sprite):
 		if abs(self.vel.y) >= 0.5: 
 			self.on_ground = False
 			self.platform = None
+
+	def got_headroom(self):
+		for sprite in self.scene.block_sprites:
+			if sprite.hitbox.collidepoint((self.hitbox.centerx, self.hitbox.y - 8)):
+				return True
+		return False
 
 	def ladder_physics(self, dt):
 
@@ -391,7 +404,6 @@ class Player(pygame.sprite.Sprite):
 		self.hit_by_bullet()
 		self.collect()
 		self.hit_liquid(dt)
-
 		
 
 

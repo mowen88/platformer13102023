@@ -123,8 +123,6 @@ class Scene(State):
 		for x, y, surf in tmx_data.get_layer_by_name('liquid_top').tiles():
 			Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
 			
-
-
 		for obj in tmx_data.get_layer_by_name('entities'):
 			if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
 			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
@@ -134,14 +132,6 @@ class Scene(State):
 		# create gun objects for the enemies and player
 		self.create_enemy_guns()
 		self.create_player_gun()
-
-	def exit_scene(self):
-		for exit in self.exit_sprites:
-			if self.player.hitbox.colliderect(exit.rect):
-				self.exiting = True
-				self.new_scene = SCENE_DATA[self.scene_num][exit.name]
-				self.entry_point = exit.name
-				return
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
@@ -330,10 +320,8 @@ class Scene(State):
 	def update(self, dt):
 		self.pause_or_inventory(ACTIONS['space'], self.pause)
 		self.pause_or_inventory(ACTIONS['enter'], self.inventory)
-		self.exit_scene()
 		self.hud.update(dt)
-		self.update_sprites.update(dt)
-		
+		self.update_sprites.update(dt)	
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -356,7 +344,7 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('AMMO: '+ str(round(self.player.underwater_timer))), 
+					str('HEADROOM: '+ str(self.player.got_headroom())), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),

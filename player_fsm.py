@@ -11,6 +11,23 @@ class Fall:
 		if player.collide_ladders() and player.vel.y > 0:
 			return OnLadderIdle(player)
 
+	def update(self, player, dt):
+		player.acc.x = 0
+		player.physics_x(dt)
+		player.physics_y(dt)
+
+		player.animate('fall', 0.25 * dt, False)
+
+class Fall:
+	def __init__(self, player):
+		
+		player.frame_index = 0
+
+	def state_logic(self, player):
+
+		if player.collide_ladders() and player.vel.y > 0:
+			return OnLadderIdle(player)
+
 		if not player.alive:
 			return Death(player)
 
@@ -48,6 +65,7 @@ class Idle:
 		
 		player.jump_counter = 1
 		player.frame_index = 0
+
 
 	def state_logic(self, player):
 
@@ -89,6 +107,7 @@ class Idle:
 		player.animate('idle', 0.25 * dt)
 
 		player.get_on_ground()
+		player.exit_scene()
 
 class Crouch:
 	def __init__(self, player):
@@ -110,7 +129,7 @@ class Crouch:
 		if not player.alive:
 			return Death(player)
 
-		if not ACTIONS['down']:
+		if not ACTIONS['down'] and not player.got_headroom():
 			player.acc_rate = 0.4
 			return Idle(player)
 
@@ -154,7 +173,7 @@ class CrouchMove:
 		if not player.alive:
 			return Death(player)
 
-		if not ACTIONS['down']:
+		if not ACTIONS['down'] and not player.got_headroom():
 			player.acc_rate = 0.4
 			return Idle(player)
 
@@ -333,6 +352,7 @@ class Skid:
 		player.physics_x(dt)
 		player.physics_y(dt)
 		player.animate('skid', 0.25 * dt, False)
+		player.exit_scene()
 	
 class Landing:
 	def __init__(self, player):
