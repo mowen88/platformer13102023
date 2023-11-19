@@ -28,8 +28,8 @@ class HUD:
 			rect = self.alpha_rect(screen, (0, 0, 0, 127), (start_x + box * offset, 16, 53, 20))
 			screen.blit(icon, (start_x + box * offset, 16))
 			
-			#change colour of health to red if under 25 health or under 25 ammo
-			colour = RED if box != 1 and SAVE_DATA[self.data[box]] <= 25 else WHITE
+			#change colour of health to red if under 25 health
+			colour = RED if box == 0 and SAVE_DATA[self.data[box]] < 25 else WHITE
 			self.game.render_text(int(SAVE_DATA[self.data[box]]), colour, self.game.font, (start_x + 26 + box * offset, 16), True)
 
 	def update(self, dt):

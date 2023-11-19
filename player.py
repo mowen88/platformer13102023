@@ -93,22 +93,16 @@ class Player(pygame.sprite.Sprite):
 				if sprite.name not in SAVE_DATA['guns_collected']:
 					SAVE_DATA['guns_collected'].append(sprite.name)
 
+				sprite.kill()
 				self.change_weapon(1, sprite.name)
-				
 				ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
-				ammo_added = 10
+				ammo_added = CONSTANT_DATA['guns'][sprite.name]['ammo_given']
 				capacity_type = SAVE_DATA['ammo_capacity']
 				max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
-				current_ammo = AMMO_DATA[ammo_type]
-				new_ammo = min(current_ammo + ammo_added, max_ammo)
-				AMMO_DATA[ammo_type] = new_ammo
-
-				SAVE_DATA.update({'ammo': AMMO_DATA[ammo_type]})
-
-				if new_ammo > current_ammo:
-					sprite.kill()
-
+				AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
+				SAVE_DATA.update({'ammo': min(AMMO_DATA[ammo_type], max_ammo)})
+					
 
 	def change_weapon(self, direction, gun_collected=None):	
 
@@ -128,16 +122,15 @@ class Player(pygame.sprite.Sprite):
 
 				if gun_collected is not None:
 					if current_gun == gun_collected:
-						self.gun_sprite.kill()
 						break
 
 				elif current_gun in SAVE_DATA['guns_collected']:
 					break	
 			
+			self.gun_sprite.kill()
 			self.gun = current_gun
 			SAVE_DATA.update({'ammo':AMMO_DATA[CONSTANT_DATA['guns'][self.gun]['ammo_type']]})
 
-			self.gun_sprite.kill()
 			self.scene.create_player_gun()
 			self.cooldown = 0
 
