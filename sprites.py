@@ -92,10 +92,18 @@ class AnimatedTile(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
-class Pickup(AnimatedTile):
+class Pickup(Tile):
+	def __init__(self, groups, pos, surf, z, name):
+		super().__init__(groups, pos, surf, z)
+
+		self.rect = self.image.get_rect(bottomleft = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.name = name
+		
+
+class AnimatedPickup(AnimatedTile):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type)
-		
 		self.name = name
 
 	def update(self, dt):

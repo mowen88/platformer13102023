@@ -72,7 +72,6 @@ class MuzzleFlash(DustParticle):
 		self.update_alpha(20, dt)
 		self.rect.center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset
 
-
 class FadeParticle(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, z, surf=None, colour=((WHITE))):
 		super().__init__(groups)
@@ -168,6 +167,31 @@ class RailParticle(FadeParticle):
 		self.update_alpha(2, dt)
 
 
+class Flash(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, colour, size, z = LAYERS['foreground']):
+		super().__init__(groups)
 
+		self.scene = scene
+		self.colour = colour
+		self.size = size
+		self.z = z
+		self.pos = pos
+		self.alpha = 255
+		self.flash_size = [0,0]
+		self.image = pygame.Surface((self.flash_size))
+		self.image.fill(self.colour)
+		self.rect = self.image.get_rect(center = self.pos)
+
+	def update(self, dt):
 		
-		
+		self.image.fill(self.colour)
+		self.alpha -= 12 * dt
+		self.flash_size[0] += self.size * dt
+		self.flash_size[1] += self.size * dt
+
+		if self.alpha < 0:
+			self.kill()
+
+		self.image = pygame.transform.scale(self.image, (self.flash_size))
+		self.image.set_alpha(self.alpha)
+		self.rect = self.image.get_rect(center = self.pos)

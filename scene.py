@@ -11,10 +11,10 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, AnimatedTile, Pickup, MovingPlatform
+from sprites import FadeSurf, Collider, Tile, AnimatedTile, Pickup, AnimatedPickup, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
-from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
+from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
 	def __init__(self, game, scene_num, entry_point):
@@ -69,11 +69,16 @@ class Scene(State):
 
 		#if 'entries' in self.layers:
 		gun_list = list(CONSTANT_DATA['guns'].keys())
+		ammo_list = list(AMMO_DATA.keys())
 
 		for obj in tmx_data.get_layer_by_name('pickups'):
 			for gun in gun_list:
-				if obj.name == gun: Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
+				if obj.name == gun: AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					LAYERS['blocks'], f'assets/pickups/{obj.name}', 'loop', obj.name)
+
+			for ammo in ammo_list:
+				if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -191,6 +196,8 @@ class Scene(State):
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
 		elif particle_type == 'explosion':
 			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
+		elif particle_type == 'flash':
+			Flash(self.game, self, [self.update_sprites, self.drawn_sprites], pos, WHITE, 16, LAYERS['foreground'])
 		else:
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, LIGHT_GREY)
 
@@ -332,7 +339,7 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('AMMO: '+ str(round(self.player.gun_sprite.angle))), 
+					str('AMMO: '+ str(round(AMMO_DATA[CONSTANT_DATA['guns'][self.player.gun]['ammo_type']]))), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),

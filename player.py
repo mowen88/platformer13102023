@@ -89,24 +89,58 @@ class Player(pygame.sprite.Sprite):
 	def collect(self):
 		for sprite in self.scene.pickup_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
+
+				if sprite.name in list(CONSTANT_DATA['guns'].keys()):
 				
-				if sprite.name not in SAVE_DATA['guns_collected']:
-					SAVE_DATA['guns_collected'].append(sprite.name)
+					if sprite.name not in SAVE_DATA['guns_collected']:
+						SAVE_DATA['guns_collected'].append(sprite.name)
 
-				sprite.kill()
-				self.change_weapon(1, sprite.name)
-				ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
-				ammo_added = CONSTANT_DATA['guns'][sprite.name]['ammo_given']
-				capacity_type = SAVE_DATA['ammo_capacity']
-				max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
+					self.scene.create_particle('flash', sprite.hitbox.center)
+					sprite.kill()
+					self.change_weapon(1, sprite.name)
+					ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
+					ammo_added = CONSTANT_DATA['guns'][sprite.name]['ammo_given']
+					capacity_type = SAVE_DATA['ammo_capacity']
+					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
-				AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
-				SAVE_DATA.update({'ammo': min(AMMO_DATA[ammo_type], max_ammo)})
+					AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
+					SAVE_DATA.update({'ammo': min(AMMO_DATA[ammo_type], max_ammo)})
+
+				elif sprite.name in list(AMMO_DATA.keys()):
+					sprite.kill()
+					self.scene.create_particle('flash', sprite.hitbox.center)
+					ammo_type = sprite.name
+					# get list of guns that use this ammo tye
+					guns = self.get_gun_from_ammo_type(ammo_type)
+					# get 1 gun from the above list to use in getting
+
+					# using guns[0], any gun in guns list to get the relevant gun for ammo given
+					ammo_added = CONSTANT_DATA['guns'][guns[0]]['ammo_given']
+					capacity_type = SAVE_DATA['ammo_capacity']
+					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 					
+					AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
+
+					print(CONSTANT_DATA['guns'][guns[0]]['ammo_given'])
+
+					#if current gun is same ammo type, update SAVE_DATA['ammo']
+					if self.gun in guns:
+						SAVE_DATA.update({'ammo':min(AMMO_DATA[ammo_type], max_ammo)})
+					
+					
+
+	def get_gun_from_ammo_type(self, ammo_type):
+		guns = []
+		for gun, attributes in CONSTANT_DATA['guns'].items():
+			if 'ammo_type' in attributes and attributes['ammo_type'] == ammo_type:
+				guns.append(gun)
+		return guns
+
 
 	def change_weapon(self, direction, gun_collected=None):	
 
 		if len(SAVE_DATA['guns_collected']) > 1:
+			self.gun_sprite.kill()
 		
 			num_of_guns = len(list(CONSTANT_DATA['guns'].keys()))
 		
@@ -127,7 +161,6 @@ class Player(pygame.sprite.Sprite):
 				elif current_gun in SAVE_DATA['guns_collected']:
 					break	
 			
-			self.gun_sprite.kill()
 			self.gun = current_gun
 			SAVE_DATA.update({'ammo':AMMO_DATA[CONSTANT_DATA['guns'][self.gun]['ammo_type']]})
 

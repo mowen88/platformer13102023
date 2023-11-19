@@ -30,7 +30,7 @@ SCENE_DATA = {
 			'1':{'1':'0'}
 			}
 
-AMMO_LIMITS = {'normal':{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenade':50, 'slugs':50, 'rockets':50},
+AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenade':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenade':50, 'slugs':75, 'rockets':50},
 				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenade':100, 'slugs':100, 'rockets':100}
 				}
@@ -39,7 +39,7 @@ AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenade':0, 'slugs':0, 'rockets':0}
 
 SAVE_DATA = {
-			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
 			'armour_type':None, 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
 			'guns_collected':['blaster'],
