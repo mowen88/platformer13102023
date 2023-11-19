@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
 		self.jump_buffer = 0
 		self.jump_buffer_threshold = 6
 
-		self.gun = list(DATA['guns'].keys())[SAVE_DATA['gun_index']]
+		self.gun = list(CONSTANT_DATA['guns'].keys())[SAVE_DATA['gun_index']]
 		self.muzzle_pos = None
 		self.cooldown = 0
 
@@ -86,22 +86,60 @@ class Player(pygame.sprite.Sprite):
 		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
 			self.acc.x = self.acc_rate
 
-	def change_weapon(self, direction):	
+	def collect(self):
+		for sprite in self.scene.pickup_sprites:
+			if self.hitbox.colliderect(sprite.hitbox):
+				
+				if sprite.name not in SAVE_DATA['guns_collected']:
+					SAVE_DATA['guns_collected'].append(sprite.name)
 
-		num_of_guns = len(list(DATA['guns'].keys()))
-		SAVE_DATA['gun_index'] += direction
+				self.change_weapon(1, sprite.name)
+				
+				ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
+				ammo_added = 10
+				capacity_type = SAVE_DATA['ammo_capacity']
+				max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
-		if SAVE_DATA['gun_index'] >= num_of_guns:
-			SAVE_DATA['gun_index'] = 0
-		elif SAVE_DATA['gun_index'] < 0:
-			SAVE_DATA['gun_index'] = num_of_guns-1
+				current_ammo = AMMO_DATA[ammo_type]
+				new_ammo = min(current_ammo + ammo_added, max_ammo)
+				AMMO_DATA[ammo_type] = new_ammo
+
+				SAVE_DATA.update({'ammo': AMMO_DATA[ammo_type]})
+
+				if new_ammo > current_ammo:
+					sprite.kill()
+
+
+	def change_weapon(self, direction, gun_collected=None):	
+
+		if len(SAVE_DATA['guns_collected']) > 1:
 		
-		self.gun = list(DATA['guns'].keys())[SAVE_DATA['gun_index']]
-		SAVE_DATA.update({'ammo':AMMO_DATA[DATA['guns'][self.gun]['ammo_type']][0]})
+			num_of_guns = len(list(CONSTANT_DATA['guns'].keys()))
+		
+			while True:
+				SAVE_DATA['gun_index'] += direction
 
-		self.gun_sprite.kill()
-		self.scene.create_player_gun()
-		self.cooldown = 0
+				if SAVE_DATA['gun_index'] >= num_of_guns:
+					SAVE_DATA['gun_index'] = 0
+				elif SAVE_DATA['gun_index'] < 0:
+					SAVE_DATA['gun_index'] = num_of_guns-1
+
+				current_gun = list(CONSTANT_DATA['guns'].keys())[SAVE_DATA['gun_index']]
+
+				if gun_collected is not None:
+					if current_gun == gun_collected:
+						self.gun_sprite.kill()
+						break
+
+				elif current_gun in SAVE_DATA['guns_collected']:
+					break	
+			
+			self.gun = current_gun
+			SAVE_DATA.update({'ammo':AMMO_DATA[CONSTANT_DATA['guns'][self.gun]['ammo_type']]})
+
+			self.gun_sprite.kill()
+			self.scene.create_player_gun()
+			self.cooldown = 0
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -243,23 +281,25 @@ class Player(pygame.sprite.Sprite):
 	def chain_gun_spin_up(self, dt):
 		if self.gun == 'chain gun':
 			if ACTIONS['left_click']:
-				DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
+				CONSTANT_DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
 			else:
-				DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
+				CONSTANT_DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
 
-		DATA['guns']['chain gun']['cooldown'] = max(2, min(DATA['guns']['chain gun']['cooldown'], 10))
+		CONSTANT_DATA['guns']['chain gun']['cooldown'] = max(2, min(CONSTANT_DATA['guns']['chain gun']['cooldown'], 10))
 
-		return DATA['guns']['chain gun']['cooldown']
+		return CONSTANT_DATA['guns']['chain gun']['cooldown']
 
 	def fire(self):
-		if self.gun_sprite in self.scene.gun_sprites and self.cooldown <= 0 and DATA['guns'][self.gun]['ammo_used'] <= SAVE_DATA['ammo']: #and SAVE_DATA['ammo'] > 0:
-			self.scene.create_bullet(self, DATA['guns'][self.gun]['auto'])
-			self.cooldown = DATA['guns'][self.gun]['cooldown']
+		if self.gun_sprite in self.scene.gun_sprites and self.cooldown <= 0\
+		 and CONSTANT_DATA['guns'][self.gun]['ammo_used'] <= SAVE_DATA['ammo'] and self.scene.fade_surf.alpha == 0: #and SAVE_DATA['ammo'] > 0:
+			if not self.scene.exiting:
+				self.scene.create_bullet(self, CONSTANT_DATA['guns'][self.gun]['auto'])
+				self.cooldown = CONSTANT_DATA['guns'][self.gun]['cooldown']
 
 	def hit_by_bullet(self):
 		for sprite in self.scene.bullet_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
-				ammo_type = DATA['guns'][sprite.firer.gun]['ammo_type']
+				ammo_type = CONSTANT_DATA['guns'][sprite.firer.gun]['ammo_type']
 				self.reduce_health(sprite.damage, ammo_type)
 				sprite.kill()
 
@@ -288,13 +328,14 @@ class Player(pygame.sprite.Sprite):
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 
-		self.state_logic()
-		self.state.update(self, dt)
-		
 		self.handle_jumping(dt)
 		self.cooldown_timer(dt)
 		self.chain_gun_spin_up(dt)
 		self.hit_by_bullet()
+		self.collect()
+
+		self.state_logic()
+		self.state.update(self, dt)
 
 
 	

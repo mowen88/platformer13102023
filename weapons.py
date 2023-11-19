@@ -12,7 +12,7 @@ class Gun(pygame.sprite.Sprite):
 		self.image = pygame.image.load(f'assets/guns/{self.owner.gun}.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)
 
-		self.gun_data = DATA['guns'][self.owner.gun]
+		self.gun_data = CONSTANT_DATA['guns'][self.owner.gun]
 
 		self.angle = 0
 		self.total_angles = 90

@@ -164,7 +164,7 @@ class Wait(Shoot):
 	def __init__(self, enemy):
 		
 		enemy.frame_index = 0
-		enemy.burst_count = DATA['enemies'][enemy.name]['burst_count']
+		enemy.burst_count = CONSTANT_DATA['enemies'][enemy.name]['burst_count']
 		self.timer = 50
 
 	def state_logic(self, enemy):

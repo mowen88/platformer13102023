@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="44">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="47">
  <editorsettings>
   <export target="0.csv" format="csv"/>
  </editorsettings>
@@ -108,6 +108,14 @@
    <point/>
   </object>
   <object id="43" name="1" x="624" y="160">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="pickups">
+  <object id="44" name="shotgun" x="704" y="32">
+   <point/>
+  </object>
+  <object id="45" name="machine gun" x="432" y="160">
    <point/>
   </object>
  </objectgroup>

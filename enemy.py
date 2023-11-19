@@ -36,7 +36,7 @@ class Guard(pygame.sprite.Sprite):
 		self.on_ground = False
 		self.drop_through = False
 
-		self.data = DATA['enemies'][self.name]
+		self.data = CONSTANT_DATA['enemies'][self.name]
 
 		self.burst_count = self.data['burst_count']
 		self.health = self.data['health']
@@ -222,13 +222,13 @@ class Guard(pygame.sprite.Sprite):
 	def chain_gun_spin_up(self, dt):
 		if self.gun == 'chain gun':
 			if ACTIONS['left_click'] and not self.on_ladder:
-				DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
+				CONSTANT_DATA['guns']['chain gun']['cooldown'] -= 0.05 * dt
 			else:
-				DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
+				CONSTANT_DATA['guns']['chain gun']['cooldown'] += 0.1 * dt
 
-		DATA['guns']['chain gun']['cooldown'] = max(2, min(DATA['guns']['chain gun']['cooldown'], 10))
+		CONSTANT_DATA['guns']['chain gun']['cooldown'] = max(2, min(CONSTANT_DATA['guns']['chain gun']['cooldown'], 10))
 
-		return DATA['guns']['chain gun']['cooldown']
+		return CONSTANT_DATA['guns']['chain gun']['cooldown']
 
 	def player_seen(self):
 		if self.vision_box.colliderect(self.scene.player.hitbox) and self.has_los():

@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, AnimatedTile, MovingPlatform
+from sprites import FadeSurf, Collider, Tile, AnimatedTile, Pickup, MovingPlatform
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion
@@ -40,7 +40,7 @@ class Scene(State):
 		self.gun_sprites = pygame.sprite.Group()
 		self.bullet_sprites = pygame.sprite.Group()
 		self.collision_sprites = pygame.sprite.Group()
-		self.railparticle = pygame.sprite.Sprite()
+		self.pickup_sprites = pygame.sprite.Group()
 
 		# fade screen and exit flag
 		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
@@ -68,6 +68,14 @@ class Scene(State):
 		tmx_data = load_pygame(f'scenes/{self.scene_num}/{self.scene_num}.tmx')
 
 		#if 'entries' in self.layers:
+
+		for obj in tmx_data.get_layer_by_name('pickups'):
+			if obj.name == 'shotgun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
+			if obj.name == 'machine gun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
+			if obj.name == 'railgun': Pickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				LAYERS['blocks'], f'assets/guns/{obj.name}', 'loop', obj.name)
 
 		for obj in tmx_data.get_layer_by_name('platforms'):
 			if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -129,11 +137,11 @@ class Scene(State):
 		# reset the firing button if the weapon is not an automatic
 		if sprite == self.player:
 
-			ammo_type = DATA['guns'][sprite.gun]['ammo_type']
-			ammo_used = DATA['guns'][sprite.gun]['ammo_used']
+			ammo_type = CONSTANT_DATA['guns'][sprite.gun]['ammo_type']
+			ammo_used = CONSTANT_DATA['guns'][sprite.gun]['ammo_used']
 
-			AMMO_DATA[ammo_type][0] -= ammo_used
-			SAVE_DATA.update({'ammo': max(0, AMMO_DATA[ammo_type][0])})
+			AMMO_DATA[ammo_type] -= ammo_used
+			SAVE_DATA.update({'ammo': max(AMMO_DATA[ammo_type], AMMO_DATA[ammo_type])})
 
 			if not auto:
 				ACTIONS['left_click'] = False
@@ -168,7 +176,6 @@ class Scene(State):
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
-			
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
@@ -216,11 +223,11 @@ class Scene(State):
 	def hitscan(self, sprite, offset=0):
 
 		if sprite == self.player:
-			gun_damage = DATA['guns'][self.player.gun]['damage']
+			gun_damage = CONSTANT_DATA['guns'][self.player.gun]['damage']
 			angle = math.atan2(pygame.mouse.get_pos()[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					pygame.mouse.get_pos()[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 		else:
-			gun_damage = DATA['enemies'][sprite.name]['damage']
+			gun_damage = CONSTANT_DATA['enemies'][sprite.name]['damage']
 			angle = math.atan2(self.player.rect.centery-self.drawn_sprites.offset[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					self.player.rect.centerx-self.drawn_sprites.offset[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 
@@ -230,7 +237,7 @@ class Scene(State):
 		distance = ((x, y) - pygame.math.Vector2(sprite.gun_sprite.rect.center)).magnitude()
 
 		
-		ammo_type = DATA['guns'][sprite.gun]['ammo_type']
+		ammo_type = CONSTANT_DATA['guns'][sprite.gun]['ammo_type']
 
 		if sprite.gun in ['shotgun', 'super shotgun', 'machine gun', 'chain gun']:
 
@@ -302,8 +309,9 @@ class Scene(State):
 		self.pause_or_inventory(ACTIONS['space'], self.pause)
 		self.pause_or_inventory(ACTIONS['enter'], self.inventory)
 		self.exit_scene()
-		self.update_sprites.update(dt)
 		self.hud.update(dt)
+		self.update_sprites.update(dt)
+		
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -326,10 +334,10 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					# str('VEL_X: '+ str(round(self.player.vel.x,3))), 
+					str('AMMO: '+ str(round(self.player.gun_sprite.angle))), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					str('GUN: '+ str(SAVE_DATA['gun_index'])), 
-					str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
+					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
+					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

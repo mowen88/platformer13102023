@@ -26,8 +26,8 @@ class PauseMenu(State):
 
 		if rect.collidepoint(mx, my):
 			pygame.draw.rect(screen, hover_colour, rect, 2)
-			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery))
-			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
+			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery), 2)
+			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery), 2)
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.next_menu = next_menu

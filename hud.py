@@ -25,7 +25,7 @@ class HUD:
 				continue
 
 			icon = pygame.image.load(f'assets/icons/{box}.png').convert_alpha()
-			rect = self.alpha_rect(screen, (0, 0, 0, 127), (start_x + box * offset, 16, 50, 20))
+			rect = self.alpha_rect(screen, (0, 0, 0, 127), (start_x + box * offset, 16, 53, 20))
 			screen.blit(icon, (start_x + box * offset, 16))
 			
 			#change colour of health to red if under 25 health or under 25 ammo

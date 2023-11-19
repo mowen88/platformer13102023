@@ -92,6 +92,14 @@ class AnimatedTile(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
+class Pickup(AnimatedTile):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+		super().__init__(game, scene, groups, pos, z, path, animation_type)
+		
+		self.name = name
+
+	def update(self, dt):
+		self.animate(0.2 * dt)
 
 class MovingPlatform(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, surf, z, direction, amplitude, circular=None):

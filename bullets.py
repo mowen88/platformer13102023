@@ -28,7 +28,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 		# self.damage = GUN_DATA[self.zone.player.gun]['damage']
 		# self.knockback_power = GUN_DATA[self.zone.player.gun]['knockback']
 
-		self.damage = DATA['guns'][self.firer.gun]['damage'] if self.firer == self.scene.player else DATA['enemies'][self.firer.name]['damage']
+		self.damage = CONSTANT_DATA['guns'][self.firer.gun]['damage'] if self.firer == self.scene.player else CONSTANT_DATA['enemies'][self.firer.name]['damage']
 
 	def collide(self):
 		for sprite in self.scene.block_sprites:

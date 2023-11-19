@@ -9,7 +9,7 @@ class Inventory(State):
 		self.padding = 24
 
 		self.buttons = self.get_list()
-		self.no_items_message = 'No items collected. Get back to work!'
+		self.no_items_message = 'No items collected. Get back to work !'
 		self.fade_surf = pygame.Surface((RES))
 		self.fade_surf.fill(BLACK)
 
@@ -47,8 +47,8 @@ class Inventory(State):
 
 		if rect.collidepoint(mx, my) and hovered_item != self.no_items_message:
 			pygame.draw.rect(screen, hover_colour, rect, 2)
-			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery))
-			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
+			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery), 2)
+			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery), 2)
 			self.game.render_text(hovered_item, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.activated_item = activated_item
@@ -62,7 +62,7 @@ class Inventory(State):
 			self.exit_state()
 			self.game.reset_keys()
 
-		elif self.activated_item in ['quad damage','rebreather','envirosuit','invulnerability']:
+		elif self.activated_item in CONSTANT_DATA['all_items']:
 			SAVE_DATA['items'].remove(self.activated_item)
 			self.buttons = self.get_list()
 			self.activated_item = None 
