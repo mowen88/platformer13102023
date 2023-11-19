@@ -185,7 +185,7 @@ class Flash(pygame.sprite.Sprite):
 	def update(self, dt):
 		
 		self.image.fill(self.colour)
-		self.alpha -= 12 * dt
+		self.alpha -= 16 * dt
 		self.flash_size[0] += self.size * dt
 		self.flash_size[1] += self.size * dt
 

@@ -92,6 +92,19 @@ class AnimatedTile(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
+class Liquid(Tile):
+	def __init__(self, groups, pos, surf, z, alpha):
+		super().__init__(groups, pos, surf, z)
+
+		self.image.fill(NEON_GREEN)
+		self.rect = self.image.get_rect(topleft = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.alpha = alpha
+
+	def update(self, dt):
+		self.image.set_alpha(self.alpha)
+
+
 class Pickup(Tile):
 	def __init__(self, groups, pos, surf, z, name):
 		super().__init__(groups, pos, surf, z)
@@ -100,7 +113,6 @@ class Pickup(Tile):
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.name = name
 		
-
 class AnimatedPickup(AnimatedTile):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type)
@@ -143,10 +155,10 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.rect.center = self.hitbox.center
 		self.raycast_box.midbottom = self.hitbox.midtop
 
-
 	def update(self, dt):
 		#get pos before it is updated to get the displacement of movement per frame and pass it to the player platform_speed
 		self.old_pos = self.pos.copy()
+		self.pos.x += self.direction.x * dt
 		self.old_hitbox = self.hitbox.copy()
 		self.move(dt)
 		

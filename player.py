@@ -12,7 +12,8 @@ class Player(pygame.sprite.Sprite):
 		self.z = z
 		
 		self.animations = {'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
-		self.import_images(self.animations)
+		self.import_images(self.animations, SAVE_DATA['armour_type'])
+
 		self.frame_index = 0
 		self.image = self.animations['fall'][self.frame_index].convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
@@ -46,12 +47,18 @@ class Player(pygame.sprite.Sprite):
 		self.gun = list(CONSTANT_DATA['guns'].keys())[SAVE_DATA['gun_index']]
 		self.muzzle_pos = None
 		self.cooldown = 0
+		self.underwater = False
+		self.max_underwater_time = 120
+		self.underwater_timer = self.max_underwater_time
 
 		self.state = Fall(self)
 
-	def import_images(self, animation_states):
+	def import_images(self, animation_states, armour_type):
 
-		path = f'assets/characters/{self.name}/'
+		if armour_type is not None:
+			path = f'assets/characters/{self.name + "_" + armour_type}/'
+		else:
+			path = f'assets/characters/{self.name}/'
 
 		for animation in animation_states.keys():
 			full_path = path + animation
@@ -90,12 +97,13 @@ class Player(pygame.sprite.Sprite):
 		for sprite in self.scene.pickup_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
 
+				self.scene.create_particle('flash', sprite.hitbox.center)
+
 				if sprite.name in list(CONSTANT_DATA['guns'].keys()):
 				
 					if sprite.name not in SAVE_DATA['guns_collected']:
 						SAVE_DATA['guns_collected'].append(sprite.name)
 
-					self.scene.create_particle('flash', sprite.hitbox.center)
 					sprite.kill()
 					self.change_weapon(1, sprite.name)
 					ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
@@ -103,12 +111,12 @@ class Player(pygame.sprite.Sprite):
 					capacity_type = SAVE_DATA['ammo_capacity']
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
-					AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
-					SAVE_DATA.update({'ammo': min(AMMO_DATA[ammo_type], max_ammo)})
+					AMMO_DATA[ammo_type] = min(AMMO_DATA[ammo_type] + ammo_added, max_ammo)
+					SAVE_DATA.update({'ammo':AMMO_DATA[ammo_type]})
+
 
 				elif sprite.name in list(AMMO_DATA.keys()):
 					sprite.kill()
-					self.scene.create_particle('flash', sprite.hitbox.center)
 					ammo_type = sprite.name
 					# get list of guns that use this ammo tye
 					guns = self.get_gun_from_ammo_type(ammo_type)
@@ -119,23 +127,26 @@ class Player(pygame.sprite.Sprite):
 					capacity_type = SAVE_DATA['ammo_capacity']
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 					
-					AMMO_DATA[ammo_type] = AMMO_DATA[ammo_type] + ammo_added
-
-					print(CONSTANT_DATA['guns'][guns[0]]['ammo_given'])
+					AMMO_DATA[ammo_type] = min(AMMO_DATA[ammo_type] + ammo_added, max_ammo)
 
 					#if current gun is same ammo type, update SAVE_DATA['ammo']
 					if self.gun in guns:
-						SAVE_DATA.update({'ammo':min(AMMO_DATA[ammo_type], max_ammo)})
-					
-					
+						SAVE_DATA.update({'ammo':AMMO_DATA[ammo_type]})	
 
+				elif sprite.name == 'jacket':
+					sprite.kill()
+					SAVE_DATA.update({'armour_type':sprite.name})
+					self.import_images(self.animations, SAVE_DATA['armour_type'])
+
+				else:
+					sprite.kill()
+					
 	def get_gun_from_ammo_type(self, ammo_type):
 		guns = []
 		for gun, attributes in CONSTANT_DATA['guns'].items():
 			if 'ammo_type' in attributes and attributes['ammo_type'] == ammo_type:
 				guns.append(gun)
 		return guns
-
 
 	def change_weapon(self, direction, gun_collected=None):	
 
@@ -166,6 +177,23 @@ class Player(pygame.sprite.Sprite):
 
 			self.scene.create_player_gun()
 			self.cooldown = 0
+
+	def hit_liquid(self, dt):
+	    for sprite in self.scene.liquid_sprites:
+	        if self.hitbox.colliderect(sprite.hitbox):
+	            if not self.underwater:
+	                self.underwater = True
+	                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+	                    self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
+	            self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	            self.underwater = False
+
+	    if self.underwater:
+	    	self.underwater_timer -= dt
+	    else:
+	    	self.underwater_timer = self.max_underwater_time
+
 
 	def collisions_x(self, group):
 		for sprite in group:
@@ -330,7 +358,7 @@ class Player(pygame.sprite.Sprite):
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type):
-		armour_coefficients = {None:[0.0, 0.0], 'Jacket': [0.3, 0.0], 'Combat':[0.6,0.3], 'Body':[0.8,0.6]}
+		armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
 		# determine energy weapon or normal for armour damage coefficient
 		coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
 		armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
@@ -354,14 +382,17 @@ class Player(pygame.sprite.Sprite):
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 
+		self.state_logic()
+		self.state.update(self, dt)
+
 		self.handle_jumping(dt)
 		self.cooldown_timer(dt)
 		self.chain_gun_spin_up(dt)
 		self.hit_by_bullet()
 		self.collect()
+		self.hit_liquid(dt)
 
-		self.state_logic()
-		self.state.update(self, dt)
+		
 
 
 	

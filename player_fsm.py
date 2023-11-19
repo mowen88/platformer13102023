@@ -100,6 +100,13 @@ class Crouch:
 
 	def state_logic(self, player):
 
+		if ACTIONS['scroll_up']:
+			player.change_weapon(1)
+			ACTIONS['scroll_up'] = False
+		elif ACTIONS['scroll_down']:
+			player.change_weapon(-1)
+			ACTIONS['scroll_down'] = False
+
 		if not player.alive:
 			return Death(player)
 
@@ -137,6 +144,13 @@ class CrouchMove:
 
 	def state_logic(self, player):
 
+		if ACTIONS['scroll_up']:
+			player.change_weapon(1)
+			ACTIONS['scroll_up'] = False
+		elif ACTIONS['scroll_down']:
+			player.change_weapon(-1)
+			ACTIONS['scroll_down'] = False
+
 		if not player.alive:
 			return Death(player)
 
@@ -171,6 +185,13 @@ class Move:
 		player.frame_index = 0
 
 	def state_logic(self, player):
+
+		if ACTIONS['scroll_up']:
+			player.change_weapon(1)
+			ACTIONS['scroll_up'] = False
+		elif ACTIONS['scroll_down']:
+			player.change_weapon(-1)
+			ACTIONS['scroll_down'] = False
 
 		if not player.alive:
 			return Death(player)
@@ -400,9 +421,10 @@ class DoubleJump(Fall):
 		player.jump_counter = 0
 		player.frame_index = 0
 		player.jump(player.jump_height)
+		self.gun = player.gun
 		player.scene.create_particle('double_jump', player.hitbox.midbottom)
 
-		# remove gun sprite from player when using ladder
+		# remove gun sprite from player when double jumping
 		player.gun_sprite.kill()
 
 	def state_logic(self, player):
@@ -410,10 +432,11 @@ class DoubleJump(Fall):
 		if not player.alive:
 			return Death(player)
 
+		# self.gun is the gun you have before the double jump, and comparing it with a new one if you collected one while double jumping 
 		if player.vel.y > 0:
-			player.scene.create_player_gun()
+			if player.gun == self.gun:
+				player.scene.create_player_gun()
 			return Fall(player)
-
 
 	def update(self, player, dt):
 		

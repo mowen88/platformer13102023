@@ -30,19 +30,19 @@ SCENE_DATA = {
 			'1':{'1':'0'}
 			}
 
-AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenade':50, 'slugs':50, 'rockets':50},
-				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenade':50, 'slugs':75, 'rockets':50},
-				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenade':100, 'slugs':100, 'rockets':100}
+AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
+				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
+				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenades':100, 'slugs':100, 'rockets':100}
 				}
 
 AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
-			'grenade':0, 'slugs':0, 'rockets':0}
+			'grenades':5, 'slugs':0, 'rockets':0}
 
 SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
 			'armour_type':None, 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
-			'guns_collected':['blaster'],
+			'guns_collected':['blaster', 'hand grenade'],
 			}
 
 CONSTANT_DATA = {
@@ -50,11 +50,11 @@ CONSTANT_DATA = {
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':18, 'auto':False},
 			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},
-			'grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenade','cooldown': 180, 'speed': 0, 'damage': 20, 'length':15, 'auto':False},
+			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 50, 'length':15, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},
 			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 6, 'length':25, 'auto':False},
 			'chain gun': {'ammo_given': 200, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':22, 'auto':True},
-			'grenade launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenade', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':15, 'auto':False},
+			'grenade launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'rockets', 'cooldown': 50, 'speed': 2, 'damage': 400, 'length':20, 'auto':False},
 			'railgun': {'ammo_given': 10, 'ammo_used': 1, 'ammo_type': 'slugs', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':20, 'auto':False},
 			'hyper blaster': {'ammo_given': 100, 'ammo_used': 1, 'ammo_type': 'cells', 'cooldown': 8, 'speed': 5, 'damage': 5, 'length':23, 'auto':True},
@@ -68,5 +68,6 @@ CONSTANT_DATA = {
 			},
 
 	'all_items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
+	'armour_types':[None,'jacket','combat','body']
 		}
 
