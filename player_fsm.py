@@ -1,22 +1,21 @@
 import pygame
 from settings import *
 
-class Fall:
+class Hold:
 	def __init__(self, player):
 		
 		player.frame_index = 0
 
 	def state_logic(self, player):
-
-		if player.collide_ladders() and player.vel.y > 0:
-			return OnLadderIdle(player)
+		if player.scene.fade_surf.alpha < 255 and not player.scene.exiting:
+			return Idle(player)
 
 	def update(self, player, dt):
 		player.acc.x = 0
 		player.physics_x(dt)
 		player.physics_y(dt)
 
-		player.animate('fall', 0.25 * dt, False)
+		player.animate('idle', 0.25 * dt, False)
 
 class Fall:
 	def __init__(self, player):
@@ -69,6 +68,9 @@ class Idle:
 
 	def state_logic(self, player):
 
+		if player.scene.exiting:
+			return Hold(player)
+
 		if ACTIONS['scroll_up']:
 			player.change_weapon(1)
 			ACTIONS['scroll_up'] = False
@@ -108,6 +110,7 @@ class Idle:
 
 		player.get_on_ground()
 		player.exit_scene()
+		
 
 class Crouch:
 	def __init__(self, player):
@@ -329,6 +332,9 @@ class Skid:
 		player.frame_index = 0
 
 	def state_logic(self, player):
+
+		if player.scene.exiting:
+			return Hold(player)
 
 		if not player.alive:
 			return Death(player)

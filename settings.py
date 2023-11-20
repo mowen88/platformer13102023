@@ -21,6 +21,7 @@ WHITE = (255, 255, 255)
 RED = (212, 30, 60)
 NEON_BLUE = (120, 215, 225)
 NEON_GREEN = (61, 255, 110)
+DARK_GREEN = (5, 33, 55)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
 LIGHT_GREY = (199, 212, 225)
@@ -42,7 +43,7 @@ SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
 			'armour_type':None, 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
-			'guns_collected':['blaster', 'hand grenade'],
+			'guns_collected':['blaster', 'hand grenade'],'keys_collected':[]
 			}
 
 CONSTANT_DATA = {

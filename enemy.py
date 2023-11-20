@@ -178,6 +178,7 @@ class Guard(pygame.sprite.Sprite):
 		self.health -= amount
 		if self.health <= 0:
 			self.gun_sprite.kill()
+			self.scene.create_particle('chunk', self.rect.center)
 			self.kill()
 			#pass#self.alive = False
 

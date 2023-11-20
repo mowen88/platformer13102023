@@ -1,6 +1,6 @@
 import pygame, math
 from settings import *
-from player_fsm import Fall
+from player_fsm import Hold
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, name, z):
@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
 		self.max_underwater_time = 300
 		self.underwater_timer = self.max_underwater_time
 
-		self.state = Fall(self)
+		self.state = Hold(self)
 
 	def import_images(self, animation_states, armour_type):
 
@@ -180,7 +180,7 @@ class Player(pygame.sprite.Sprite):
 
 	def exit_scene(self):
 		for exit in self.scene.exit_sprites:
-			if self.hitbox.colliderect(exit.rect) and ACTIONS['up']:
+			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.scene.exiting = True
 				self.scene.new_scene = SCENE_DATA[self.scene.scene_string][exit.name]
 				self.scene.entry_point = exit.name

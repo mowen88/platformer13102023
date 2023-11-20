@@ -160,6 +160,39 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 		self.move(dt)
+
+class Door(AnimatedPickup):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
+
+		self.rect = self.image.get_rect(bottomleft=pos)
+		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.75, -self.rect.height * 0.75)
+
+	def open(self, dt):
+		if self.rect.colliderect(self.scene.player.rect):
+			if self.name not in SAVE_DATA['keys_collected']:
+				self.scene.exit_sprites.add(self)
+				self.frame_index += 0.2 * dt
+				if self.frame_index >= len(self.frames) -1:
+					self.frame_index = len(self.frames) -1
+				else:
+					self.frame_index = self.frame_index % len(self.frames)	
+		else:
+			self.frame_index -= 0.2 * dt
+			if self.frame_index <= 0: 
+				self.frame_index = 0
+			else: 
+				self.frame_index = self.frame_index % len(self.frames)
+
+		self.image = self.frames[int(self.frame_index)]
+
+		if self.frame_index == len(self.frames) -1:
+			self.scene.block_sprites.remove(self)
+		else:
+			self.scene.exit_sprites.remove(self)	
+
+	def update(self, dt):
+		self.open(dt)
 		
 
 		

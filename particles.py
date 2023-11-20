@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from settings import *
 
 class Explosion(pygame.sprite.Sprite):
@@ -23,7 +23,7 @@ class Explosion(pygame.sprite.Sprite):
 			self.kill()
 
 	def update(self, dt):
-		self.animate(0.2 * dt)
+		self.animate(0.25 * dt)
 
 class DustParticle(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, z, path):
@@ -59,6 +59,29 @@ class DustParticle(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.25 * dt, False)
 		self.update_alpha(10, dt)
+
+class GibbedChunk(DustParticle):
+	def __init__(self, game, scene, groups, pos, z, path):
+		super().__init__(game, scene, groups, pos, z, path)
+		
+		self.gravity = 0.3
+		self.fric = 0.015
+		random_x = random.uniform(-2,2) * 2
+		random_y = random.randint(2,5)
+		self.vel = pygame.math.Vector2(random_x, -random_y)
+		self.pos = pygame.math.Vector2(self.rect.center)
+
+	def move(self, dt):
+		self.pos += self.vel * dt
+		self.rect.center = self.pos
+
+		self.vel.y += self.gravity * dt
+		self.vel.x -= self.vel.x * self.fric * dt
+
+	def update(self, dt):
+		self.move(dt)
+		self.animate(0.2 * dt, False)
+		self.update_alpha(2, dt)
 
 class MuzzleFlash(DustParticle):
 	def __init__(self, game, scene, groups, pos, z, path, firer):

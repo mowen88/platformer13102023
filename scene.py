@@ -11,10 +11,10 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform
+from sprites import FadeSurf, Collider, Tile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
-from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
+from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
 	def __init__(self, game, scene_string, entry_point):
@@ -109,7 +109,8 @@ class Scene(State):
 				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 
 		for obj in tmx_data.get_layer_by_name('exits'):
-				if obj.name == '1': Collider([self.exit_sprites, self.update_sprites, self.collision_sprites], (obj.x, obj.y), obj.name)
+				if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
@@ -200,11 +201,14 @@ class Scene(State):
 		elif particle_type == 'double_jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
 		elif particle_type == 'explosion':
-			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/explosion')
+			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/mushroom')
 		elif particle_type == 'flash':
 			Flash(self.game, self, [self.update_sprites, self.drawn_sprites], pos, WHITE, 8, LAYERS['foreground'])
 		elif particle_type == 'splash':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/splash')
+		elif particle_type == 'chunk':
+			for chunk in range(random.randint(8,12)):
+				GibbedChunk(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/chunk')
 		else:
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, LIGHT_GREY)
 
@@ -344,7 +348,7 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('HEADROOM: '+ str(self.player.got_headroom())), 
+					str('HEADROOM: '+ str(self.player.state)), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),

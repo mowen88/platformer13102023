@@ -72,7 +72,7 @@ class MenuBG(pygame.sprite.Sprite):
 
 		self.menu = menu
 		self.image = pygame.Surface((random.random()*TILESIZE, random.random()*TILESIZE))
-		self.image.fill(BROWN)
+		self.image.fill(DARK_GREEN)
 		self.rect = self.image.get_rect()
 		self.alpha = 255
 
