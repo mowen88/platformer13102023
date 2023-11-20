@@ -17,16 +17,16 @@ from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
-	def __init__(self, game, scene_num, entry_point):
+	def __init__(self, game, scene_string, entry_point):
 		State.__init__(self, game)
 
 
-		self.scene_num = scene_num
+		self.scene_string = scene_string
 		self.entry_point = entry_point
 		self.scene_size = self.get_scene_size()
-		SAVE_DATA.update({'current_scene': self.scene_num, 'entry_pos': self.entry_point})
-		# if self.scene_num not in COMPLETED_DATA['visited_zones']:
-		# 	COMPLETED_DATA['visited_zones'].append(self.scene_num)
+		SAVE_DATA.update({'current_scene': self.scene_string, 'entry_pos': self.entry_point})
+		# if self.scene_string not in COMPLETED_DATA['visited_zones']:
+		# 	COMPLETED_DATA['visited_zones'].append(self.scene_string)
 
 		self.update_sprites = pygame.sprite.Group()
 		self.drawn_sprites = Camera(self.game, self)
@@ -57,7 +57,7 @@ class Scene(State):
 		Scene(self.game, scene, self.entry_point).enter_state()
 
 	def get_scene_size(self):
-		with open(f'scenes/{self.scene_num}/{self.scene_num}_blocks.csv', newline='') as csvfile:
+		with open(f'scenes/{self.scene_string}/{self.scene_string}_blocks.csv', newline='') as csvfile:
 		    reader = csv.reader(csvfile, delimiter=',')
 		    for row in reader:
 		        rows = (sum (1 for row in reader) + 1)
@@ -66,7 +66,7 @@ class Scene(State):
 
 	def create_scene_instances(self):
 
-		tmx_data = load_pygame(f'scenes/{self.scene_num}/{self.scene_num}.tmx')
+		tmx_data = load_pygame(f'scenes/{self.scene_string}/{self.scene_string}.tmx')
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())

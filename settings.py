@@ -26,8 +26,8 @@ BROWN = (110, 74, 57)
 LIGHT_GREY = (199, 212, 225)
 
 SCENE_DATA = {
-			'0':{'1':'1'},
-			'1':{'1':'0'}
+			'0':{'1':'room_2'},
+			'room_2':{'1':'0'}
 			}
 
 AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},

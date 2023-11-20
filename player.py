@@ -179,11 +179,11 @@ class Player(pygame.sprite.Sprite):
 			self.cooldown = 0
 
 	def exit_scene(self):
-		for door in self.scene.exit_sprites:
-			if self.hitbox.colliderect(door.rect) and ACTIONS['up']:
+		for exit in self.scene.exit_sprites:
+			if self.hitbox.colliderect(exit.rect) and ACTIONS['up']:
 				self.scene.exiting = True
-				self.scene.new_scene = SCENE_DATA[self.scene.scene_num][door.name]
-				self.scene.entry_point = door.name
+				self.scene.new_scene = SCENE_DATA[self.scene.scene_string][exit.name]
+				self.scene.entry_point = exit.name
 
 	def hit_liquid(self, dt):
 	    for sprite in self.scene.liquid_sprites:
@@ -291,7 +291,7 @@ class Player(pygame.sprite.Sprite):
 
 	def got_headroom(self):
 		for sprite in self.scene.block_sprites:
-			if sprite.hitbox.collidepoint((self.hitbox.centerx, self.hitbox.y - 8)):
+			if sprite.hitbox.collidepoint((self.hitbox.centerx, self.hitbox.y - TILESIZE/2)):
 				return True
 		return False
 

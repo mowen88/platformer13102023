@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="16">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="16">
  <editorsettings>
-  <export target="1.csv" format="csv"/>
+  <export target="room_2.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
  <layer id="1" name="blocks" width="32" height="18">
