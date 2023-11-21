@@ -10,10 +10,18 @@ class Player(pygame.sprite.Sprite):
 		self.scene = scene
 		self.name = name
 		self.z = z
-		
-		self.animations = {'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
-		self.import_images(SAVE_DATA['armour_type'])
 
+		self.animations = {'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
+		
+		self.armour_animations = []
+		for armour in CONSTANT_DATA['armour_types']:
+			animations = {armour:{'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}}
+			self.armour_animations.append(animations)
+
+		print(self.armour_animations)
+
+		self.import_images(SAVE_DATA['armour_type'])
+		
 		self.frame_index = 0
 		self.image = self.animations['fall'][self.frame_index].convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
@@ -63,6 +71,8 @@ class Player(pygame.sprite.Sprite):
 		for animation in self.animations.keys():
 			full_path = path + animation
 			self.animations[animation] = self.game.get_folder_images(full_path)
+
+		return full_path
 
 	def animate(self, state, speed, loop=True):
 
