@@ -170,14 +170,16 @@ class Door(AnimatedPickup):
 
 	def open(self, dt):
 		if self.rect.colliderect(self.scene.player.rect):
-			if self.name not in SAVE_DATA['keys_collected']:
-				self.scene.exit_sprites.add(self)
-				self.frame_index += 0.2 * dt
-				if self.frame_index >= len(self.frames) -1:
-					self.frame_index = len(self.frames) -1
-				else:
-					self.frame_index = self.frame_index % len(self.frames)	
+			
+			self.frame_index += 0.2 * dt
+			if self.frame_index >= len(self.frames) -1:
+				self.frame_index = len(self.frames) -1
+			else:
+				self.frame_index = self.frame_index % len(self.frames)
+
+
 		else:
+			self.scene.message = None
 			self.frame_index -= 0.2 * dt
 			if self.frame_index <= 0: 
 				self.frame_index = 0
@@ -185,14 +187,14 @@ class Door(AnimatedPickup):
 				self.frame_index = self.frame_index % len(self.frames)
 
 		self.image = self.frames[int(self.frame_index)]
-
 		if self.frame_index == len(self.frames) -1:
-			self.scene.block_sprites.remove(self)
+			self.scene.exit_sprites.add(self)
 		else:
-			self.scene.exit_sprites.remove(self)	
-
+			self.scene.exit_sprites.remove(self)
+			
 	def update(self, dt):
 		self.open(dt)
+
 		
 
 		

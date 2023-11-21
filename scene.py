@@ -4,7 +4,6 @@ from state import State
 from settings import *
 
 from pytmx.util_pygame import load_pygame
-
 from camera import Camera
 from pause import PauseMenu
 from inventory import Inventory
@@ -19,7 +18,6 @@ from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, Shot
 class Scene(State):
 	def __init__(self, game, scene_string, entry_point):
 		State.__init__(self, game)
-
 
 		self.scene_string = scene_string
 		self.entry_point = entry_point
@@ -52,8 +50,10 @@ class Scene(State):
 		self.pause = PauseMenu(self.game)
 		self.inventory = Inventory(self.game)
 		self.hud = HUD(self.game, self)
+		self.message = None
 
 	def create_scene(self, scene):
+
 		Scene(self.game, scene, self.entry_point).enter_state()
 
 	def get_scene_size(self):
@@ -111,6 +111,14 @@ class Scene(State):
 		for obj in tmx_data.get_layer_by_name('exits'):
 				if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+				if obj.name == '2': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+				if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+
+
+				# if obj.name == 'Ammo Depot': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
 
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
@@ -325,7 +333,7 @@ class Scene(State):
 		self.pause_or_inventory(ACTIONS['space'], self.pause)
 		self.pause_or_inventory(ACTIONS['enter'], self.inventory)
 		self.hud.update(dt)
-		self.update_sprites.update(dt)	
+		self.update_sprites.update(dt)
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -336,6 +344,9 @@ class Scene(State):
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 		self.hud.draw(screen)
 		self.fade_surf.draw(screen)
+
+		if self.message:
+			self.game.render_text(self.message, WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT + TILESIZE * 3), False)
 
 		#self.hitscan()
 		# if self.player.muzzle_pos is not None:
@@ -348,7 +359,7 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('HEADROOM: '+ str(self.player.state)), 
+					str('UNIT: '+ str(self.exiting)), 
 					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
 					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),

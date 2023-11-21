@@ -104,6 +104,7 @@ class Player(pygame.sprite.Sprite):
 					if sprite.name not in SAVE_DATA['guns_collected']:
 						SAVE_DATA['guns_collected'].append(sprite.name)
 
+
 					sprite.kill()
 					self.change_weapon(1, sprite.name)
 					ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
@@ -136,7 +137,7 @@ class Player(pygame.sprite.Sprite):
 				elif sprite.name == 'jacket':
 					sprite.kill()
 					SAVE_DATA.update({'armour_type':sprite.name})
-					self.import_images(self.animations, SAVE_DATA['armour_type'])
+					self.import_images(SAVE_DATA['armour_type'])
 
 				else:
 					sprite.kill()
