@@ -1,5 +1,6 @@
 import pygame, math
 from settings import *
+from message import Message
 from player_fsm import Hold
 
 class Player(pygame.sprite.Sprite):
@@ -97,6 +98,9 @@ class Player(pygame.sprite.Sprite):
 		for sprite in self.scene.pickup_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
 
+				# show message on screen
+				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], sprite.name, (WIDTH - TILESIZE * 3.5, TILESIZE * 1.5))
+
 				self.scene.create_particle('flash', sprite.hitbox.center)
 
 				if sprite.name in list(CONSTANT_DATA['guns'].keys()):
@@ -183,7 +187,23 @@ class Player(pygame.sprite.Sprite):
 		for exit in self.scene.exit_sprites:
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.scene.exiting = True
-				self.scene.new_scene = SCENE_DATA[self.scene.scene_string][exit.name]
+				self.scene.new_unit = self.scene.current_unit
+
+				levels = list(SCENE_DATA[self.scene.current_unit].keys())
+
+				current_level_index = levels.index(self.scene.current_level)
+				next_level = levels[current_level_index+1]
+
+
+				if exit.name == '3': # 3 = next level
+					self.scene.new_level = next_level
+				else:
+					self.scene.new_level = self.scene.current_level
+
+				print(next_level)
+
+				self.scene.new_scene = SCENE_DATA[self.scene.new_unit][self.scene.new_level][self.scene.current_scene][exit.name]
+
 				self.scene.entry_point = exit.name
 
 	def hit_liquid(self, dt):

@@ -5,6 +5,7 @@ from settings import *
 
 from pytmx.util_pygame import load_pygame
 from camera import Camera
+from message import Message
 from pause import PauseMenu
 from inventory import Inventory
 from hud import HUD
@@ -16,13 +17,15 @@ from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
-	def __init__(self, game, scene_string, entry_point):
+	def __init__(self, game, current_unit, current_level, current_scene, entry_point):
 		State.__init__(self, game)
 
-		self.scene_string = scene_string
+		self.current_unit = current_unit
+		self.current_level = current_level
+		self.current_scene = current_scene
 		self.entry_point = entry_point
 		self.scene_size = self.get_scene_size()
-		SAVE_DATA.update({'current_scene': self.scene_string, 'entry_pos': self.entry_point})
+		SAVE_DATA.update({'current_unit': self.current_unit, 'current_level': self.current_level,'current_scene': self.current_scene, 'entry_pos': self.entry_point})
 		# if self.scene_string not in COMPLETED_DATA['visited_zones']:
 		# 	COMPLETED_DATA['visited_zones'].append(self.scene_string)
 
@@ -42,6 +45,7 @@ class Scene(State):
 		self.pickup_sprites = pygame.sprite.Group()
 
 		# fade screen and exit flag
+		self.message = None
 		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
 		self.exiting = False
 		
@@ -50,14 +54,15 @@ class Scene(State):
 		self.pause = PauseMenu(self.game)
 		self.inventory = Inventory(self.game)
 		self.hud = HUD(self.game, self)
-		self.message = None
+		 
 
-	def create_scene(self, scene):
-
-		Scene(self.game, scene, self.entry_point).enter_state()
+	def create_scene(self, unit, level, scene):
+		# unit = self.current_unit if unit != self.current_unit else self.current_unit
+		# level = self.current_level if level != self.current_level else self.current_level
+		Scene(self.game, unit, level, scene, self.entry_point).enter_state()
 
 	def get_scene_size(self):
-		with open(f'scenes/{self.scene_string}/{self.scene_string}_blocks.csv', newline='') as csvfile:
+		with open(f'scenes/{self.current_unit}/{self.current_level}/{self.current_scene}_blocks.csv', newline='') as csvfile:
 		    reader = csv.reader(csvfile, delimiter=',')
 		    for row in reader:
 		        rows = (sum (1 for row in reader) + 1)
@@ -66,7 +71,7 @@ class Scene(State):
 
 	def create_scene_instances(self):
 
-		tmx_data = load_pygame(f'scenes/{self.scene_string}/{self.scene_string}.tmx')
+		tmx_data = load_pygame(f'scenes/{self.current_unit}/{self.current_level}/{self.current_scene}.tmx')
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())
@@ -97,7 +102,7 @@ class Scene(State):
 			if obj.name == '4': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (-0.025, 0.025), 48, 'circular')
 			if obj.name == '5': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.05), 64)
+				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.025), 64)
 			if obj.name == '6': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
 			if obj.name == '7': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -115,6 +120,8 @@ class Scene(State):
 										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 				if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 										LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+				# if obj.name == 'Installation': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 
 				# if obj.name == 'Ammo Depot': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -343,10 +350,9 @@ class Scene(State):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 		self.hud.draw(screen)
-		self.fade_surf.draw(screen)
-
 		if self.message:
-			self.game.render_text(self.message, WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT + TILESIZE * 3), False)
+			self.message.draw(screen)
+		self.fade_surf.draw(screen)
 
 		#self.hitscan()
 		# if self.player.muzzle_pos is not None:
@@ -359,9 +365,9 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('UNIT: '+ str(self.exiting)), 
-					# str('VEL_Y: '+str(round(self.player.vel.y,3))),
-					# str('GUN: '+ str(SAVE_DATA['gun_index'])), 
+					str('UNIT: '+ str(self.current_unit)), 
+					str('LEVEL: '+str(self.current_level)),
+					str('STR: '+ str(SCENE_DATA[self.current_unit][self.current_level][self.current_scene])), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])

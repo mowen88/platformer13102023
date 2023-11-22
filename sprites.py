@@ -10,7 +10,7 @@ class FadeSurf(pygame.sprite.Sprite):
 		self.image = pygame.Surface((self.scene.scene_size))
 		self.alpha = alpha
 		self.loading_text = True
-		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/10 # makes load time relative to zone size
+		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/20 # makes load time relative to zone size
 		self.fade_duration = 255/20
 		self.z = z
 		self.rect = self.image.get_rect(topleft = pos)
@@ -22,7 +22,7 @@ class FadeSurf(pygame.sprite.Sprite):
 			if self.alpha >= 255: 
 				self.alpha = 255
 				self.scene.exit_state()
-				self.scene.create_scene(self.scene.new_scene)
+				self.scene.create_scene(self.scene.new_unit, self.scene.new_level, self.scene.new_scene)
 			
 		else:
 			self.timer -= dt
@@ -162,7 +162,7 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.move(dt)
 
 class Door(AnimatedPickup):
-	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, new_level=None):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 
 		self.rect = self.image.get_rect(bottomleft=pos)
@@ -179,7 +179,6 @@ class Door(AnimatedPickup):
 
 
 		else:
-			self.scene.message = None
 			self.frame_index -= 0.2 * dt
 			if self.frame_index <= 0: 
 				self.frame_index = 0

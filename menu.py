@@ -149,7 +149,7 @@ class MainMenu(State):
 			self.game.running = False
  
 		elif state == 'start_game':
-			Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+			Scene(self.game, SAVE_DATA['current_unit'], SAVE_DATA['current_level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 
 
 	def draw_bounding_box(self, screen):
