@@ -214,7 +214,7 @@ class Scene(State):
 		elif particle_type == 'double_jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
 		elif particle_type == 'explosion':
-			Explosion(self.game, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/mushroom')
+			Explosion(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/mushroom')
 		elif particle_type == 'flash':
 			Flash(self.game, self, [self.update_sprites, self.drawn_sprites], pos, WHITE, 8, LAYERS['foreground'])
 		elif particle_type == 'splash':
@@ -364,7 +364,8 @@ class Scene(State):
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
-					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
+					str('GUARD HEALTH: '+ str(self.guard.health)),
+					str('GUARD HEALTH2: '+ str(self.guard2.health)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

@@ -2,9 +2,10 @@ import pygame, random
 from settings import *
 
 class Explosion(pygame.sprite.Sprite):
-	def __init__(self, game, groups, pos, z, path, damage=0, knockback_power=0):
+	def __init__(self, game, scene, groups, pos, z, path, damage=0, knockback_power=0):
 		super().__init__(groups)
 		self.game = game
+		self.scene = scene
 		self.z = z
 		self.frames = self.game.get_folder_images(path)
 		self.frame_index = 0
@@ -13,6 +14,16 @@ class Explosion(pygame.sprite.Sprite):
 
 		self.damage = damage
 		self.knockback_power = knockback_power
+
+		self.blast_damage(self.scene.enemy_sprites)
+		self.blast_damage([self.scene.player])
+
+	def blast_damage(self, group):
+		for sprite in group:
+			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
+			if distance < 100 and self.frame_index < 1:
+				sprite.reduce_health(int(100-distance))
+				print(int(100-distance))
 
 	def animate(self, animation_speed):
 
@@ -23,6 +34,7 @@ class Explosion(pygame.sprite.Sprite):
 			self.kill()
 
 	def update(self, dt):
+		
 		self.animate(0.25 * dt)
 
 class DustParticle(pygame.sprite.Sprite):

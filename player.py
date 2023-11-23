@@ -99,7 +99,7 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(sprite.hitbox):
 
 				# show message on screen
-				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], sprite.name, (WIDTH - TILESIZE * 3.5, TILESIZE * 1.5))
+				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], sprite.name, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 				self.scene.create_particle('flash', sprite.hitbox.center)
 
@@ -375,7 +375,7 @@ class Player(pygame.sprite.Sprite):
 				self.reduce_health(sprite.damage, ammo_type)
 				sprite.kill()
 
-	def reduce_health(self, amount, ammo_type):
+	def reduce_health(self, amount, ammo_type=False):
 		armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
 		# determine energy weapon or normal for armour damage coefficient
 		coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]

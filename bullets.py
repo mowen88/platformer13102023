@@ -106,7 +106,12 @@ class Grenade(BlasterBullet):
 	def particles(self, dt):
 		self.timer += dt
 
-		if self.timer > 30:
+		if self.timer < 30:
+			for sprite in self.scene.enemy_sprites:
+				if self.rect.colliderect(sprite.hitbox):
+					self.scene.create_particle('explosion', self.rect.center)
+					self.kill()
+		else:
 			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()
 
@@ -114,9 +119,7 @@ class Grenade(BlasterBullet):
 			self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
 			self.timer = 0
 
-		for sprite in self.scene.enemy_sprites:
-			if self.rect.colliderect(sprite.hitbox):
-				self.scene.create_particle('explosion', self.rect.center)
+		
 
 	def move(self, dt):
 		self.old_rect = self.rect.copy()
