@@ -27,31 +27,10 @@ BROWN = (110, 74, 57)
 LIGHT_GREY = (199, 212, 225)
 
 SCENE_DATA = {
-			0:{
-			  'Outer Base':{'0':{'1':'1', '3':'1'}, 
-			  				'1':{'1':'0', '2':'2', '3':'0'},
-			  				'2':{'2':'1','3':'0'}},
-			  'Installation':{'0':{'1':'1', '3':'1'},
-			  				 '1':{'1':'0', '2':'2', '3':'0'},
-			  				 '2':{'2':'1','3':'0'}},
-			  'Comm Center':{'0':{'1':'1', '3':'1'},
-			  				 '1':{'1':'0', '2':'2', '3':'0'},
-			  				 '2':{'2':'1'}},
-			  'Lost Station':{'0':{'1':'1', '3':'1'},
-			  				 '1':{'1':'0', '2':'2', '3':'0'},
-			  				 '2':{'2':'1'}},
-			  },
-			1:{
-			  'Ammo Depot':{'0':{'1':'1', '3':'1'}, 
-			  				'1':{'1':'0', '2':'2', '3':'0'},
-			  				'2':{'2':'1','3':'0'}},
-			  'Supply Station':{'0':{'1':'1', '3':'1'},
-			  				 '1':{'1':'0', '2':'2', '3':'0'},
-			  				 '2':{'2':'1','3':'0'}},
-			  'Warehouse':{'0':{'1':'1', '3':'1'},
-			  				 '1':{'1':'0', '2':'2', '3':'0'},
-			  				 '2':{'2':'1'}},
-			}}
+			   '0':{'1':'1', '3':'1'}, 
+  			   '1':{'1':'0', '2':'2', '3':'0'},
+  			   '2':{'2':'1','3':'0'}
+  			}
 
 AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
@@ -62,7 +41,7 @@ AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':5, 'slugs':0, 'rockets':0}
 
 SAVE_DATA = {
-			'current_unit':0, 'current_level':'Outer Base','current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
 			'armour_type':None, 'armour':100, 'max_armour':100, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
 			'guns_collected':['blaster', 'hand grenade'],'keys_collected':['red key']

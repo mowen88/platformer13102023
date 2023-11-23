@@ -17,15 +17,13 @@ from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
-	def __init__(self, game, current_unit, current_level, current_scene, entry_point):
+	def __init__(self, game, current_scene, entry_point):
 		State.__init__(self, game)
 
-		self.current_unit = current_unit
-		self.current_level = current_level
 		self.current_scene = current_scene
 		self.entry_point = entry_point
 		self.scene_size = self.get_scene_size()
-		SAVE_DATA.update({'current_unit': self.current_unit, 'current_level': self.current_level,'current_scene': self.current_scene, 'entry_pos': self.entry_point})
+		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
 		# if self.scene_string not in COMPLETED_DATA['visited_zones']:
 		# 	COMPLETED_DATA['visited_zones'].append(self.scene_string)
 
@@ -56,13 +54,13 @@ class Scene(State):
 		self.hud = HUD(self.game, self)
 		 
 
-	def create_scene(self, unit, level, scene):
+	def create_scene(self, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
 		# level = self.current_level if level != self.current_level else self.current_level
-		Scene(self.game, unit, level, scene, self.entry_point).enter_state()
+		Scene(self.game, scene, self.entry_point).enter_state()
 
 	def get_scene_size(self):
-		with open(f'scenes/{self.current_unit}/{self.current_level}/{self.current_scene}_blocks.csv', newline='') as csvfile:
+		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
 		    reader = csv.reader(csvfile, delimiter=',')
 		    for row in reader:
 		        rows = (sum (1 for row in reader) + 1)
@@ -71,7 +69,7 @@ class Scene(State):
 
 	def create_scene_instances(self):
 
-		tmx_data = load_pygame(f'scenes/{self.current_unit}/{self.current_level}/{self.current_scene}.tmx')
+		tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())
@@ -365,9 +363,7 @@ class Scene(State):
 		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
 		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('UNIT: '+ str(self.current_unit)), 
-					str('LEVEL: '+str(self.current_level)),
-					str('STR: '+ str(SCENE_DATA[self.current_unit][self.current_level][self.current_scene])), 
+					str('UNIT: '+ str(self.current_scene)), 
 					# str('AMMO TYPE: '+str(SAVE_DATA['ammo'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])

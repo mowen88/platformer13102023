@@ -187,23 +187,7 @@ class Player(pygame.sprite.Sprite):
 		for exit in self.scene.exit_sprites:
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.scene.exiting = True
-				self.scene.new_unit = self.scene.current_unit
-
-				levels = list(SCENE_DATA[self.scene.current_unit].keys())
-
-				current_level_index = levels.index(self.scene.current_level)
-				next_level = levels[current_level_index+1]
-
-
-				if exit.name == '3': # 3 = next level
-					self.scene.new_level = next_level
-				else:
-					self.scene.new_level = self.scene.current_level
-
-				print(next_level)
-
-				self.scene.new_scene = SCENE_DATA[self.scene.new_unit][self.scene.new_level][self.scene.current_scene][exit.name]
-
+				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
 				self.scene.entry_point = exit.name
 
 	def hit_liquid(self, dt):
