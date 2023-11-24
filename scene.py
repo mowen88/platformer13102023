@@ -74,7 +74,7 @@ class Scene(State):
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())
-		armour_list = CONSTANT_DATA['armour_types']
+		armour_list = list(ARMOUR_DATA.keys())
 		item_list = CONSTANT_DATA['all_items']
 
 		for obj in tmx_data.get_layer_by_name('pickups'):
@@ -401,7 +401,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
 					str('GUARD HEALTH: '+ str(self.guard.health)),
-					str('GUARD HEALTH2: '+ str(self.guard.health)),
+					str('ARMOUR TYPE: '+ str(SAVE_DATA['armour_type'])),
+					str('ARMOUR TYPE: '+ str(SAVE_DATA['max_armour'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

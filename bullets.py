@@ -144,8 +144,7 @@ class Grenade(BlasterBullet):
 
 			if self.scene.player.hitbox.colliderect(self.rect):
 				self.scene.create_particle('explosion', self.rect.center)
-				
-
+	
 		else:
 			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()

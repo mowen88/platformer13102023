@@ -2,7 +2,7 @@ import pygame, random
 from settings import *
 
 class Explosion(pygame.sprite.Sprite):
-	def __init__(self, game, scene, groups, pos, z, path, radius=100, max_damage=100):
+	def __init__(self, game, scene, groups, pos, z, path, radius=100, max_damage=50):
 		super().__init__(groups)
 		self.game = game
 		self.scene = scene
