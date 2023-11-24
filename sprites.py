@@ -161,6 +161,31 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.move(dt)
 
+class Barrel(pygame.sprite.Sprite):
+	def __init__(self, scene,  groups, pos, surf, z):
+		super().__init__(groups)
+
+		self.scene = scene
+		self.image = surf
+		self.rect = self.image.get_rect(bottomleft = pos)	
+		self.z = z
+		self.hitbox = self.rect.copy()
+		self.raycast_box = self.hitbox.copy().inflate(0,2)
+		self.old_hitbox = self.hitbox.copy()
+		self.pos = pygame.math.Vector2(self.rect.bottomleft)
+		self.vel = pygame.math.Vector2()
+		self.health = 20
+
+	def explode(self):
+		for bullet in self.scene.bullet_sprites:
+			if bullet.hitbox.colliderect(self.hitbox):
+				self.scene.create_particle('explosion', self.rect.center)
+				#bullet.kill()
+				self.kill()
+
+	def update(self, dt):
+		self.explode()
+
 class Door(AnimatedPickup):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, new_level=None):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)

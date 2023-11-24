@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Door
+from sprites import FadeSurf, Collider, Tile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -41,6 +41,7 @@ class Scene(State):
 		self.collision_sprites = pygame.sprite.Group()
 		self.liquid_sprites = pygame.sprite.Group()
 		self.pickup_sprites = pygame.sprite.Group()
+		self.destructible_sprites = pygame.sprite.Group()
 
 		# fade screen and exit flag
 		self.message = None
@@ -105,7 +106,10 @@ class Scene(State):
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
 			if obj.name == '7': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0), 16)
-
+			# barrels
+			if obj.name == '8': Barrel(self, [self.platform_sprites, self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
+		
 		# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
 		for obj in tmx_data.get_layer_by_name('entries'):
 			if obj.name == self.entry_point:
@@ -365,7 +369,7 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
 					str('GUARD HEALTH: '+ str(self.guard.health)),
-					str('GUARD HEALTH2: '+ str(self.guard2.health)),
+					str('GUARD HEALTH2: '+ str(self.guard.health)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

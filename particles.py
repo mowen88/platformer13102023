@@ -2,7 +2,7 @@ import pygame, random
 from settings import *
 
 class Explosion(pygame.sprite.Sprite):
-	def __init__(self, game, scene, groups, pos, z, path, damage=0, knockback_power=0):
+	def __init__(self, game, scene, groups, pos, z, path, radius=100, max_damage=100):
 		super().__init__(groups)
 		self.game = game
 		self.scene = scene
@@ -12,8 +12,8 @@ class Explosion(pygame.sprite.Sprite):
 		self.image = self.frames[self.frame_index]
 		self.rect = self.image.get_rect(center = pos)
 
-		self.damage = damage
-		self.knockback_power = knockback_power
+		self.radius = radius
+		self.max_damage = max_damage
 
 		self.blast_damage(self.scene.enemy_sprites)
 		self.blast_damage([self.scene.player])
@@ -21,10 +21,10 @@ class Explosion(pygame.sprite.Sprite):
 	def blast_damage(self, group):
 		for sprite in group:
 			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
-			if distance < 100 and self.frame_index < 1:
-				sprite.reduce_health(int(100-distance))
-				print(int(100-distance))
-
+			if distance < self.radius:
+				ratio = self.max_damage/self.radius
+				sprite.reduce_health(int(self.max_damage - distance * ratio))
+				
 	def animate(self, animation_speed):
 
 		self.frame_index += animation_speed
