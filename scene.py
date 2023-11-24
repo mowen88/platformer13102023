@@ -137,7 +137,7 @@ class Scene(State):
 			Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
-			SecretTile(self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
+			SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
 
 		for x, y, surf in tmx_data.get_layer_by_name('liquid').tiles():
 			Liquid([self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
@@ -283,7 +283,7 @@ class Scene(State):
 
 				if num > 6:
 
-					# make sure player is clear of its own shot by making sure hte point is far enough away before it can hurt player...
+					# make sure player is clear of its own shot by making sure the point is far enough away before it can hurt player...
 					if self.player.hitbox.collidepoint(point):
 						if sprite.gun in ['shotgun', 'super shotgun']:
 							gun_damage = round(gun_damage/(num * 0.1))
@@ -292,15 +292,20 @@ class Scene(State):
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
 						return True
 
-					for sprite in self.block_sprites:
+					for sprite in self.destructible_sprites:
 						if sprite.hitbox.collidepoint(point):
-							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
+							sprite.exploded = True
 							return True
 
 					for sprite in self.secret_sprites:
 						if sprite.hitbox.collidepoint(point):
 							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
 							sprite.activated = True
+							return True
+
+					for sprite in self.block_sprites:
+						if sprite.hitbox.collidepoint(point):
+							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
 							return True
 
 					for sprite in self.enemy_sprites:
@@ -327,9 +332,16 @@ class Scene(State):
 					if self.player.hitbox.collidepoint(point) and self.player not in hit_sprites:
 						self.player.reduce_health(gun_damage, ammo_type)
 						hit_sprites.add(self.player)
-
-						
 						AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+
+					for sprite in self.destructible_sprites:
+						if sprite.hitbox.collidepoint(point):
+							sprite.exploded = True
+
+					for sprite in self.secret_sprites:
+						if sprite.hitbox.collidepoint(point):
+							sprite.activated = True
+							return True
 
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):

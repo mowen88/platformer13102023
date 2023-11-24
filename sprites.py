@@ -1,5 +1,6 @@
 import pygame, math
 from settings import *
+from message import Message
 
 class FadeSurf(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
@@ -58,8 +59,9 @@ class Tile(pygame.sprite.Sprite):
 		self.z = z
 
 class SecretTile(pygame.sprite.Sprite):
-	def __init__(self, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
+	def __init__(self, game, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
 		super().__init__(groups)
+		self.game = game
 		self.scene = scene
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)
@@ -71,6 +73,7 @@ class SecretTile(pygame.sprite.Sprite):
 
 	def update_alpha(self, rate, dt):
 		if self.activated:
+			self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'You have found a secret.', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 			self.alpha -= rate * dt
 			if self.alpha < 0:
 				for sprite in self.scene.secret_sprites:
@@ -197,17 +200,20 @@ class Barrel(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.pos = pygame.math.Vector2(self.rect.bottomleft)
 		self.vel = pygame.math.Vector2()
-		self.health = 20
+		self.exploded = False
 
 	def explode(self):
-		for bullet in self.scene.bullet_sprites:
-			if bullet.hitbox.colliderect(self.hitbox):
-				self.scene.create_particle('explosion', self.rect.center)
-				#bullet.kill()
-				self.kill()
+		
+		self.scene.create_particle('explosion', self.rect.center)
+		for sprite in self.scene.destructible_sprites:
+			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
+			if distance < 50:
+				sprite.scene.create_particle('explosion', sprite.rect.center)
+				sprite.kill()
 
 	def update(self, dt):
-		self.explode()
+		if self.exploded:
+			self.explode()
 
 class Door(AnimatedPickup):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, new_level=None):

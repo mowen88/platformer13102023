@@ -15,8 +15,15 @@ class Explosion(pygame.sprite.Sprite):
 		self.radius = radius
 		self.max_damage = max_damage
 
+		self.blast_secret()
 		self.blast_damage(self.scene.enemy_sprites)
 		self.blast_damage([self.scene.player])
+
+	def blast_secret(self):
+		for sprite in self.scene.secret_sprites:
+			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
+			if distance < 50:
+				sprite.activated = True
 
 	def blast_damage(self, group):
 		for sprite in group:

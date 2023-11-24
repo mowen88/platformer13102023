@@ -32,6 +32,11 @@ class BlasterBullet(pygame.sprite.Sprite):
 
 
 	def collide(self):
+		for sprite in self.scene.destructible_sprites:
+			if self.rect.colliderect(sprite.hitbox):
+				sprite.exploded = True
+				self.kill()
+
 		for sprite in self.scene.block_sprites:
 			if self.rect.colliderect(sprite.hitbox):
 				self.kill()
@@ -39,9 +44,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 		for sprite in self.scene.secret_sprites:
 			if self.rect.colliderect(sprite.hitbox):
 				self.kill()
-				sprite.activated = True
-				
-					
+				sprite.activated = True	
 
 	def particles(self, dt):
 		self.timer += dt
@@ -85,6 +88,12 @@ class Grenade(BlasterBullet):
 		self.collide()
 
 	def collide(self):
+
+		for sprite in self.scene.destructible_sprites:
+			if self.rect.colliderect(sprite.hitbox):
+				sprite.exploded = True
+				self.kill()
+
 		for sprite in self.scene.secret_sprites:
 			if self.rect.colliderect(sprite.hitbox):
 				self.scene.create_particle('explosion', self.rect.center)
@@ -127,11 +136,14 @@ class Grenade(BlasterBullet):
 		self.timer += dt
 
 		if self.timer < 30:
+			if self.scene.player.hitbox.colliderect(self.rect):
+				self.scene.create_particle('explosion', self.rect.center)
+				self.kill()
+
 			for sprite in self.scene.enemy_sprites:
 				if self.rect.colliderect(sprite.hitbox):
 					self.scene.create_particle('explosion', self.rect.center)
 					self.kill()
-
 		else:
 			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()
