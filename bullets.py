@@ -30,10 +30,18 @@ class BlasterBullet(pygame.sprite.Sprite):
 
 		self.damage = CONSTANT_DATA['guns'][self.firer.gun]['damage'] if self.firer == self.scene.player else CONSTANT_DATA['enemies'][self.firer.name]['damage']
 
+
 	def collide(self):
 		for sprite in self.scene.block_sprites:
 			if self.rect.colliderect(sprite.hitbox):
 				self.kill()
+
+		for sprite in self.scene.secret_sprites:
+			if self.rect.colliderect(sprite.hitbox):
+				self.kill()
+				sprite.activated = True
+				
+					
 
 	def particles(self, dt):
 		self.timer += dt
@@ -74,7 +82,19 @@ class Grenade(BlasterBullet):
 			if block.hitbox.colliderect(self.rect):
 				self.kill()
 
+		self.collide()
+
+	def collide(self):
+		for sprite in self.scene.secret_sprites:
+			if self.rect.colliderect(sprite.hitbox):
+				self.scene.create_particle('explosion', self.rect.center)
+				self.kill()
+				sprite.activated = True
+
 	def collisions_x(self):
+
+		self.collide()
+
 		for sprite in self.scene.block_sprites:
 			if self.rect.colliderect(sprite.hitbox):
 				
@@ -111,6 +131,7 @@ class Grenade(BlasterBullet):
 				if self.rect.colliderect(sprite.hitbox):
 					self.scene.create_particle('explosion', self.rect.center)
 					self.kill()
+
 		else:
 			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()
@@ -118,8 +139,6 @@ class Grenade(BlasterBullet):
 		if self.vel.magnitude() > 1 and self.timer > 4:
 			self.scene.create_particle(self.firer.gun, random.choice([self.rect.midtop, self.rect.midbottom]))
 			self.timer = 0
-
-		
 
 	def move(self, dt):
 		self.old_rect = self.rect.copy()
@@ -138,8 +157,9 @@ class Grenade(BlasterBullet):
 		self.vel.x -= self.vel.x * self.fric * dt
 
 	def update(self, dt):
-		self.move(dt)
 		self.particles(dt)
+		self.move(dt)
+		
 
 class HyperBlasterBullet(BlasterBullet):
 	def __init__(self, game, scene, firer, groups, pos, z, speed, sprite):

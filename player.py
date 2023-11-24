@@ -190,6 +190,11 @@ class Player(pygame.sprite.Sprite):
 				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
 				self.scene.entry_point = exit.name
 
+	# def hit_secret(self, dt):
+	# 	for sprite in self.scene.secret_sprites:
+	# 		if sprite.hitbox.colliderect(self.hitbox):
+	# 			sprite.activated = True
+
 	def hit_liquid(self, dt):
 	    for sprite in self.scene.liquid_sprites:
 	        if self.hitbox.colliderect(sprite.hitbox):
@@ -409,6 +414,7 @@ class Player(pygame.sprite.Sprite):
 		self.hit_by_bullet()
 		self.collect()
 		self.hit_liquid(dt)
+		# self.hit_secret(dt)
 		
 
 

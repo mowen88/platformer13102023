@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
+from sprites import FadeSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -42,6 +42,7 @@ class Scene(State):
 		self.liquid_sprites = pygame.sprite.Group()
 		self.pickup_sprites = pygame.sprite.Group()
 		self.destructible_sprites = pygame.sprite.Group()
+		self.secret_sprites = pygame.sprite.Group()
 
 		# fade screen and exit flag
 		self.message = None
@@ -133,7 +134,10 @@ class Scene(State):
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
-			Tile([self.ladder_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+			Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+
+		for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
+			SecretTile(self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
 
 		for x, y, surf in tmx_data.get_layer_by_name('liquid').tiles():
 			Liquid([self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
@@ -293,6 +297,12 @@ class Scene(State):
 							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
 							return True
 
+					for sprite in self.secret_sprites:
+						if sprite.hitbox.collidepoint(point):
+							ShotgunParticle(self.game, self, [self.update_sprites, self.drawn_sprites], point_list[num-1], LAYERS['particles'])
+							sprite.activated = True
+							return True
+
 					for sprite in self.enemy_sprites:
 						if sprite.hitbox.collidepoint(point):
 							if sprite.gun in ['shotgun', 'super shotgun']:
@@ -323,6 +333,11 @@ class Scene(State):
 
 					for sprite in self.block_sprites:
 						if sprite.hitbox.collidepoint(point):
+							return True
+
+					for sprite in self.secret_sprites:
+						if sprite.hitbox.collidepoint(point):
+							sprite.activated = True
 							return True
 					
 					for sprite in self.enemy_sprites:

@@ -57,6 +57,29 @@ class Tile(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.z = z
 
+class SecretTile(pygame.sprite.Sprite):
+	def __init__(self, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
+		super().__init__(groups)
+		self.scene = scene
+		self.image = surf
+		self.rect = self.image.get_rect(topleft = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.old_hitbox = self.hitbox.copy()
+		self.z = z
+		self.alpha = 255
+		self.activated = False
+
+	def update_alpha(self, rate, dt):
+		if self.activated:
+			self.alpha -= rate * dt
+			if self.alpha < 0:
+				for sprite in self.scene.secret_sprites:
+					sprite.kill()
+			self.image.set_alpha(self.alpha)
+
+	def update(self, dt):
+		self.update_alpha(10, dt) 
+
 class AnimatedTile(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type=None):
 		super().__init__(groups)
