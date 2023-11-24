@@ -2,9 +2,10 @@ from state import State
 from settings import *
 
 class Inventory(State):
-	def __init__(self, game):
+	def __init__(self, game, scene):
 		State.__init__(self, game)
 
+		self.scene = scene
 		self.activated_item = None
 		self.padding = 24
 
@@ -64,6 +65,9 @@ class Inventory(State):
 
 		elif self.activated_item in CONSTANT_DATA['all_items']:
 			SAVE_DATA['items'].remove(self.activated_item)
+			if self.activated_item == 'quad damage':
+				self.scene.player.quad_damage = True
+				self.scene.create_glow('blue')
 			self.buttons = self.get_list()
 			self.activated_item = None 
 			self.exit_state()

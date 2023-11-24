@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
+from sprites import FadeSurf, Collider, Tile, Glow, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -52,9 +52,8 @@ class Scene(State):
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
 		self.pause = PauseMenu(self.game)
-		self.inventory = Inventory(self.game)
+		self.inventory = Inventory(self.game, self)
 		self.hud = HUD(self.game, self)
-		 
 
 	def create_scene(self, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
@@ -114,7 +113,7 @@ class Scene(State):
 		# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
 		for obj in tmx_data.get_layer_by_name('entries'):
 			if obj.name == self.entry_point:
-				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
+				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
 
 		for obj in tmx_data.get_layer_by_name('exits'):
 				if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -154,6 +153,10 @@ class Scene(State):
 		# create gun objects for the enemies and player
 		self.create_enemy_guns()
 		self.create_player_gun()
+
+	def create_glow(self, colour):
+		if self.player.quad_damage:
+			Glow(self.game, self, [self.update_sprites, self.drawn_sprites], self.player.rect.center, pygame.image.load(f'assets/{colour}_glow.png').convert_alpha())	
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
@@ -379,9 +382,11 @@ class Scene(State):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 		self.hud.draw(screen)
+
 		if self.message:
 			self.message.draw(screen)
 		self.fade_surf.draw(screen)
+
 
 		#self.hitscan()
 		# if self.player.muzzle_pos is not None:

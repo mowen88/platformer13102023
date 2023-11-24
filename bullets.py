@@ -136,14 +136,16 @@ class Grenade(BlasterBullet):
 		self.timer += dt
 
 		if self.timer < 30:
-			if self.scene.player.hitbox.colliderect(self.rect):
-				self.scene.create_particle('explosion', self.rect.center)
-				self.kill()
 
 			for sprite in self.scene.enemy_sprites:
 				if self.rect.colliderect(sprite.hitbox):
-					self.scene.create_particle('explosion', self.rect.center)
+					sprite.scene.create_particle('explosion', self.rect.center)
 					self.kill()
+
+			if self.scene.player.hitbox.colliderect(self.rect):
+				self.scene.create_particle('explosion', self.rect.center)
+				
+
 		else:
 			self.scene.create_particle('explosion', self.rect.center)
 			self.kill()
@@ -169,9 +171,9 @@ class Grenade(BlasterBullet):
 		self.vel.x -= self.vel.x * self.fric * dt
 
 	def update(self, dt):
-		self.particles(dt)
-		self.move(dt)
 		
+		self.move(dt)
+		self.particles(dt)
 
 class HyperBlasterBullet(BlasterBullet):
 	def __init__(self, game, scene, firer, groups, pos, z, speed, sprite):

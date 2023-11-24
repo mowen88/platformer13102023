@@ -48,9 +48,13 @@ class Player(pygame.sprite.Sprite):
 		self.gun = list(CONSTANT_DATA['guns'].keys())[SAVE_DATA['gun_index']]
 		self.muzzle_pos = None
 		self.cooldown = 0
+
 		self.underwater = False
 		self.max_underwater_time = 300
 		self.underwater_timer = self.max_underwater_time
+
+		self.quad_damage = False
+		self.invulnerability = False
 
 		self.state = Hold(self)
 
@@ -190,12 +194,8 @@ class Player(pygame.sprite.Sprite):
 				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
 				self.scene.entry_point = exit.name
 
-	# def hit_secret(self, dt):
-	# 	for sprite in self.scene.secret_sprites:
-	# 		if sprite.hitbox.colliderect(self.hitbox):
-	# 			sprite.activated = True
-
 	def hit_liquid(self, dt):
+		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
 	        if self.hitbox.colliderect(sprite.hitbox):
 	            if not self.underwater:

@@ -58,6 +58,22 @@ class Tile(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.z = z
 
+class Glow(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, surf, z= LAYERS['foreground']):
+		super().__init__(groups)
+		self.game = game
+		self.scene = scene
+		self.image = surf
+		self.rect = self.image.get_rect(center = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.old_hitbox = self.hitbox.copy()
+		self.z = z
+		self.alpha = 120
+
+	def update(self, dt):
+		self.image.set_alpha(self.alpha)
+		self.rect.center = self.scene.player.rect.center
+
 class SecretTile(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
 		super().__init__(groups)
