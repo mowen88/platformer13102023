@@ -103,10 +103,8 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(sprite.hitbox):
 
 				# show message on screen
-				if sprite.name not in list(ARMOUR_DATA.keys()):
-					self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], sprite.name, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
-				else:
-					self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], f'{sprite.name} armour', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+				message = f'{sprite.name} armour' if sprite.name in list(ARMOUR_DATA.keys()) else sprite.name
+				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 				self.scene.create_particle('flash', sprite.hitbox.center)
 
