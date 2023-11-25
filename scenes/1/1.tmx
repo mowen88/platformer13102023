@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="34">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="39">
  <editorsettings>
   <export target="1.csv" format="csv"/>
  </editorsettings>
@@ -112,7 +112,7 @@
   <object id="10" name="railgun_0" x="128" y="160">
    <point/>
   </object>
-  <object id="11" name="slugs" x="176" y="176">
+  <object id="11" name="slugs_0" x="176" y="176">
    <point/>
   </object>
   <object id="13" name="grenade launcher_0" x="288" y="144">
@@ -125,6 +125,21 @@
    <point/>
   </object>
   <object id="32" name="body_0" x="256" y="224">
+   <point/>
+  </object>
+  <object id="34" name="shotgun_1" x="320" y="144">
+   <point/>
+  </object>
+  <object id="35" name="shells_2" x="240" y="176">
+   <point/>
+  </object>
+  <object id="36" name="shells_3" x="272" y="176">
+   <point/>
+  </object>
+  <object id="37" name="combat_1" x="192" y="240">
+   <point/>
+  </object>
+  <object id="38" name="body_1" x="272" y="224">
    <point/>
   </object>
  </objectgroup>

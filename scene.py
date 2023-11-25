@@ -104,9 +104,9 @@ class Scene(State):
 			# for gun in gun_list:
 			# 	if obj.name == gun: AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 			# 		LAYERS['blocks'], f'assets/pickups/{obj.name}', 'loop', obj.name)
-			for ammo in ammo_list:
-				if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+			# for ammo in ammo_list:
+			# 	if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+			# 	pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
 			
 			for item in item_list:
 				if obj.name == item: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
