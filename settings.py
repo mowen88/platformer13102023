@@ -24,7 +24,7 @@ NEON_GREEN = (61, 255, 110)
 DARK_GREEN = (5, 33, 55)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
-LIGHT_GREY = (199, 212, 225)
+LIGHT_GREY = (146,143,184)
 
 SCENE_DATA = {
 			   '0':{'1':'1', '3':'1'}, 

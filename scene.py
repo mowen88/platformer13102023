@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, Glow, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
+from sprites import Bloom, FadeSurf, Collider, Tile, Glow, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -47,6 +47,11 @@ class Scene(State):
 		# fade screen and exit flag
 		self.message = None
 		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
+		
+		self.quad_surf = pygame.Surface(self.get_scene_size())
+		self.light_mask = pygame.image.load('assets/circle.png').convert_alpha()
+		self.light_rect = self.light_mask.get_rect()
+		
 		self.exiting = False
 		
 		# create all objects in the scene using tmx data
@@ -54,6 +59,12 @@ class Scene(State):
 		self.pause = PauseMenu(self.game)
 		self.inventory = Inventory(self.game, self)
 		self.hud = HUD(self.game, self)
+
+	def render_fog(self, target, screen):
+		self.quad_surf.fill((20,68,145))
+		self.light_rect.center = target.rect.center - self.drawn_sprites.offset
+		self.quad_surf.blit(self.light_mask, self.light_rect)
+		screen.blit(self.quad_surf, (0,0), special_flags = pygame.BLEND_MULT)
 
 	def create_scene(self, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
@@ -381,13 +392,15 @@ class Scene(State):
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
+		#self.render_fog(self.player, screen)
+
 		self.hud.draw(screen)
 
 		if self.message:
 			self.message.draw(screen)
 		self.fade_surf.draw(screen)
 
-
+		
 		#self.hitscan()
 		# if self.player.muzzle_pos is not None:
 		# 	pygame.draw.circle(screen, WHITE, self.player.muzzle_pos, 5)
