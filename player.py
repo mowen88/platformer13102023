@@ -162,14 +162,13 @@ class Player(pygame.sprite.Sprite):
 					else:
 						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'max capacity reached', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
-
 				elif name in list(ARMOUR_DATA.keys()):
 
 					sprite.kill()
 					self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 					self.scene.create_particle('flash', sprite.hitbox.center)
 					SAVE_DATA['killed_sprites'].append(sprite.name)
-					
+
 					max_armour = ARMOUR_DATA[name][1]
 					max_armour = max(max_armour + SAVE_DATA['shards'], SAVE_DATA['max_armour'])
 					
@@ -177,7 +176,6 @@ class Player(pygame.sprite.Sprite):
 					armour_increase = ARMOUR_DATA[name][0]
 
 					armour_list = list(ARMOUR_DATA.keys())
-
 
 					if name != 'shard':
 						SAVE_DATA.update({'max_armour':max_armour})
@@ -200,8 +198,42 @@ class Player(pygame.sprite.Sprite):
 						SAVE_DATA.update({'max_armour': SAVE_DATA['max_armour'] + armour_increase})
 						SAVE_DATA.update({'armour':current_armour + armour_increase})
 
+				elif name in list(HEALTH_DATA.keys()):
+
+					current_health = SAVE_DATA['health']
+					health_added = HEALTH_DATA[name]
+					max_health = SAVE_DATA['max_health']
+					max_health = max(max_health + SAVE_DATA['stimpacks'], SAVE_DATA['max_health'])
+
+					if name == 'stimpack':
+						SAVE_DATA.update({'max_health':max_health + health_added})
+						SAVE_DATA.update({'health':current_health + health_added})
+						sprite.kill()
+						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+						self.scene.create_particle('flash', sprite.hitbox.center)
+						SAVE_DATA['killed_sprites'].append(sprite.name)
+
+					elif SAVE_DATA['health'] < max_health:
+						SAVE_DATA.update({'health':min(max_health, current_health + health_added)})
+						sprite.kill()
+						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+						self.scene.create_particle('flash', sprite.hitbox.center)
+						SAVE_DATA['killed_sprites'].append(sprite.name)
+					else:
+						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'max capacity reached', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+
+				elif name in CONSTANT_DATA['all_items']: 
+					if name not in SAVE_DATA['items']:
+						SAVE_DATA['items'].append(name)
+						sprite.kill()
+						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+						self.scene.create_particle('flash', sprite.hitbox.center)
+						SAVE_DATA['killed_sprites'].append(sprite.name)
+					else:
+						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'max capacity reached', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 				else:
 					sprite.kill()
+
 					
 	def get_gun_from_ammo_type(self, ammo_type):
 		guns = []

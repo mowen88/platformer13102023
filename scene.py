@@ -56,8 +56,6 @@ class Scene(State):
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
-		self.pause = PauseMenu(self.game)
-		self.inventory = Inventory(self.game, self)
 		self.hud = HUD(self.game, self)
 
 	def render_fog(self, target, colour, screen):
@@ -86,6 +84,7 @@ class Scene(State):
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())
 		armour_list = list(ARMOUR_DATA.keys())
+		health_list = list(HEALTH_DATA.keys())
 		item_list = CONSTANT_DATA['all_items']
 
 		for obj in tmx_data.get_layer_by_name('pickups'):
@@ -100,6 +99,12 @@ class Scene(State):
 					for ammo in ammo_list:
 						if obj.name == f'{ammo}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 						pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+					for health in health_list:
+						if obj.name == f'{health}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+						pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+					for item in item_list:
+						if obj.name == f'{item}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+						pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
 
 			# for gun in gun_list:
 			# 	if obj.name == gun: AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -108,9 +113,7 @@ class Scene(State):
 			# 	if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 			# 	pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
 			
-			for item in item_list:
-				if obj.name == item: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+			
 
 
 			# if obj.name == 'jacket': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -394,15 +397,15 @@ class Scene(State):
 							hit_sprites.add(sprite)
 			
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
-		
+
 	def pause_or_inventory(self, action, menu_type):
 		if action:
 			menu_type.enter_state()
 			self.game.reset_keys()
 
 	def update(self, dt):
-		self.pause_or_inventory(ACTIONS['space'], self.pause)
-		self.pause_or_inventory(ACTIONS['enter'], self.inventory)
+		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
+		self.pause_or_inventory(ACTIONS['enter'], Inventory(self.game, self))
 		self.hud.update(dt)
 		self.update_sprites.update(dt)
 
@@ -438,8 +441,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
 					str('GUARD HEALTH: '+ str(self.guard.health)),
-					str('ARMOUR TYPE: '+ str(SAVE_DATA['armour_type'])),
-					str('ARMOUR TYPE: '+ str(SAVE_DATA['max_armour'])),
+					str('HEALTH: '+ str(SAVE_DATA['health'])),
+					str('HEALTH MAX: '+ str(SAVE_DATA['max_health'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

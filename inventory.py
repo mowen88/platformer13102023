@@ -63,10 +63,17 @@ class Inventory(State):
 			self.exit_state()
 			self.game.reset_keys()
 
-		elif self.activated_item in CONSTANT_DATA['all_items']:
+		elif self.activated_item in SAVE_DATA['items']:
 			SAVE_DATA['items'].remove(self.activated_item)
+
 			if self.activated_item == 'quad damage':
 				self.scene.player.quad_damage = True
+
+			if self.activated_item == 'adrenaline':
+				current_max = SAVE_DATA['max_health']
+				SAVE_DATA.update({'max_health':current_max + 1})
+				SAVE_DATA.update({'health':SAVE_DATA['max_health']})
+
 			self.buttons = self.get_list()
 			self.activated_item = None 
 			self.exit_state()

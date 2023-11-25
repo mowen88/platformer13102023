@@ -80,6 +80,7 @@ class Game:
                 elif event.button == 2:
                     ACTIONS['scroll_up'] = False
 
+
     def reset_keys(self):
         for action in ACTIONS:
             ACTIONS[action] = False
