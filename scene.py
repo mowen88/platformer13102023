@@ -11,7 +11,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import Bloom, FadeSurf, Collider, Tile, Glow, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
+from sprites import Bloom, FadeSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -60,8 +60,8 @@ class Scene(State):
 		self.inventory = Inventory(self.game, self)
 		self.hud = HUD(self.game, self)
 
-	def render_fog(self, target, screen):
-		self.quad_surf.fill((20,68,145))
+	def render_fog(self, target, colour, screen):
+		self.quad_surf.fill(colour)
 		self.light_rect.center = target.rect.center - self.drawn_sprites.offset
 		self.quad_surf.blit(self.light_mask, self.light_rect)
 		screen.blit(self.quad_surf, (0,0), special_flags = pygame.BLEND_MULT)
@@ -164,10 +164,6 @@ class Scene(State):
 		# create gun objects for the enemies and player
 		self.create_enemy_guns()
 		self.create_player_gun()
-
-	def create_glow(self, colour):
-		if self.player.quad_damage:
-			Glow(self.game, self, [self.update_sprites, self.drawn_sprites], self.player.rect.center, pygame.image.load(f'assets/{colour}_glow.png').convert_alpha())	
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
@@ -392,7 +388,10 @@ class Scene(State):
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
-		#self.render_fog(self.player, screen)
+
+		if self.player.quad_damage:
+			self.render_fog(self.player, BLUE, screen)
+			self.render_fog(self.player, RED, screen)
 
 		self.hud.draw(screen)
 

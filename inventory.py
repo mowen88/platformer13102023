@@ -67,7 +67,6 @@ class Inventory(State):
 			SAVE_DATA['items'].remove(self.activated_item)
 			if self.activated_item == 'quad damage':
 				self.scene.player.quad_damage = True
-				self.scene.create_glow('blue')
 			self.buttons = self.get_list()
 			self.activated_item = None 
 			self.exit_state()

@@ -19,6 +19,7 @@ FONT = 'fonts/homespun.ttf'
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (212, 30, 60)
+BLUE = (20,68,145)
 NEON_BLUE = (120, 215, 225)
 NEON_GREEN = (61, 255, 110)
 DARK_GREEN = (5, 33, 55)
@@ -53,11 +54,11 @@ CONSTANT_DATA = {
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':18, 'auto':False},
 			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},
-			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 50, 'length':20, 'auto':False},
+			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},
 			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 6, 'length':25, 'auto':False},
 			'chain gun': {'ammo_given': 200, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':22, 'auto':True},
-			'grenade launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':15, 'auto':False},
+			'grenade launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades', 'cooldown': 50, 'speed': 0, 'damage': 0, 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'rockets', 'cooldown': 50, 'speed': 2, 'damage': 400, 'length':20, 'auto':False},
 			'railgun': {'ammo_given': 10, 'ammo_used': 1, 'ammo_type': 'slugs', 'cooldown': 50, 'speed': 0, 'damage': 50, 'length':20, 'auto':False},
 			'hyper blaster': {'ammo_given': 100, 'ammo_used': 1, 'ammo_type': 'cells', 'cooldown': 8, 'speed': 5, 'damage': 5, 'length':23, 'auto':True},
