@@ -33,6 +33,8 @@ SCENE_DATA = {
   			   '2':{'2':'1','3':'0'}
   			}
 
+KILLED_SPRITES = []
+
 AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
 				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenades':100, 'slugs':100, 'rockets':100}
@@ -40,13 +42,13 @@ AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'g
 
 AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':5, 'slugs':0, 'rockets':0}
-ARMOUR_DATA = {None:[0,0],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
+ARMOUR_DATA = {None:[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
 
 SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
-			'armour_type':None, 'armour':0, 'max_armour':0, 'health':100, 'max_health':100,
+			'armour_type':None, 'armour':0, 'max_armour':0, 'shards': 0, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
-			'guns_collected':['blaster', 'hand grenade'],'keys_collected':['red key']
+			'guns_collected':['blaster', 'hand grenade'],'keys_collected':['red key'], 'killed_sprites':[]
 			}
 
 CONSTANT_DATA = {

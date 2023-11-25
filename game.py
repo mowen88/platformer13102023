@@ -95,7 +95,6 @@ class Game:
                 full_path = path + '/' + img
                 img_surf = pygame.image.load(full_path).convert_alpha()
                 surf_list.append(img_surf)
-
         return surf_list
 
     def render_text(self, text, colour, font, pos, topleft=False):

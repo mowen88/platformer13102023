@@ -101,22 +101,31 @@ class Player(pygame.sprite.Sprite):
 	def collect(self):
 		for sprite in self.scene.pickup_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
-
+				SAVE_DATA['killed_sprites'].append(sprite.name)
+				name = sprite.name.split('_')[0]
 				# show message on screen
-				message = f'{sprite.name} armour' if sprite.name in list(ARMOUR_DATA.keys()) else sprite.name
+				# message = f'{sprite.name.split('_')[0]} armour' if sprite.name.split('_')[0] in list(ARMOUR_DATA.keys()) else sprite.name.split('_')[0]
+
+				if name == 'shard':
+					message = f'armour {name}'
+				elif name in list(ARMOUR_DATA.keys()):
+					message = f'{name} armour'
+				else:
+					message = name
+				
 				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 				self.scene.create_particle('flash', sprite.hitbox.center)
 
-				if sprite.name in list(CONSTANT_DATA['guns'].keys()):
+				if name in list(CONSTANT_DATA['guns'].keys()):
 				
-					if sprite.name not in SAVE_DATA['guns_collected']:
-						SAVE_DATA['guns_collected'].append(sprite.name)
+					if name not in SAVE_DATA['guns_collected']:
+						SAVE_DATA['guns_collected'].append(name)
 
 					sprite.kill()
-					self.change_weapon(1, sprite.name)
-					ammo_type = CONSTANT_DATA['guns'][sprite.name]['ammo_type']
-					ammo_added = CONSTANT_DATA['guns'][sprite.name]['ammo_given']
+					self.change_weapon(1, name)
+					ammo_type = CONSTANT_DATA['guns'][name]['ammo_type']
+					ammo_added = CONSTANT_DATA['guns'][name]['ammo_given']
 					capacity_type = SAVE_DATA['ammo_capacity']
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
@@ -124,9 +133,9 @@ class Player(pygame.sprite.Sprite):
 					SAVE_DATA.update({'ammo':AMMO_DATA[ammo_type]})
 
 
-				elif sprite.name in list(AMMO_DATA.keys()):
+				elif name in list(AMMO_DATA.keys()):
 					sprite.kill()
-					ammo_type = sprite.name
+					ammo_type = name
 					# get list of guns that use this ammo tye
 					guns = self.get_gun_from_ammo_type(ammo_type)
 					# get 1 gun from the above list to use in getting
@@ -142,22 +151,35 @@ class Player(pygame.sprite.Sprite):
 					if self.gun in guns:
 						SAVE_DATA.update({'ammo':AMMO_DATA[ammo_type]})	
 
-				elif sprite.name in list(ARMOUR_DATA.keys()):
+				elif name in list(ARMOUR_DATA.keys()):
 					sprite.kill()
-					max_armour = ARMOUR_DATA[sprite.name][1]# if ARMOUR_DATA[sprite.name][1] >= SAVE_DATA['max_armour'] else SAVE_DATA['max_armour']
-					max_armour = max(max_armour, SAVE_DATA['max_armour'])
-					SAVE_DATA.update({'max_armour':max_armour})
-
+					max_armour = ARMOUR_DATA[name][1]
+					max_armour = max(max_armour + SAVE_DATA['shards'], SAVE_DATA['max_armour'])
+					
 					current_armour = SAVE_DATA['armour']
-					armour_increase = ARMOUR_DATA[sprite.name][0]
+					armour_increase = ARMOUR_DATA[name][0]
 
 					armour_list = list(ARMOUR_DATA.keys())
-					if armour_list.index(sprite.name) >= armour_list.index(SAVE_DATA['armour_type']):
-						SAVE_DATA.update({'armour_type':sprite.name})
-						SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
+					if name != 'shard':
+						SAVE_DATA.update({'max_armour':max_armour})
+						if armour_list.index(name) >= armour_list.index(SAVE_DATA['armour_type']):
+							SAVE_DATA.update({'armour_type':name})
+							SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
+							self.import_images(SAVE_DATA['armour_type'])
+						else:
+							SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
+
+					elif SAVE_DATA['armour_type'] == None:
+						SAVE_DATA.update({'shards':SAVE_DATA['shards'] + armour_increase})
+						SAVE_DATA.update({'armour':current_armour + armour_increase})
+						SAVE_DATA.update({'armour_type':'jacket'})
 						self.import_images(SAVE_DATA['armour_type'])
+						max_armour 
+
 					else:
-						SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
+						SAVE_DATA.update({'shards':SAVE_DATA['shards'] + armour_increase})
+						SAVE_DATA.update({'max_armour': SAVE_DATA['max_armour'] + armour_increase})
+						SAVE_DATA.update({'armour':current_armour + armour_increase})
 
 				else:
 					sprite.kill()

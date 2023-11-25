@@ -2,19 +2,6 @@ import pygame, math
 from settings import *
 from message import Message
 
-class Bloom(pygame.sprite.Sprite):
-	def __init__(self, scene, groups, pos, z = LAYERS['foreground']):
-		super().__init__(groups)
-
-		self.scene = scene
-		self.image = pygame.Surface(self.scene.get_scene_size(), pygame.SRCALPHA)
-		self.rect = self.image.get_rect(topleft = pos)
-		self.z = z
-		self.bloom_surf = pygame.image.load('assets/circle.png').convert_alpha()
-		self.bloom_surf = pygame.transform.scale(self.bloom_surf, self.scene.get_scene_size())
-		self.bloom_rect = self.bloom_surf.get_rect(center = (0,0))
-
-
 class FadeSurf(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
 		super().__init__(groups)
