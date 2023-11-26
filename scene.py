@@ -12,7 +12,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door
+from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door, Lever
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -47,7 +47,8 @@ class Scene(State):
 
 		# fade screen and exit flag
 		self.message = None
-		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
+		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (RES/2))
+		self.hurt_surf = HurtSurf(self.game, self, [self.update_sprites], (RES/2))
 		self.get_fog_surf()
 		
 		self.exiting = False
@@ -119,8 +120,6 @@ class Scene(State):
 			# 	if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 			# 	pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
 			
-			
-
 
 			# if obj.name == 'jacket': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 			# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
@@ -174,11 +173,16 @@ class Scene(State):
 				# if obj.name == 'Ammo Depot': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 				# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
 
+
+		for obj in tmx_data.get_layer_by_name('entities'):
+			if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
+			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+			if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
+
 		for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 			Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
-
-		for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
-			Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
 			SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
@@ -188,12 +192,12 @@ class Scene(State):
 
 		for x, y, surf in tmx_data.get_layer_by_name('liquid_top').tiles():
 			Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
+
+		for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
+			Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+
+		
 			
-		for obj in tmx_data.get_layer_by_name('entities'):
-			if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
-			if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-			if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-			if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 
 		# create gun objects for the enemies and player
 		self.create_enemy_guns()
@@ -429,23 +433,25 @@ class Scene(State):
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 
 		if self.player.quad_damage:
-			self.render_fog(self.player, NEON_GREEN, screen)
+			self.render_fog(self.player, (0,0,255), screen)
 			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
 		if self.player.invulnerable:
-			self.render_fog(self.player, RED, screen)
+			self.render_fog(self.player, (255, 0, 0), screen)
 			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
-			
+		
+		if self.player.hurt and not self.player.invulnerable:
+			self.hurt_surf.draw(screen)
+
 		self.hud.draw(screen)
 
 		if self.message:
 			self.message.draw(screen)
 
 		self.fade_surf.draw(screen)
-	
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
-					str('GUARD HEALTH: '+ str(self.guard.health)),
+					str('hurt ?: '+ str(self.player.hurt)),
 					str('HEALTH: '+ str(SAVE_DATA['health'])),
 					str('quad_timer: '+ str(round(self.quad_timer.countdown))),
 					# str('PLAYER HEALTH: '+str(self.player.health)),

@@ -55,6 +55,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.quad_damage = False
 		self.invulnerable = False
+		self.hurt = False
 
 		self.state = Hold(self)
 
@@ -467,6 +468,7 @@ class Player(pygame.sprite.Sprite):
 
 	def reduce_health(self, amount, ammo_type=False):
 		if not self.invulnerable:
+			self.hurt = True
 			armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
 			# determine energy weapon or normal for armour damage coefficient
 			coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]

@@ -8,13 +8,13 @@ class FadeSurf(pygame.sprite.Sprite):
 
 		self.game = game
 		self.scene = scene
-		self.image = pygame.Surface((self.scene.scene_size))
+		self.image = pygame.Surface((WIDTH *2, HEIGHT*2))
 		self.alpha = alpha
 		self.loading_text = True
 		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/20 # makes load time relative to zone size
 		self.fade_duration = 255/20
 		self.z = z
-		self.rect = self.image.get_rect(topleft = pos)
+		self.rect = self.image.get_rect(center = pos)
 
 	def update(self, dt):
 
@@ -36,10 +36,31 @@ class FadeSurf(pygame.sprite.Sprite):
 
 	def draw(self, screen):
 		self.image.set_alpha(self.alpha)
-		screen.blit(self.image, (0,0))
+		screen.blit(self.image, self.rect)
 
 		if self.loading_text:
 			self.game.render_text('Loading...', NEON_GREEN, self.game.font, (RES/2))
+
+class HurtSurf(FadeSurf):
+	def __init__(self, game, scene, groups, pos, alpha=255, z = LAYERS['foreground']):
+		super().__init__(game, scene, groups, pos, alpha)
+		self.image = pygame.image.load('assets/hurt_surf.png').convert_alpha()
+		self.image = pygame.transform.scale(self.image, (WIDTH + 10, HEIGHT + 10))
+		self.rect = self.image.get_rect(center = pos)
+
+	def update(self, dt):
+		if self.scene.player.hurt:
+			self.alpha -= self.fade_duration * dt
+			if self.alpha <= 0:
+				self.alpha = 0
+				self.scene.player.hurt = False
+		else:
+			self.alpha = 255
+
+	def draw(self, screen):
+		self.image.set_alpha(self.alpha)
+		screen.blit(self.image, self.rect)
+
 
 class Collider(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, name=None):
@@ -52,6 +73,7 @@ class Collider(pygame.sprite.Sprite):
 class Tile(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['blocks']):
 		super().__init__(groups)
+
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.copy().inflate(0,0)
@@ -118,10 +140,12 @@ class AnimatedTile(pygame.sprite.Sprite):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
-class Liquid(Tile):
+class Liquid(pygame.sprite.Sprite):
 	def __init__(self, groups, pos, surf, z, alpha):
-		super().__init__(groups, pos, surf, z)
+		super().__init__(groups)
 
+		self.z = z
+		self.image = pygame.Surface((TILESIZE, TILESIZE))
 		self.image.fill(NEON_GREEN)
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.copy().inflate(0,0)
@@ -247,6 +271,47 @@ class Door(AnimatedPickup):
 			
 	def update(self, dt):
 		self.open(dt)
+
+class Lever(pygame.sprite.Sprite):
+	def __init__(self, game, scene, groups, pos, surf, z):
+		super().__init__(groups)
+		self.game = game
+		self.scene = scene
+		self.z = z
+		self.image_type = pygame.image.load(surf).convert_alpha()
+		self.image = pygame.image.load(surf).convert_alpha()
+		self.rect = self.image.get_rect(bottomleft = pos)
+		self.hitbox = self.rect.inflate(0, 0)
+
+		self.rotate = 0
+		self.on = False
+		self.can_collide = True
+		self.max_rotation = 24
+
+	def rotate_sprite(self, dt):
+		if self.on:
+			self.rotate = min(self.rotate + 2 * dt, self.max_rotation)
+		else:
+			self.rotate = max(self.rotate - 2 * dt, 0)
+		
+		self.image = pygame.transform.rotate(self.image_type, self.rotate)
+		self.rect = self.image.get_rect(center = self.rect.center)
+		self.hitbox.center = self.rect.center
+
+	def update(self, dt):
+		if self.scene.player.hitbox.colliderect(self.hitbox) and ACTIONS['up']:
+			if self.can_collide:
+				self.on = True
+				self.can_collide = False
+		else:
+			self.can_collide = True
+
+		if self.rotate >= self.max_rotation:
+			self.rotate = 0
+			self.on = False
+
+		self.rotate_sprite(dt)
+		self.rect.center = self.hitbox.center
 
 		
 

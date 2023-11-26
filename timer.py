@@ -14,6 +14,7 @@ class Timer:
 		self.countdown = (duration + (max_toggles * toggle_duration))//60
 
 	def start(self):
+		self.countdown = (self.duration + (self.max_toggles * self.toggle_duration))//60
 		self.running = True
 
 	def update(self, dt):
