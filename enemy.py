@@ -174,8 +174,10 @@ class Guard(pygame.sprite.Sprite):
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=None):
-		# if not self.invincible:
-		self.health -= amount
+		if self.scene.quad_timer.running:
+			self.health -= amount * 4 # quad damage!!!!
+		else:
+			self.health -= amount
 		if self.health <= 0:
 			self.gun_sprite.kill()
 			self.scene.create_particle('chunk', self.rect.center)

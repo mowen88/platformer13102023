@@ -4,6 +4,7 @@ from state import State
 from settings import *
 
 from pytmx.util_pygame import load_pygame
+from timer import Timer
 from camera import Camera
 from message import Message
 from pause import PauseMenu
@@ -47,22 +48,27 @@ class Scene(State):
 		# fade screen and exit flag
 		self.message = None
 		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (0,0))
-		
-		self.quad_surf = pygame.Surface(self.get_scene_size())
-		self.light_mask = pygame.image.load('assets/circle.png').convert_alpha()
-		self.light_rect = self.light_mask.get_rect()
+		self.get_fog_surf()
 		
 		self.exiting = False
+
+		self.quad_timer = Timer(1440, 20, 12)
+		self.invulnerability_timer = Timer(1440, 20, 12)
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
 		self.hud = HUD(self.game, self)
 
+	def get_fog_surf(self):
+		self.glow_surf = pygame.Surface(self.get_scene_size())
+		self.light_mask = pygame.image.load('assets/circle.png').convert_alpha()
+		self.light_rect = self.light_mask.get_rect()
+
 	def render_fog(self, target, colour, screen):
-		self.quad_surf.fill(colour)
+		self.glow_surf.fill(colour)
 		self.light_rect.center = target.rect.center - self.drawn_sprites.offset
-		self.quad_surf.blit(self.light_mask, self.light_rect)
-		screen.blit(self.quad_surf, (0,0), special_flags = pygame.BLEND_MULT)
+		self.glow_surf.blit(self.light_mask, self.light_rect)
+		screen.blit(self.glow_surf, (0,0), special_flags = pygame.BLEND_MULT)
 
 	def create_scene(self, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
@@ -409,6 +415,11 @@ class Scene(State):
 		self.hud.update(dt)
 		self.update_sprites.update(dt)
 
+		# update quad damage timer
+		self.player.quad_damage = True if self.quad_timer.update(dt) else False
+		self.player.invulnerable = True if self.invulnerability_timer.update(dt) else False
+
+
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
 			self.game.render_text(name, WHITE, self.game.font, (10, 15 * index), True)
@@ -418,31 +429,25 @@ class Scene(State):
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 
 		if self.player.quad_damage:
-			self.render_fog(self.player, BLUE, screen)
+			self.render_fog(self.player, NEON_GREEN, screen)
+			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
+		if self.player.invulnerable:
 			self.render_fog(self.player, RED, screen)
-
+			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+			
 		self.hud.draw(screen)
 
 		if self.message:
 			self.message.draw(screen)
+
 		self.fade_surf.draw(screen)
+	
 
-		
-		#self.hitscan()
-		# if self.player.muzzle_pos is not None:
-		# 	pygame.draw.circle(screen, WHITE, self.player.muzzle_pos, 5)
-		# 	pygame.draw.line(screen, WHITE, self.player.rect.center - self.drawn_sprites.offset, self.player.muzzle_pos)
-
-		# 	pygame.draw.circle(screen, WHITE, self.guard2.muzzle_pos, 5)
-		# 	pygame.draw.line(screen, WHITE, self.guard2.rect.center - self.drawn_sprites.offset, self.guard2.muzzle_pos)
-
-		#pygame.draw.rect(screen, WHITE, ((self.player.hitbox.x - self.drawn_sprites.offset.x, self.player.hitbox.y - self.drawn_sprites.offset.y), (self.player.hitbox.width, self.player.hitbox.height)), 1)
-		
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
 					str('GUARD HEALTH: '+ str(self.guard.health)),
 					str('HEALTH: '+ str(SAVE_DATA['health'])),
-					str('HEALTH MAX: '+ str(SAVE_DATA['max_health'])),
+					str('quad_timer: '+ str(round(self.quad_timer.countdown))),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
 		self.underwater_timer = self.max_underwater_time
 
 		self.quad_damage = False
-		self.invulnerability = False
+		self.invulnerable = False
 
 		self.state = Hold(self)
 
@@ -466,19 +466,20 @@ class Player(pygame.sprite.Sprite):
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=False):
-		armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
-		# determine energy weapon or normal for armour damage coefficient
-		coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
-		armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
-		health_reduction = amount - armour_reduction
+		if not self.invulnerable:
+			armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
+			# determine energy weapon or normal for armour damage coefficient
+			coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
+			armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
+			health_reduction = amount - armour_reduction
 
-		SAVE_DATA['armour'] -= armour_reduction
-		if SAVE_DATA['armour'] < 0:
-			SAVE_DATA['health'] += SAVE_DATA['armour']
-			SAVE_DATA['armour'] = 0
+			SAVE_DATA['armour'] -= armour_reduction
+			if SAVE_DATA['armour'] < 0:
+				SAVE_DATA['health'] += SAVE_DATA['armour']
+				SAVE_DATA['armour'] = 0
 
-		SAVE_DATA['health'] -= health_reduction
-		SAVE_DATA['health'] = max(0, SAVE_DATA['health'])
+			SAVE_DATA['health'] -= health_reduction
+			SAVE_DATA['health'] = max(0, SAVE_DATA['health'])
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)

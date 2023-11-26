@@ -47,7 +47,7 @@ ARMOUR_DATA = {None:[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'b
 SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
 			'armour_type':None, 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-			'items':['rebreather','envirosuit','invulnerability'],
+			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'],
 			'guns_collected':['blaster', 'hand grenade'],'keys_collected':['red key'], 'killed_sprites':[]
 			}
 

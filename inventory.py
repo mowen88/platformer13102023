@@ -67,7 +67,10 @@ class Inventory(State):
 			SAVE_DATA['items'].remove(self.activated_item)
 
 			if self.activated_item == 'quad damage':
-				self.scene.player.quad_damage = True
+				self.scene.quad_timer.start()
+
+			if self.activated_item == 'invulnerability':
+				self.scene.invulnerability_timer.start()
 
 			if self.activated_item == 'adrenaline':
 				current_max = SAVE_DATA['max_health']

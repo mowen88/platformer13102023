@@ -135,7 +135,7 @@
    <point/>
   </object>
   <object id="35" name="collider" x="48" y="192" width="16" height="16"/>
-  <object id="36" name="collider" x="272" y="240" width="16" height="16"/>
+  <object id="36" name="collider" x="240" y="240" width="16" height="16"/>
   <object id="37" name="collider" x="304" y="64" width="16" height="16"/>
   <object id="38" name="collider" x="235.5" y="59" width="16" height="16"/>
   <object id="39" name="gladiator" x="173.5" y="201.5">
@@ -159,10 +159,10 @@
   <object id="50" name="jacket_0" x="704" y="160">
    <point/>
   </object>
-  <object id="53" name="quad damage" x="704" y="112">
+  <object id="53" name="quad damage_0" x="704" y="112">
    <point/>
   </object>
-  <object id="56" name="rebreather" x="720" y="112">
+  <object id="56" name="rebreather_0" x="720" y="112">
    <point/>
   </object>
   <object id="58" name="grenades_0" x="528" y="208">
