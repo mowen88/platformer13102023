@@ -33,22 +33,28 @@ class Game:
     def get_slot_dict(self):
         slot_data = {}
         num_of_slots = 5
-        for i in range(num_of_slots):
-            slot_data.update({str(i+1): {"time_spent": None, "percent_complete": f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"}})
+        for i in range(1, num_of_slots):
+            slot_data.update({str(i): {"time_spent": None, "percent_complete": f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"}})
         return slot_data
 
     def write_data(self):
-        with open(f"save_file_{self.slot}", "w") as outfile:
-            json.dump(SAVE_DATA, outfile)
+        with open(f"save_file_{self.slot}", "w") as write_save_file:
+            json.dump(SAVE_DATA, write_save_file)
+        with open(f"ammo_file_{self.slot}", "w") as write_ammo_file:
+            json.dump(AMMO_DATA, write_ammo_file)
 
     def read_data(self):
-        if self.slot is not None:
-            with open(f"save_file_{self.slot}", 'r') as readfile:
-                json_object = json.load(readfile)
-                SAVE_DATA.update(json_object)
+        
+        with open(f"save_file_{self.slot}", 'r') as read_save_file:
+            save_json = json.load(read_save_file)
+            SAVE_DATA.update(save_json)
 
-                self.completed_scenes = len(SAVE_DATA['scenes_completed'])
-                self.slot_data[self.slot]['percent_complete'] = f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} % complete"
+        with open(f"ammo_file_{self.slot}", 'r') as read_ammo_file:
+            ammo_json = json.load(read_ammo_file)
+            AMMO_DATA.update(ammo_json)
+
+            self.completed_scenes = len(SAVE_DATA['scenes_completed'])
+            self.slot_data[self.slot]['percent_complete'] = f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} % complete"
 
     def write_data_on_quit(self):
         if self.slot is not None and self.slot in list(self.slot_data.keys()):

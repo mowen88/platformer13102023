@@ -190,15 +190,16 @@ class SlotMenu(MainMenu):
 		buttons = {}
 		for index, slot in enumerate(self.num_of_slots):
 			start_y = HALF_HEIGHT - len(self.num_of_slots) * 0.5 * self.padding
-			buttons.update({'Slot ' + str(index+1):[(HALF_WIDTH, start_y + self.padding * index), str(index)]})
+			buttons.update({'Slot ' + str(index+1):[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
 		return buttons
 
 	def activate_slot(self):
 		self.game.slot = self.next_menu
-		if self.next_menu is not None and self.next_menu in self.num_of_slots:
-			self.game.slot = str(int(self.next_menu) + 1)
+		if self.next_menu in self.num_of_slots:
+			self.game.slot = str(self.next_menu)
+
 			self.game.read_data()
-			# print(self.game.slot)
+			print(self.game.slot)
 			#self.game.read_data()
 
 	def update(self, dt):

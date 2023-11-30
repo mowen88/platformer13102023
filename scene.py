@@ -22,7 +22,6 @@ class Scene(State):
 		State.__init__(self, game)
 
 		self.game = game
-		
 
 		self.current_scene = current_scene
 		self.entry_point = entry_point
@@ -443,7 +442,7 @@ class Scene(State):
 
 		# print(self.breathe_timer.update(dt))
 
-		print(self.game.slot)
+		
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -469,8 +468,6 @@ class Scene(State):
 			self.message.draw(screen)
 
 		self.fade_surf.draw(screen)
-
-
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
