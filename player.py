@@ -61,11 +61,9 @@ class Player(pygame.sprite.Sprite):
 
 	def import_images(self, armour_type):
 
-		if armour_type is not None:
-			path = f'assets/characters/{self.name + "_" + armour_type}/'
-		else:
-			path = f'assets/characters/{self.name}/'
 
+		path = f'assets/characters/{self.name + "_" + armour_type}/'
+		
 		for animation in self.animations.keys():
 			full_path = path + animation
 			self.animations[animation] = self.game.get_folder_images(full_path)
@@ -286,11 +284,13 @@ class Player(pygame.sprite.Sprite):
 	        if self.hitbox.colliderect(sprite.hitbox):
 	            if not self.underwater:
 	                self.underwater = True
+	                self.scene.breathe_timer.start()
 	                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
 	                    self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 	        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
 	            self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 	            self.underwater = False
+	            self.scene.breathe_timer
 
 	    # breathing / drowning logic
 	    if self.underwater:
@@ -469,7 +469,7 @@ class Player(pygame.sprite.Sprite):
 	def reduce_health(self, amount, ammo_type=False):
 		if not self.invulnerable:
 			self.hurt = True
-			armour_coefficients = {None:[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
+			armour_coefficients = {'normal':[0.0, 0.0], 'jacket': [0.3, 0.0], 'combat':[0.6,0.3], 'body':[0.8,0.6]}
 			# determine energy weapon or normal for armour damage coefficient
 			coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
 			armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])

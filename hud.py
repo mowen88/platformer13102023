@@ -21,7 +21,7 @@ class HUD:
 		start_x = (WIDTH - max_width)//2
 
 		for box in range(self.num_of_slots):
-			if (box == 1 and SAVE_DATA['armour_type'] == None) or (box == 2 and self.scene.player.gun == 'blaster'):
+			if (box == 1 and SAVE_DATA['armour_type'] == 'normal') or (box == 2 and self.scene.player.gun == 'blaster'):
 				continue
 
 			icon = pygame.image.load(f'assets/icons/{box}.png').convert_alpha()

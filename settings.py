@@ -35,27 +35,27 @@ SCENE_DATA = {
 
 KILLED_SPRITES = []
 
-AMMO_LIMITS = {None:{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
+AMMO_LIMITS = {'normal':{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
 				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenades':100, 'slugs':100, 'rockets':100}
 				}
 HEALTH_DATA = {'stimpack': 2, 'first aid': 10, 'medkit': 25}
 AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':5, 'slugs':0, 'rockets':0}
-ARMOUR_DATA = {None:[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
+ARMOUR_DATA = {'normal':[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
 
 SAVE_DATA = {
-			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':None,
-			'armour_type':None, 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'],
-			'guns_collected':['blaster', 'hand grenade'],'keys_collected':['red key'], 'killed_sprites':[]
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'], 'guns_collected':['blaster', 'hand grenade'],
+			'keys_collected':['red key'], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': 0
 			}
 
 CONSTANT_DATA = {
 
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':18, 'auto':False},
-			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},
+			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},
 			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},
 			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 6, 'length':25, 'auto':False},

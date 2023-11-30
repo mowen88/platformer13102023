@@ -67,7 +67,7 @@ class DustParticle(pygame.sprite.Sprite):
 				# self.frame_index = len(self.frames)-1
 				self.kill()
 
-		self.image = self.frames[int(self.frame_index)]
+		self.image = self.frames[int(self.frame_index)] if int(self.frame_index) >= 0 else 0
 
 	def update_alpha(self, rate, dt):
 		self.alpha -= rate * dt
@@ -76,7 +76,7 @@ class DustParticle(pygame.sprite.Sprite):
 		self.image.set_alpha(self.alpha)
 
 	def update(self, dt):
-		self.animate(0.25 * dt, False)
+		self.animate(0.2 * dt, False)
 		self.update_alpha(10, dt)
 
 class GibbedChunk(DustParticle):

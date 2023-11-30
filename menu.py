@@ -105,10 +105,11 @@ class MainMenu(State):
 		self.game = game
 		self.alpha = 255
 		self.next_menu = None
-		self.padding = 20
+		self.padding = 24
 
 		self.buttons = {
-						'Start': [(HALF_WIDTH, HALF_HEIGHT - self.padding), 'start_game'],
+						'Start': [(HALF_WIDTH, HALF_HEIGHT - self.padding), 'slot_menu'],
+						'Options': [(HALF_WIDTH, HALF_HEIGHT), 'options_menu'],
 						'Quit': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'quit_game'],
 						}
 
@@ -147,16 +148,16 @@ class MainMenu(State):
 		if state == 'quit_game':
 			#self.game.quit_write_data()
 			self.game.running = False
+
+		elif state == 'slot_menu':
+			SlotMenu(self.game).enter_state()
+		elif state == 'options_menu':
+			SlotMenu(self.game).enter_state()
+		elif state in list(self.game.slot_data.keys()):
+			StartGameMenu(self.game).enter_state()
  
-		elif state == 'start_game':
+		else:
 			Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
-
-
-	def draw_bounding_box(self, screen):
-		box = pygame.Rect(0,0,HALF_WIDTH, HEIGHT - 20)
-		box.center = RES/2
-		pygame.draw.rect(screen, NEON_GREEN, (box), 2)
-
 
 	def update(self, dt):
 
@@ -176,6 +177,95 @@ class MainMenu(State):
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
 
-		#self.draw_bounding_box(screen)
+		self.transition_screen.draw(screen)
+
+class SlotMenu(MainMenu):
+	def __init__(self, game):
+		super().__init__(game)
+
+		self.num_of_slots = list(self.game.slot_data.keys())
+		self.buttons = self.get_slots()
+
+	def get_slots(self):
+		buttons = {}
+		for index, slot in enumerate(self.num_of_slots):
+			start_y = HALF_HEIGHT - len(self.num_of_slots) * 0.5 * self.padding
+			buttons.update({'Slot ' + str(index+1):[(HALF_WIDTH, start_y + self.padding * index), str(index)]})
+		return buttons
+
+	def activate_slot(self):
+		self.game.slot = self.next_menu
+		if self.next_menu is not None and self.next_menu in self.num_of_slots:
+			self.game.slot = str(int(self.next_menu) + 1)
+			self.game.read_data()
+			# print(self.game.slot)
+			#self.game.read_data()
+
+	def update(self, dt):
+	
+		for box in self.boxes:
+			box.update(dt)
+
+		self.activate_slot()
+
+		self.transition_screen.update(dt)
+		if self.next_menu is not None:
+			self.transitioning = True
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+
+		for box in self.boxes:
+			box.draw(screen)
+
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
+
+		self.transition_screen.draw(screen)		
+
+class StartGameMenu(MainMenu):
+	def __init__(self, game):
+		super().__init__(game)
+
+		self.buttons = {
+				'Continue': [(HALF_WIDTH, HALF_HEIGHT + self.padding * 0.5), 'GO!!!'],
+				'Delete Data': [(HALF_WIDTH, HALF_HEIGHT + self.padding * 1.5), 'DELETE_SLOT'],
+				'Back': [(HALF_WIDTH, HALF_HEIGHT + self.padding * 2.5), 'slot_menu']
+				}
+
+	def show_stats(self):
+		if self.game.slot is not None:
+			self.game.render_text(f"Slot {self.game.slot}", WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 3))
+			self.game.render_text(SAVE_DATA['time_elapsed'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 2))
+			self.game.render_text(self.game.slot_data[self.game.slot]['percent_complete'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding))
+			
+
+	def start_timer(self):
+		pass
+		# if self.next_menu == 'GO!!!' and self.alpha >= 255:
+		# 	self.game.timer.stop_start()
+
+	def update(self, dt):
+
+		for box in self.boxes:
+			box.update(dt)
+
+		self.transition_screen.update(dt)
+		if self.next_menu is not None:
+			self.start_timer()
+			self.transitioning = True
+
+		# print(self.game.slot)
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+
+		for box in self.boxes:
+			box.draw(screen)
+
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
+
+		self.show_stats()
 
 		self.transition_screen.draw(screen)

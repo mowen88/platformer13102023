@@ -27,6 +27,7 @@ class Timer:
 				self.var = not self.var
 				self.timer = self.duration
 				self.toggle_count += 1
+				
 				if self.toggle_count > self.max_toggles:
 					self.running = False
 					self.toggle_count = 0
