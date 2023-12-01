@@ -23,7 +23,7 @@ class FadeSurf(pygame.sprite.Sprite):
 			if self.alpha >= 255: 
 				self.alpha = 255
 				self.scene.exit_state()
-				self.scene.create_scene(self.scene.new_scene)
+				self.scene.create_scene(self.scene.current_level, self.scene.new_scene)
 			
 		else:
 			self.timer -= dt

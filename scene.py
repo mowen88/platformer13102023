@@ -18,12 +18,13 @@ from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
-	def __init__(self, game, current_scene, entry_point):
+	def __init__(self, game, current_level, current_scene, entry_point):
 		State.__init__(self, game)
 
 		self.game = game
 
 		self.current_scene = current_scene
+		self.current_level = current_level
 		self.entry_point = entry_point
 		self.scene_size = self.get_scene_size()
 		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
@@ -75,10 +76,10 @@ class Scene(State):
 		self.glow_surf.blit(self.light_mask, self.light_rect)
 		screen.blit(self.glow_surf, (0,0), special_flags = pygame.BLEND_MULT)
 
-	def create_scene(self, scene):
+	def create_scene(self, last_level, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
 		# level = self.current_level if level != self.current_level else self.current_level
-		Scene(self.game, scene, self.entry_point).enter_state()
+		Scene(self.game, last_level, scene, self.entry_point).enter_state()
 
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
@@ -472,8 +473,8 @@ class Scene(State):
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('UNIT: '+ str(self.current_scene)), 
 					str('gun: '+ str(self.player.gun)),
-					str('HEALTH: '+ str(SAVE_DATA['health'])),
-					str('quad_timer: '+ str(round(self.quad_timer.countdown))),
+					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
+					str('level: '+ str(self.current_level)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

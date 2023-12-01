@@ -61,7 +61,6 @@ class Player(pygame.sprite.Sprite):
 
 	def import_images(self, armour_type):
 
-
 		path = f'assets/characters/{self.name + "_" + armour_type}/'
 		
 		for animation in self.animations.keys():
@@ -232,7 +231,6 @@ class Player(pygame.sprite.Sprite):
 						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'max capacity reached', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 				else:
 					sprite.kill()
-
 					
 	def get_gun_from_ammo_type(self, ammo_type):
 		guns = []
@@ -276,6 +274,7 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.scene.exiting = True
 				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
+				self.scene.current_level = self.scene.current_scene['level']
 				self.scene.entry_point = exit.name
 
 	def hit_liquid(self, dt):

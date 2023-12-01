@@ -28,9 +28,9 @@ BROWN = (110, 74, 57)
 LIGHT_GREY = (146,143,184)
 
 SCENE_DATA = {
-			   '0':{'1':'1', '3':'1'}, 
-  			   '1':{'1':'0', '2':'2', '3':'0'},
-  			   '2':{'2':'1','3':'0'}
+			   '0':{'unit':1, 'level': 'Outer Base', '1':'1', '3':'1'}, 
+  			   '1':{'unit':1, 'level': 'Installation', '1':'0', '2':'2', '3':'0'},
+  			   '2':{'unit':1, 'level': 'Supply Station', '2':'1','3':'0'}
   			}
 
 KILLED_SPRITES = []
@@ -45,6 +45,13 @@ AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 ARMOUR_DATA = {'normal':[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
 
 SAVE_DATA = {
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'], 'guns_collected':['blaster', 'hand grenade'],
+			'keys_collected':['red key'], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': 0
+			}
+
+INITIAL_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
 			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
 			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'], 'guns_collected':['blaster', 'hand grenade'],
