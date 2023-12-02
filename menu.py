@@ -194,7 +194,8 @@ class SlotMenu(MainMenu):
 		buttons = {}
 		for index, slot in enumerate(self.num_of_slots):
 			start_y = HALF_HEIGHT - len(self.num_of_slots) * 0.5 * self.padding
-			buttons.update({'Slot ' + str(index+1):[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
+			buttons.update({'Slot ' + str(index+1) +' -- '+ str(self.game.read_slot_progress(index+1, 'unit')) +' -- '+ \
+			str(self.game.read_slot_progress(index+1, 'level')) +' -- '+ str(self.game.read_slot_progress(index+1, 'time_elapsed')) :[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
 		return buttons
 
 	def activate_slot(self):

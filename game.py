@@ -58,6 +58,16 @@ class Game:
             self.completed_scenes = len(SAVE_DATA['scenes_completed'])
             self.slot_data[self.slot]['percent_complete'] = f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} % complete"
 
+    def read_slot_progress(self, slot, data_type): 
+        with open(f"save_file_{slot}", 'r') as read_save_file:
+            save_json = json.load(read_save_file)
+            if data_type == 'level':
+                return SCENE_DATA[save_json['current_scene']]['level']
+            elif data_type == 'unit':
+                return SCENE_DATA[save_json['current_scene']]['unit']
+            else:
+                return save_json[data_type]
+
     def write_data_on_quit(self):
         if self.slot is not None and self.slot in list(self.slot_data.keys()):
             #self.slot_data[self.slot]["time_spent"] = self.timer.add_times(str(PLAYER_DATA['time']), self.timer.get_elapsed_time())
