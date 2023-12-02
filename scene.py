@@ -5,8 +5,8 @@ from settings import *
 
 from pytmx.util_pygame import load_pygame
 from timer import Timer
-from camera import Camera
 from message import Message
+from camera import Camera
 from pause import PauseMenu
 from inventory import Inventory
 from hud import HUD
@@ -18,13 +18,12 @@ from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
 
 class Scene(State):
-	def __init__(self, game, current_level, current_scene, entry_point):
+	def __init__(self, game, prev_level, current_scene, entry_point):
 		State.__init__(self, game)
 
 		self.game = game
-
+		self.prev_level = prev_level
 		self.current_scene = current_scene
-		self.current_level = current_level
 		self.entry_point = entry_point
 		self.scene_size = self.get_scene_size()
 		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
@@ -65,6 +64,13 @@ class Scene(State):
 		self.create_scene_instances()
 		self.hud = HUD(self.game, self)
 
+		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
+			COMMIT_SAVE_DATA.update(SAVE_DATA)
+			COMMIT_AMMO_DATA.update(AMMO_DATA)
+			self.game.write_data()
+			self.message = Message(self.game, self, [self.update_sprites], SCENE_DATA[self.current_scene]['level'], (HALF_WIDTH, HALF_HEIGHT - TILESIZE * 2), 220)
+
+
 	def get_fog_surf(self):
 		self.glow_surf = pygame.Surface(self.get_scene_size())
 		self.light_mask = pygame.image.load('assets/circle.png').convert_alpha()
@@ -76,10 +82,14 @@ class Scene(State):
 		self.glow_surf.blit(self.light_mask, self.light_rect)
 		screen.blit(self.glow_surf, (0,0), special_flags = pygame.BLEND_MULT)
 
-	def create_scene(self, last_level, scene):
+	def create_scene(self, level, scene):
 		# unit = self.current_unit if unit != self.current_unit else self.current_unit
 		# level = self.current_level if level != self.current_level else self.current_level
-		Scene(self.game, last_level, scene, self.entry_point).enter_state()
+		Scene(self.game, level, scene, self.entry_point).enter_state()
+
+	def respawn(self, scene, entry_pos):
+		self.game.read_data()
+		Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
@@ -179,6 +189,7 @@ class Scene(State):
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+
 					# if obj.name == 'Installation': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
@@ -455,10 +466,10 @@ class Scene(State):
 
 		if self.player.quad_damage:
 			self.render_fog(self.player, (0,0,255), screen)
-			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
+			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
 		if self.player.invulnerable:
 			self.render_fog(self.player, (255, 0, 0), screen)
-			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
 		
 		if self.player.hurt and not self.player.invulnerable:
 			self.hurt_surf.draw(screen)
@@ -471,10 +482,11 @@ class Scene(State):
 		self.fade_surf.draw(screen)
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('UNIT: '+ str(self.current_scene)), 
+					str('entry_point: '+ str(self.entry_point)), 
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-					str('level: '+ str(self.current_level)),
+					str('prev_level: '+ str(self.prev_level)),
+					str('level: '+ str(SCENE_DATA[self.current_scene]['level'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

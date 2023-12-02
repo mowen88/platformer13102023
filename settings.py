@@ -27,10 +27,19 @@ YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
 LIGHT_GREY = (146,143,184)
 
-SCENE_DATA = {
-			   '0':{'unit':1, 'level': 'Outer Base', '1':'1', '3':'1'}, 
-  			   '1':{'unit':1, 'level': 'Installation', '1':'0', '2':'2', '3':'0'},
-  			   '2':{'unit':1, 'level': 'Supply Station', '2':'1','3':'0'}
+SCENE_DATA = { # UNIT 1 - BASE
+			   # Outer Base
+			   '0':{'unit':'Base', 'level':'Outer Base', '1':'1', '3':'1'}, 
+  			   '1':{'unit':'Base', 'level':'Outer Base', '1':'0', '2':'2', '3':'0'},
+  			   # Comm Center
+  			   '2':{'unit':'Base', 'level':'Comm Center', '2':'1','3':'3'},
+
+  			   # UNIT 2 - BUNKER
+  			   # Ammo Depot
+  			   '3':{'unit':'Bunker', 'level':'Ammo Depot', '2':'1','3':'2'},
+  			   '4':{'unit':'Bunker', 'level':'Ammo Depot', '2':'1','3':'0'},
+  			   # Warehouse
+  			   '5':{'unit':'Bunker', 'level':'Warehouse', '2':'1','3':'0'},
   			}
 
 KILLED_SPRITES = []
@@ -40,15 +49,28 @@ AMMO_LIMITS = {'normal':{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200
 				'ammo pack':{'infinite': 0, 'cells':300, 'shells':200, 'bullets':300, 'grenades':100, 'slugs':100, 'rockets':100}
 				}
 HEALTH_DATA = {'stimpack': 2, 'first aid': 10, 'medkit': 25}
+
+
+ARMOUR_DATA = {'normal':[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
+
 AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':5, 'slugs':0, 'rockets':0}
-ARMOUR_DATA = {'normal':[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
+
+COMMIT_AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
+			'grenades':5, 'slugs':0, 'rockets':0}
 
 SAVE_DATA = {
 			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
 			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-			'items':['rebreather','envirosuit', 'quad damage', 'invulnerability'], 'guns_collected':['blaster', 'hand grenade'],
-			'keys_collected':['red key'], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': 0
+			'items':[], 'guns_collected':['blaster', 'hand grenade'],
+			'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': 0
+			}
+
+COMMIT_SAVE_DATA = {
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+			'items':[], 'guns_collected':['blaster', 'hand grenade'],
+			'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': 0
 			}
 
 INITIAL_DATA = {

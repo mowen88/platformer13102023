@@ -3,6 +3,7 @@ from settings import *
 from message import Message
 from player_fsm import Hold
 
+
 class Player(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, name, z):
 		super().__init__(groups)
@@ -274,7 +275,7 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.scene.exiting = True
 				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
-				self.scene.current_level = self.scene.current_scene['level']
+				self.scene.prev_level = SCENE_DATA[self.scene.current_scene]['level']
 				self.scene.entry_point = exit.name
 
 	def hit_liquid(self, dt):

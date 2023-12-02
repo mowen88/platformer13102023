@@ -9,8 +9,9 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
-        self.font = pygame.font.Font(FONT, 10) #int(TILESIZE)) 
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
+        self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
         
         # states
@@ -38,10 +39,11 @@ class Game:
         return slot_data
 
     def write_data(self):
+
         with open(f"save_file_{self.slot}", "w") as write_save_file:
-            json.dump(SAVE_DATA, write_save_file)
+            json.dump(COMMIT_SAVE_DATA, write_save_file)
         with open(f"ammo_file_{self.slot}", "w") as write_ammo_file:
-            json.dump(AMMO_DATA, write_ammo_file)
+            json.dump(COMMIT_AMMO_DATA, write_ammo_file)
 
     def read_data(self):
         
@@ -60,6 +62,7 @@ class Game:
         if self.slot is not None and self.slot in list(self.slot_data.keys()):
             #self.slot_data[self.slot]["time_spent"] = self.timer.add_times(str(PLAYER_DATA['time']), self.timer.get_elapsed_time())
             #PLAYER_DATA.update({'time': self.slot_data[self.slot]["time_spent"]})
+
             self.write_data()
 
     #         #print(json_object)
@@ -81,7 +84,6 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     ACTIONS['escape'] = True
-                    self.write_data_on_quit()
                     self.running = False
 
                 elif event.key == pygame.K_SPACE:

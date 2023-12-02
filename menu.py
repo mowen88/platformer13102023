@@ -146,18 +146,22 @@ class MainMenu(State):
 
 	def go_to(self, state):
 		if state == 'quit_game':
-			#self.game.quit_write_data()
+			self.game.write_data_on_quit()
 			self.game.running = False
 
 		elif state == 'slot_menu':
 			SlotMenu(self.game).enter_state()
 		elif state == 'options_menu':
 			SlotMenu(self.game).enter_state()
+		elif state == 'DELETE_SLOT':
+			AreYouSureMenu(self.game).enter_state()
+		elif state == 'delete_confirmed':
+			Confirmation(self.game).enter_state()
 		elif state in list(self.game.slot_data.keys()):
 			StartGameMenu(self.game).enter_state()
  
 		else:
-			Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+			Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 
 	def update(self, dt):
 
@@ -222,7 +226,77 @@ class SlotMenu(MainMenu):
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
 
-		self.transition_screen.draw(screen)		
+		self.transition_screen.draw(screen)	
+
+class AreYouSureMenu(MainMenu):
+	def __init__(self, game):
+		super().__init__(game)
+
+		self.buttons = {
+				'Confirm': [(HALF_WIDTH, HALF_HEIGHT), 'delete_confirmed'],
+				'Back': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'slot_menu']
+				}
+
+	def delete_data(self):
+		if self.next_menu == 'delete_confirmed':
+			COMMIT_SAVE_DATA.update(SAVE_DATA)
+			# 'time': "00:00:00"})
+			COMMIT_AMMO_DATA.update(AMMO_DATA)
+			self.game.write_data()
+
+	def update(self, dt):
+
+		for box in self.boxes:
+			box.update(dt)
+
+		self.transition_screen.update(dt)
+		if self.next_menu is not None:
+			self.delete_data()
+			self.transitioning = True
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+
+		for box in self.boxes:
+			box.draw(screen)
+		
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
+
+		self.game.render_text(f"Delete slot {self.game.slot} data?", WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 1.5))
+
+		self.transition_screen.draw(screen)
+
+class Confirmation(MainMenu):
+	def __init__(self, game):
+		super().__init__(game)
+
+		self.buttons = {
+				'Continue': [(HALF_WIDTH, HALF_HEIGHT + self.padding * 0.5), 'slot_menu']
+				}
+
+	def update(self, dt):
+
+		for box in self.boxes:
+			box.update(dt)
+
+		self.transition_screen.update(dt)
+		if self.next_menu is not None:
+			self.transitioning = True
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+
+		for box in self.boxes:
+			box.draw(screen)
+
+		# slot deleted confirmation message
+		self.game.render_text(f"Slot {self.game.slot} deleted!", WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding))
+		
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
+
+		self.transition_screen.draw(screen)
 
 class StartGameMenu(MainMenu):
 	def __init__(self, game):

@@ -30,7 +30,7 @@ class HUD:
 			
 			#change colour of health to red if under 25 health
 			colour = RED if box == 0 and SAVE_DATA[self.data[box]] < 25 else WHITE
-			self.game.render_text(int(SAVE_DATA[self.data[box]]), colour, self.game.font, (start_x + 26 + box * offset, 16), True)
+			self.game.render_text(int(SAVE_DATA[self.data[box]]), colour, self.game.ui_font, (start_x + 26 + box * offset, 16), True)
 
 	def update(self, dt):
 		pass

@@ -1,6 +1,7 @@
 import pygame, math
 from settings import *
 from message import Message
+from intermission import Intermission
 
 class FadeSurf(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
@@ -10,25 +11,36 @@ class FadeSurf(pygame.sprite.Sprite):
 		self.scene = scene
 		self.image = pygame.Surface((WIDTH *2, HEIGHT*2))
 		self.alpha = alpha
-		self.loading_text = True
-		self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/20 # makes load time relative to zone size
-		self.fade_duration = 255/20
+		self.fade_duration = 15
 		self.z = z
 		self.rect = self.image.get_rect(center = pos)
+		self.get_load_time_and_text()
+
+	def get_load_time_and_text(self):
+		if SCENE_DATA[self.scene.current_scene]['level'] != self.scene.prev_level:
+			self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/5 # makes load time relative to zone size
+			self.loading_text = True
+		else:
+			self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/15 # makes load time relative to zone size
+			self.loading_text = False
 
 	def update(self, dt):
 
+		# exit logic
 		if self.scene.exiting:
 			self.alpha += self.fade_duration * dt
 			if self.alpha >= 255: 
 				self.alpha = 255
 				self.scene.exit_state()
-				self.scene.create_scene(self.scene.current_level, self.scene.new_scene)
-			
-		else:
+				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
+					Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
+				else:
+					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
+		
+		# entering logic
+		else: 
 			self.timer -= dt
 			if self.timer <= 0:
-				self.scene.entering = False
 				self.loading_text = False
 				self.alpha -= self.fade_duration * dt
 				if self.alpha <= 0:
@@ -95,7 +107,7 @@ class SecretTile(pygame.sprite.Sprite):
 
 	def update_alpha(self, rate, dt):
 		if self.activated:
-			self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'You have found a secret.', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
+			self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'You have found a secret', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 			self.alpha -= rate * dt
 			if self.alpha < 0:
 				for sprite in self.scene.secret_sprites:

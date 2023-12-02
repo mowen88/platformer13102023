@@ -9,8 +9,8 @@ class Inventory(State):
 		self.activated_item = None
 		self.padding = 24
 
-		self.buttons = self.get_list()
 		self.no_items_message = 'No items collected. Get back to work !'
+		self.buttons = self.get_list()
 		self.fade_surf = pygame.Surface((RES))
 		self.fade_surf.fill(BLACK)
 
