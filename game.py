@@ -181,7 +181,7 @@ class Game:
         pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
         self.timer.update(dt)
         self.stack[-1].update(dt)
-        print(len(self.stack))
+        print(self.timer.elapsed_time)
  
     def draw(self, screen):
         self.stack[-1].draw(screen)

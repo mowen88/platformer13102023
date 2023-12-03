@@ -20,5 +20,5 @@ class Intermission(State):
 
 	def draw(self, screen):
 		screen.fill(DARK_GREEN)
-		self.game.render_text(f'You are now heading to the {SCENE_DATA[self.scene.new_scene]['unit']}.', NEON_GREEN, self.game.ui_font, (HALF_WIDTH, HALF_HEIGHT - TILESIZE))
-		self.game.render_text('Press enter to continue...', NEON_GREEN, self.game.ui_font, (HALF_WIDTH, HALF_HEIGHT + TILESIZE))
+		self.game.render_text(f'You are now heading to the {SCENE_DATA[self.scene.new_scene]['unit']}.', NEON_GREEN, self.game.font, (HALF_WIDTH, HALF_HEIGHT - TILESIZE))
+		self.game.render_text('Press enter to continue...', NEON_GREEN, self.game.font, (HALF_WIDTH, HALF_HEIGHT + TILESIZE))

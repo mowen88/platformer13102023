@@ -51,7 +51,7 @@ class FadeSurf(pygame.sprite.Sprite):
 		screen.blit(self.image, self.rect)
 
 		if self.loading_text:
-			self.game.render_text('Loading...', NEON_GREEN, self.game.font, (RES/2))
+			self.game.render_text('Saving...', NEON_GREEN, self.game.font, (RES/2))
 
 class HurtSurf(FadeSurf):
 	def __init__(self, game, scene, groups, pos, alpha=255, z = LAYERS['foreground']):
