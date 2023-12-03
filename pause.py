@@ -41,8 +41,13 @@ class PauseMenu(State):
 			self.game.reset_keys()
 
 		elif self.next_menu == 'main_menu':
-			self.next_menu = None 
-			#self.game.quit_write_data()
+			self.next_menu = None
+
+			# timer reset and stop 
+			self.game.timer.stop_start()
+			self.game.timer.reset()
+			self.game.write_game_time()
+
 			self.exit_state()
 			self.prev_state.exit_state()
 			self.prev_state.prev_state.exit_state()

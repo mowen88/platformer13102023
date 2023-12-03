@@ -146,9 +146,10 @@ class MainMenu(State):
 
 	def go_to(self, state):
 		if state == 'quit_game':
-			self.game.write_data_on_quit()
 			self.game.running = False
 
+		elif state == 'main_menu':
+			MainMenu(self.game).enter_state()
 		elif state == 'slot_menu':
 			SlotMenu(self.game).enter_state()
 		elif state == 'options_menu':
@@ -240,9 +241,15 @@ class AreYouSureMenu(MainMenu):
 
 	def delete_data(self):
 		if self.next_menu == 'delete_confirmed':
-			COMMIT_SAVE_DATA.update(SAVE_DATA)
+			COMMIT_SAVE_DATA.update({
+			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+			'items':[], 'guns_collected':['blaster', 'hand grenade'],
+			'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': "00:00:00"
+			})
 			# 'time': "00:00:00"})
-			COMMIT_AMMO_DATA.update(AMMO_DATA)
+			COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
+			'grenades':5, 'slugs':0, 'rockets':0})
 			self.game.write_data()
 
 	def update(self, dt):
@@ -311,15 +318,14 @@ class StartGameMenu(MainMenu):
 
 	def show_stats(self):
 		if self.game.slot is not None:
-			self.game.render_text(f"Slot {self.game.slot}", WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 3))
+			self.game.render_text(f"Slot {self.game.slot}" +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'unit')) +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'level')), WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 3))
 			self.game.render_text(SAVE_DATA['time_elapsed'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 2))
 			self.game.render_text(self.game.slot_data[self.game.slot]['percent_complete'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding))
 			
 
 	def start_timer(self):
-		pass
-		# if self.next_menu == 'GO!!!' and self.alpha >= 255:
-		# 	self.game.timer.stop_start()
+		if self.next_menu == 'GO!!!':
+			self.game.timer.stop_start()
 
 	def update(self, dt):
 

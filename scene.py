@@ -486,7 +486,7 @@ class Scene(State):
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('prev_level: '+ str(self.prev_level)),
-					str('level: '+ str(SCENE_DATA[self.current_scene]['level'])),
+					str('time: '+ str(SAVE_DATA['time_elapsed'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

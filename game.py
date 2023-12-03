@@ -1,6 +1,7 @@
 import pygame, sys, json
 from os import walk
 from menu import Intro
+from timer import GameTimer
 from settings import *
 
 class Game:
@@ -9,7 +10,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -20,16 +21,16 @@ class Game:
 
         # game play timer
         self.last_time = SAVE_DATA['time_elapsed']
-        # self.game_timer = Timer(self)
+        self.timer = GameTimer(self)
 
         # slot info
         self.completed_scenes = len(SAVE_DATA['scenes_completed'])
         self.max_num_of_scenes = len(SCENE_DATA.keys())
         self.percent_complete = f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"
-
+        self.last_time = SAVE_DATA['time_elapsed']
+        self.timer = GameTimer(self)
         self.slot = None
         self.slot_data = self.get_slot_dict()
-
 
     def get_slot_dict(self):
         slot_data = {}
@@ -68,32 +69,30 @@ class Game:
             else:
                 return save_json[data_type]
 
-    def write_data_on_quit(self):
+    def write_game_time(self):
         if self.slot is not None and self.slot in list(self.slot_data.keys()):
-            #self.slot_data[self.slot]["time_spent"] = self.timer.add_times(str(PLAYER_DATA['time']), self.timer.get_elapsed_time())
-            #PLAYER_DATA.update({'time': self.slot_data[self.slot]["time_spent"]})
+            self.slot_data[self.slot]["time_spent"] = self.timer.add_times(str(SAVE_DATA['time_elapsed']), self.timer.get_elapsed_time()) 
+            COMMIT_SAVE_DATA.update({'time_elapsed': self.slot_data[self.slot]["time_spent"]})
+            with open(f"save_file_{self.slot}", "r") as read_save_file:
+                current_saved_data = json.load(read_save_file)
 
-            self.write_data()
+            current_saved_data['time_elapsed'] = COMMIT_SAVE_DATA['time_elapsed']
 
-    #         #print(json_object)
-
-    # def quit_write_data(self):
-    #     if self.slot is not None and self.slot in "123":
-    #         self.slot_data[self.slot]["time_spent"] = self.timer.add_times(str(PLAYER_DATA['time']), self.timer.get_elapsed_time()) 
-    #         PLAYER_DATA.update({'time': self.slot_data[self.slot]["time_spent"]})
-    #         self.write_data(PLAYER_DATA, 'player_data')
-    #         self.write_data(COMPLETED_DATA,'completed_data')
+            with open(f"save_file_{self.slot}", "w") as write_save_file:
+                json.dump(current_saved_data, write_save_file)
 
 
     def get_events(self):
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
+                self.write_game_time()
                 pygame.quit()
                 sys.exit()
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     ACTIONS['escape'] = True
+                    self.write_game_time()
                     self.running = False
 
                 elif event.key == pygame.K_SPACE:
@@ -149,7 +148,6 @@ class Game:
                 elif event.button == 2:
                     ACTIONS['scroll_up'] = False
 
-
     def reset_keys(self):
         for action in ACTIONS:
             ACTIONS[action] = False
@@ -181,7 +179,9 @@ class Game:
 
     def update(self, dt):
         pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
+        self.timer.update(dt)
         self.stack[-1].update(dt)
+        print(len(self.stack))
  
     def draw(self, screen):
         self.stack[-1].draw(screen)
