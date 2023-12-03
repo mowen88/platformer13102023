@@ -130,7 +130,7 @@ class MainMenu(State):
 		colour = text_colour
 
 		surf = self.game.font.render(current_menu, False, colour)
-		rect = pygame.Rect(0,0, HALF_WIDTH, surf.get_height() * 2)
+		rect = pygame.Rect(0,0, HALF_WIDTH + 10, surf.get_height() * 2)
 		rect.center = pos
 
 		if rect.collidepoint(mx, my) and not self.transitioning:
