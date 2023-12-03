@@ -53,9 +53,11 @@ class Player(pygame.sprite.Sprite):
 		self.underwater = False
 		self.max_underwater_time = 300
 		self.underwater_timer = self.max_underwater_time
+		self.drown_damage = 4
 
 		self.quad_damage = False
 		self.invulnerable = False
+		self.rebreather = False
 		self.hurt = False
 
 		self.state = Hold(self)
@@ -282,22 +284,29 @@ class Player(pygame.sprite.Sprite):
 		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
 	        if self.hitbox.colliderect(sprite.hitbox):
+
 	            if not self.underwater:
 	                self.underwater = True
+
 	                self.scene.breathe_timer.start()
 	                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
-	                    self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	                	if 'top' in sprite.name:
+	                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+
 	        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
-	            self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-	            self.underwater = False
-	            self.scene.breathe_timer
-
-	    # breathing / drowning logic
-	    if self.underwater:
-	    	self.underwater_timer -= dt
+	        	if 'top' in sprite.name:
+	        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+        		self.underwater = False
+	            
+	    if self.underwater and not self.scene.rebreather_timer.running:
+	    	if self.scene.breathe_timer.timer == self.scene.breathe_timer.duration:
+	    		self.reduce_health(self.drown_damage)
+	    		self.drown_damage += 2
 	    else:
-	    	self.underwater_timer = self.max_underwater_time
+	    	self.scene.breathe_timer.stop()
+	    	self.drown_damage = 4
 
+	
 	def collisions_x(self, group):
 		for sprite in group:
 			if self.hitbox.colliderect(sprite.hitbox):
@@ -473,12 +482,15 @@ class Player(pygame.sprite.Sprite):
 			# determine energy weapon or normal for armour damage coefficient
 			coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
 			armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
-			health_reduction = amount - armour_reduction
 
-			SAVE_DATA['armour'] -= armour_reduction
-			if SAVE_DATA['armour'] < 0:
-				SAVE_DATA['health'] += SAVE_DATA['armour']
-				SAVE_DATA['armour'] = 0
+			if self.underwater:
+				health_reduction = amount
+			else:
+				health_reduction = amount - armour_reduction
+				SAVE_DATA['armour'] -= armour_reduction
+				if SAVE_DATA['armour'] < 0:
+					SAVE_DATA['health'] += SAVE_DATA['armour']
+					SAVE_DATA['armour'] = 0
 
 			SAVE_DATA['health'] -= health_reduction
 			SAVE_DATA['health'] = max(0, SAVE_DATA['health'])

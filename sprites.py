@@ -153,19 +153,19 @@ class AnimatedTile(pygame.sprite.Sprite):
 		self.animate(0.2 * dt)
 
 class Liquid(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, surf, z, alpha):
+	def __init__(self, groups, pos, surf, z, name, alpha=140):
 		super().__init__(groups)
 
 		self.z = z
-		self.image = pygame.Surface((TILESIZE, TILESIZE))
-		self.image.fill(NEON_GREEN)
+		self.name = name
+		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.alpha = alpha
 
+
 	def update(self, dt):
 		self.image.set_alpha(self.alpha)
-
 
 class Pickup(Tile):
 	def __init__(self, groups, pos, surf, z, name):

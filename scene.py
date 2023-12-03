@@ -58,7 +58,8 @@ class Scene(State):
 
 		self.quad_timer = Timer(1440, 20, 12)
 		self.invulnerability_timer = Timer(1440, 20, 12)
-		self.breathe_timer = Timer(1440, 20, 12)
+		self.breathe_timer = Timer(200, 60, 12)
+		self.rebreather_timer = Timer(720, 20, 12)
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
@@ -70,9 +71,8 @@ class Scene(State):
 			self.game.write_data()
 			self.message = Message(self.game, self, [self.update_sprites], SCENE_DATA[self.current_scene]['level'], (HALF_WIDTH, HALF_HEIGHT - TILESIZE * 2), 220)
 
-
 	def get_fog_surf(self):
-		self.glow_surf = pygame.Surface(self.get_scene_size())
+		self.glow_surf = pygame.Surface(self.scene_size)
 		self.light_mask = pygame.image.load('assets/circle.png').convert_alpha()
 		self.light_rect = self.light_mask.get_rect()
 
@@ -190,12 +190,12 @@ class Scene(State):
 					if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
-					# if obj.name == 'Installation': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
-
-
-					# if obj.name == 'Ammo Depot': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					# 						LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
+		if 'liquid' in layers:
+			for obj in tmx_data.get_layer_by_name('liquid'):
+				if obj.name == 'water': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+				if obj.name == 'water_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name, 140)
+				if obj.name == 'slime_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 
 		if 'entities' in layers:
 			for obj in tmx_data.get_layer_by_name('entities'):
@@ -213,10 +213,6 @@ class Scene(State):
 			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
 				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
 
-		if 'liquid' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('liquid').tiles():
-				Liquid([self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
-
 		if 'liquid_top' in layers:
 			for x, y, surf in tmx_data.get_layer_by_name('liquid_top').tiles():
 				Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
@@ -225,8 +221,6 @@ class Scene(State):
 			for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
 				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
-			
-				
 
 			# create gun objects for the enemies and player
 			self.create_enemy_guns()
@@ -451,6 +445,8 @@ class Scene(State):
 		# update quad damage timer
 		self.player.quad_damage = True if self.quad_timer.update(dt) else False
 		self.player.invulnerable = True if self.invulnerability_timer.update(dt) else False
+		self.player.underwater = True if self.breathe_timer.update(dt) else False
+		self.player.rebreather = True if self.rebreather_timer.update(dt) else False
 
 		# print(self.breathe_timer.update(dt))
 
@@ -470,6 +466,9 @@ class Scene(State):
 		if self.player.invulnerable:
 			self.render_fog(self.player, (255, 0, 0), screen)
 			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+		if self.player.rebreather:
+			self.render_fog(self.player, (NEON_BLUE), screen)
+			self.game.render_text(str(round(self.rebreather_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
 		
 		if self.player.hurt and not self.player.invulnerable:
 			self.hurt_surf.draw(screen)
@@ -485,8 +484,8 @@ class Scene(State):
 					str('entry_point: '+ str(self.entry_point)), 
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-					str('prev_level: '+ str(self.prev_level)),
-					str('time: '+ str(SAVE_DATA['time_elapsed'])),
+					str('rebreather: '+ str(self.player.rebreather)),
+					str('breathe: '+ str(self.breathe_timer.timer)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 
