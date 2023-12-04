@@ -77,6 +77,10 @@ class Inventory(State):
 				self.scene.rebreather_timer.start()
 				SAVE_DATA['items'].remove(self.activated_item)
 
+			if self.activated_item == 'envirosuit' and not self.scene.player.envirosuit:
+				self.scene.envirosuit_timer.start()
+				SAVE_DATA['items'].remove(self.activated_item)
+
 			if self.activated_item == 'adrenaline':
 				current_max = SAVE_DATA['max_health']
 				SAVE_DATA.update({'max_health':current_max + 1})

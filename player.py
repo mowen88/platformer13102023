@@ -54,10 +54,15 @@ class Player(pygame.sprite.Sprite):
 		self.max_underwater_time = 300
 		self.underwater_timer = self.max_underwater_time
 		self.drown_damage = 4
+		self.hazardous_liquid_timer = 0
+		self.hazardous_liquid_hurt_interval = 600
+		self.in_hazardous_liquid = False
+		self.hazardous_liquid_type = None
 
 		self.quad_damage = False
 		self.invulnerable = False
 		self.rebreather = False
+		self.envirosuit = False
 		self.hurt = False
 
 		self.state = Hold(self)
@@ -283,21 +288,45 @@ class Player(pygame.sprite.Sprite):
 	def hit_liquid(self, dt):
 		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
-	        if self.hitbox.colliderect(sprite.hitbox):
+	    	if 'water' in sprite.name:
+		        if self.hitbox.colliderect(sprite.hitbox):
 
-	            if not self.underwater:
-	                self.underwater = True
+		            if not self.underwater:
+		                self.underwater = True
 
-	                self.scene.breathe_timer.start()
-	                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
-	                	if 'top' in sprite.name:
-	                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+		                self.scene.breathe_timer.start()
+		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+		                	if 'top' in sprite.name:
+		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 
-	        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
-	        	if 'top' in sprite.name:
-	        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-        		self.underwater = False
-	            
+		        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
+		        	if 'top' in sprite.name:
+		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	        		self.underwater = False
+
+	    	elif 'slime' in sprite.name or 'lava' in sprite.name:
+	        	if self.hitbox.colliderect(sprite.hitbox):
+		            if not self.in_hazardous_liquid:
+		                self.in_hazardous_liquid = True
+		                self.hazardous_liquid_type = sprite.name
+		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+		                	if 'top' in sprite.name:
+		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+
+		        elif self.in_hazardous_liquid and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
+		        	if 'top' in sprite.name:
+		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	        		self.in_hazardous_liquid = False
+
+	        	if self.in_hazardous_liquid:
+	        		self.hazardous_liquid_timer += dt
+	        		if self.hazardous_liquid_timer >= self.hazardous_liquid_hurt_interval:
+	        			self.reduce_health(CONSTANT_DATA['liquid_damage'][self.hazardous_liquid_type.split("_")[0]])
+	        			self.hazardous_liquid_timer = 0
+	        	else:
+	        		self.hazardous_liquid_timer = 0
+	        		self.hazardous_liquid_type = None
+
 	    if self.underwater and not self.scene.rebreather_timer.running:
 	    	if self.scene.breathe_timer.timer == self.scene.breathe_timer.duration:
 	    		self.reduce_health(self.drown_damage)

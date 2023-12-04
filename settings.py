@@ -81,7 +81,9 @@ INITIAL_DATA = {
 			}
 
 CONSTANT_DATA = {
-
+	'liquid_damage':{
+			'lava': 10, 'slime': 5, 'water': 0
+			},
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':18, 'auto':False},
 			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},

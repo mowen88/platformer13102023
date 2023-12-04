@@ -60,6 +60,7 @@ class Scene(State):
 		self.invulnerability_timer = Timer(1440, 20, 12)
 		self.breathe_timer = Timer(200, 60, 12)
 		self.rebreather_timer = Timer(720, 20, 12)
+		self.envirosuit_timer = Timer(720, 20, 12)
 		
 		# create all objects in the scene using tmx data
 		self.create_scene_instances()
@@ -112,7 +113,6 @@ class Scene(State):
 		layers = []
 		for layer in tmx_data.layers:
 			layers.append(layer.name)
-
 
 		if 'pickups' in layers:
 			for obj in tmx_data.get_layer_by_name('pickups'):
@@ -194,8 +194,10 @@ class Scene(State):
 			for obj in tmx_data.get_layer_by_name('liquid'):
 				if obj.name == 'water': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'water_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name, 140)
+				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'slime_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 
 		if 'entities' in layers:
 			for obj in tmx_data.get_layer_by_name('entities'):
@@ -469,23 +471,25 @@ class Scene(State):
 		if self.player.rebreather:
 			self.render_fog(self.player, (NEON_BLUE), screen)
 			self.game.render_text(str(round(self.rebreather_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+		if self.player.envirosuit:
+			self.render_fog(self.player, (NEON_GREEN), screen)
+			self.game.render_text(str(round(self.envirosuit_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
 		
 		if self.player.hurt and not self.player.invulnerable:
 			self.hurt_surf.draw(screen)
 
-		self.hud.draw(screen)
-
 		if self.message:
 			self.message.draw(screen)
 
+		self.hud.draw(screen)
 		self.fade_surf.draw(screen)
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('entry_point: '+ str(self.entry_point)), 
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-					str('rebreather: '+ str(self.player.rebreather)),
-					str('breathe: '+ str(self.breathe_timer.timer)),
+					str('in hazardous liquid: '+ str(self.player.in_hazardous_liquid)),
+					str('hazardous_liquid: '+ str(self.player.hazardous_liquid_timer)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 
