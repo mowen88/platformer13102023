@@ -251,8 +251,8 @@ class Barrel(pygame.sprite.Sprite):
 		if self.exploded:
 			self.explode()
 
-class Door(AnimatedPickup):
-	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, new_level=None):
+class ExitDoor(AnimatedPickup):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 
 		self.rect = self.image.get_rect(bottomleft=pos)
@@ -283,6 +283,54 @@ class Door(AnimatedPickup):
 			
 	def update(self, dt):
 		self.open(dt)
+
+class Trigger(ExitDoor):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
+		self.activated = False
+
+	def open(self, dt):
+		if self.rect.colliderect(self.scene.player.rect) and ACTIONS['up']:
+			self.activated = True
+		
+		if self.activated:
+			self.frame_index += 0.2 * dt
+			if self.frame_index >= len(self.frames) -1:
+				self.frame_index = len(self.frames) -1
+		self.image = self.frames[int(self.frame_index)]
+
+		if self.frame_index == len(self.frames) -1:
+			for barrier in self.scene.barrier_sprites:
+				if barrier.name == self.name:
+					barrier.activated = True
+
+	def update(self, dt):
+		self.open(dt)
+
+class Barrier(ExitDoor):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
+		self.activated = False
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.old_hitbox = self.hitbox.copy()
+
+	def open(self, dt):
+		if self.activated:
+			self.frame_index += 0.2 * dt
+			if self.frame_index >= len(self.frames) -1:
+				self.frame_index = len(self.frames) -1
+		self.image = self.frames[int(self.frame_index)]
+
+		if self.frame_index == len(self.frames) -1:
+			self.scene.block_sprites.remove(self)
+		else:
+			self.scene.block_sprites.add(self)
+
+	def update(self, dt):
+
+		self.old_hitbox = self.hitbox.copy()
+		self.open(dt)
+
 
 class Lever(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, surf, z):

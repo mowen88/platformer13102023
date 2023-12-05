@@ -12,7 +12,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door, Lever
+from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, ExitDoor, Trigger, Barrier, Lever
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -47,6 +47,8 @@ class Scene(State):
 		self.pickup_sprites = pygame.sprite.Group()
 		self.destructible_sprites = pygame.sprite.Group()
 		self.secret_sprites = pygame.sprite.Group()
+		self.trigger_sprites = pygame.sprite.Group()
+		self.barrier_sprites = pygame.sprite.Group()
 
 		# fade screen and exit flag
 		self.message = None
@@ -183,11 +185,11 @@ class Scene(State):
 
 		if 'exits' in layers:
 			for obj in tmx_data.get_layer_by_name('exits'):
-					if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					if obj.name == '1': ExitDoor(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '2': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					if obj.name == '2': ExitDoor(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					if obj.name == '3': ExitDoor(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 		if 'liquid' in layers:
@@ -198,6 +200,15 @@ class Scene(State):
 				if obj.name == 'slime_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+
+		if 'triggers' in layers:
+			for obj in tmx_data.get_layer_by_name('triggers'):
+				for num in range(100):
+					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+													LAYERS['blocks'], f'assets/triggers/{num}', 'loop', num)
+					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+													LAYERS['blocks'], f'assets/barriers/{num}', 'loop', num)
+
 
 		if 'entities' in layers:
 			for obj in tmx_data.get_layer_by_name('entities'):
@@ -214,10 +225,6 @@ class Scene(State):
 		if 'secret' in layers:
 			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
 				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
-
-		if 'liquid_top' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('liquid_top').tiles():
-				Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['foreground'], 120)
 
 		if 'ladders' in layers:
 			for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
