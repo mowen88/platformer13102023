@@ -432,7 +432,22 @@ class Scene(State):
 							hit_sprites.add(sprite)
 			
 							AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], point, LAYERS['particles'], f'assets/particles/blood')
+	
+	def upgrade_timers(self, screen):
 
+		if self.player.quad_damage:
+			self.render_fog(self.player, (0,0,255), screen)
+			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
+		if self.player.invulnerable:
+			self.render_fog(self.player, (255, 0, 0), screen)
+			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+		if self.player.rebreather:
+			self.render_fog(self.player, (NEON_BLUE), screen)
+			self.game.render_text(str(round(self.rebreather_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+		if self.player.envirosuit:
+			self.render_fog(self.player, (NEON_GREEN), screen)
+			self.game.render_text(str(round(self.envirosuit_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
+		
 	def pause_or_inventory(self, action, menu_type):
 		if action:
 			menu_type.enter_state()
@@ -449,10 +464,10 @@ class Scene(State):
 		self.player.invulnerable = True if self.invulnerability_timer.update(dt) else False
 		self.player.underwater = True if self.breathe_timer.update(dt) else False
 		self.player.rebreather = True if self.rebreather_timer.update(dt) else False
+		self.player.envirosuit = True if self.envirosuit_timer.update(dt) else False
 
 		# print(self.breathe_timer.update(dt))
 
-		
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):
@@ -462,19 +477,8 @@ class Scene(State):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
 
-		if self.player.quad_damage:
-			self.render_fog(self.player, (0,0,255), screen)
-			self.game.render_text(str(round(self.quad_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE))
-		if self.player.invulnerable:
-			self.render_fog(self.player, (255, 0, 0), screen)
-			self.game.render_text(str(round(self.invulnerability_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
-		if self.player.rebreather:
-			self.render_fog(self.player, (NEON_BLUE), screen)
-			self.game.render_text(str(round(self.rebreather_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
-		if self.player.envirosuit:
-			self.render_fog(self.player, (NEON_GREEN), screen)
-			self.game.render_text(str(round(self.envirosuit_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
-		
+		self.upgrade_timers(screen)
+
 		if self.player.hurt and not self.player.invulnerable:
 			self.hurt_surf.draw(screen)
 

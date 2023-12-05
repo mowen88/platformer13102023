@@ -62,7 +62,7 @@ class Player(pygame.sprite.Sprite):
 		self.quad_damage = False
 		self.invulnerable = False
 		self.rebreather = False
-		self.envirosuit = True
+		self.envirosuit = False
 		self.hurt = False
 
 		self.state = Hold(self)
@@ -323,17 +323,16 @@ class Player(pygame.sprite.Sprite):
 	        		if self.hazardous_liquid_timer >= self.hazardous_liquid_hurt_interval:
 	        			damage = CONSTANT_DATA['liquid_damage'][self.hazardous_liquid_type.split("_")[0]]
 	        			if self.envirosuit:
-	        				if self.hazardous_liquid_type.split("_")[0] == 'lava':
-	        					self.reduce_health(CONSTANT_DATA['liquid_damage']['slime'])
-	        			else:
-	        				self.reduce_health(damage)
-
+	        				damage -= 15
+        				if damage > 0:
+        					self.reduce_health(damage)
+	  
 	        			self.hazardous_liquid_timer = 0
 	        	else:
 	        		self.hazardous_liquid_timer = 0
 	        		self.hazardous_liquid_type = None
 
-	    if self.underwater and not self.scene.rebreather_timer.running:
+	    if self.underwater and not self.scene.rebreather_timer.running and not self.scene.envirosuit_timer.running:
 	    	if self.scene.breathe_timer.timer == self.scene.breathe_timer.duration:
 	    		self.reduce_health(self.drown_damage)
 	    		self.drown_damage += 2
