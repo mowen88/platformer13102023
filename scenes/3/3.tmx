@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="46">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="56">
  <editorsettings>
   <export target="3.csv" format="csv"/>
  </editorsettings>
@@ -22,16 +22,16 @@
 0,0,0,0,0,0,0,22,23,33,33,26,27,0,0,0,8,33,10,11,12,13,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,29,33,31,32,33,34,0,0,0,15,16,33,33,19,20,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,36,37,38,39,40,41,0,0,0,22,23,33,33,26,27,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,33,31,32,33,34,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,37,38,39,40,41,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,1,2,6,0,0,0,1,2,2,2,2,6,0,0,0,1,6,0,0,0,1,5,6,0,0,
-0,0,0,0,0,8,33,13,0,0,0,8,33,33,33,33,13,0,0,0,8,13,0,0,0,8,33,13,0,0,
-0,0,0,0,0,15,33,13,0,0,0,8,33,33,33,33,13,0,0,0,8,13,0,0,0,8,19,20,0,0,
-0,0,0,0,0,22,33,13,0,0,0,8,33,33,33,33,13,0,0,0,8,13,0,0,0,8,26,27,0,0,
-0,0,0,0,0,29,33,26,5,5,5,23,33,33,33,33,26,5,5,5,23,26,5,5,5,23,33,34,0,0,
-0,0,0,0,0,8,33,33,33,33,33,33,33,33,33,19,37,37,37,37,37,37,37,37,37,37,40,41,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,2,6,0,0,0,1,2,2,2,2,2,6,0,0,0,1,6,0,0,0,1,5,6,0,
+0,0,0,0,0,8,33,13,0,0,0,8,33,33,33,33,33,13,0,0,0,8,13,0,0,0,8,33,13,0,
+0,0,0,0,0,15,33,13,0,0,0,8,33,33,33,33,33,13,0,0,0,8,13,0,0,0,8,19,20,0,
+0,0,0,0,0,22,33,13,0,0,0,8,33,33,33,33,33,13,0,0,0,8,13,0,0,0,8,26,27,0,
+0,0,0,0,0,29,33,26,5,5,5,23,33,33,33,33,33,26,5,5,5,23,26,5,5,5,23,33,34,0,
+0,0,0,0,0,8,33,33,33,33,33,33,33,33,33,19,37,37,37,37,37,37,37,37,37,37,37,40,41,0,
 0,0,0,0,0,8,33,33,33,33,33,33,33,33,33,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,8,33,33,33,33,33,33,33,33,33,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,36,37,37,37,37,37,37,37,37,37,41,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -77,6 +77,12 @@
   <object id="1" name="3" x="144" y="96">
    <point/>
   </object>
+  <object id="50" name="1" x="432" y="256">
+   <point/>
+  </object>
+  <object id="52" name="2" x="192" y="256">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="platforms">
   <object id="6" name="2" x="208" y="240">
@@ -90,17 +96,29 @@
   <object id="40" x="176" y="64">
    <point/>
   </object>
+  <object id="54" name="blue key_0" x="96" y="272">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="9" name="triggers">
-  <object id="42" name="barrier_0" x="310" y="176">
+  <object id="42" name="laser_0" x="310" y="176">
    <point/>
   </object>
   <object id="44" name="trigger_0" x="256" y="176">
    <point/>
   </object>
+  <object id="46" name="barrier_0" x="264" y="304">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="exits">
   <object id="2" name="3" x="128" y="144">
+   <point/>
+  </object>
+  <object id="47" name="4" x="176" y="304">
+   <point/>
+  </object>
+  <object id="48" name="1" x="416" y="304">
    <point/>
   </object>
  </objectgroup>
@@ -114,23 +132,23 @@
   <object id="18" name="slime" gid="89" x="128" y="368" width="16" height="16"/>
   <object id="19" name="slime" gid="89" x="128" y="352" width="16" height="16"/>
   <object id="20" name="slime" gid="89" x="160" y="368" width="16" height="16"/>
-  <object id="21" name="water_top" gid="87" x="272" y="336" width="16" height="16"/>
-  <object id="22" name="water" gid="91" x="272" y="352" width="16" height="16"/>
-  <object id="23" name="water_top" gid="87" x="304" y="336" width="16" height="16"/>
-  <object id="24" name="water" gid="91" x="304" y="352" width="16" height="16"/>
-  <object id="25" name="water_top" gid="87" x="288" y="336" width="16" height="16"/>
-  <object id="26" name="water" gid="91" x="288" y="352" width="16" height="16"/>
-  <object id="27" name="water" gid="91" x="272" y="368" width="16" height="16"/>
-  <object id="28" name="water" gid="91" x="304" y="368" width="16" height="16"/>
-  <object id="29" name="water" gid="91" x="288" y="368" width="16" height="16"/>
-  <object id="30" name="lava_top" gid="86" x="352" y="336" width="16" height="16"/>
-  <object id="31" name="lava" gid="90" x="352" y="352" width="16" height="16"/>
-  <object id="32" name="lava_top" gid="86" x="368" y="336" width="16" height="16"/>
-  <object id="33" name="lava" gid="90" x="368" y="352" width="16" height="16"/>
-  <object id="34" name="lava_top" gid="86" x="384" y="336" width="16" height="16"/>
-  <object id="35" name="lava" gid="90" x="384" y="352" width="16" height="16"/>
-  <object id="36" name="lava" gid="90" x="352" y="368" width="16" height="16"/>
-  <object id="37" name="lava" gid="90" x="368" y="368" width="16" height="16"/>
-  <object id="38" name="lava" gid="90" x="384" y="368" width="16" height="16"/>
+  <object id="21" name="water_top" gid="87" x="288" y="336" width="16" height="16"/>
+  <object id="22" name="water" gid="91" x="288" y="352" width="16" height="16"/>
+  <object id="23" name="water_top" gid="87" x="320" y="336" width="16" height="16"/>
+  <object id="24" name="water" gid="91" x="320" y="352" width="16" height="16"/>
+  <object id="25" name="water_top" gid="87" x="304" y="336" width="16" height="16"/>
+  <object id="26" name="water" gid="91" x="304" y="352" width="16" height="16"/>
+  <object id="27" name="water" gid="91" x="288" y="368" width="16" height="16"/>
+  <object id="28" name="water" gid="91" x="320" y="368" width="16" height="16"/>
+  <object id="29" name="water" gid="91" x="304" y="368" width="16" height="16"/>
+  <object id="30" name="lava_top" gid="86" x="368" y="336" width="16" height="16"/>
+  <object id="31" name="lava" gid="90" x="368" y="352" width="16" height="16"/>
+  <object id="32" name="lava_top" gid="86" x="384" y="336" width="16" height="16"/>
+  <object id="33" name="lava" gid="90" x="384" y="352" width="16" height="16"/>
+  <object id="34" name="lava_top" gid="86" x="400" y="336" width="16" height="16"/>
+  <object id="35" name="lava" gid="90" x="400" y="352" width="16" height="16"/>
+  <object id="36" name="lava" gid="90" x="368" y="368" width="16" height="16"/>
+  <object id="37" name="lava" gid="90" x="384" y="368" width="16" height="16"/>
+  <object id="38" name="lava" gid="90" x="400" y="368" width="16" height="16"/>
  </objectgroup>
 </map>

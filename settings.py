@@ -36,8 +36,8 @@ SCENE_DATA = { # UNIT 1 - BASE
 
   			   # UNIT 2 - BUNKER
   			   # Ammo Depot
-  			   '3':{'unit':'Bunker', 'level':'Ammo Depot', '2':'1','3':'2'},
-  			   '4':{'unit':'Bunker', 'level':'Ammo Depot', '2':'1','3':'0'},
+  			   '3':{'unit':'Bunker', 'level':'Ammo Depot', '1':'4','4':'4','3':'2'},
+  			   '4':{'unit':'Bunker', 'level':'Ammo Depot', '1':'3','2':'3','3':'0'},
   			   # Warehouse
   			   '5':{'unit':'Bunker', 'level':'Warehouse', '2':'1','3':'0'},
   			}
@@ -104,6 +104,6 @@ CONSTANT_DATA = {
 			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
 			},
 
-	'all_items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability'],
+	'all_items':['rebreather','envirosuit','adrenaline','quad damage','invulnerability', 'blue key'],
 		}
 

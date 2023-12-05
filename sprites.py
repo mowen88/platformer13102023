@@ -251,22 +251,24 @@ class Barrel(pygame.sprite.Sprite):
 		if self.exploded:
 			self.explode()
 
-class ExitDoor(AnimatedPickup):
-	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+class Door(AnimatedPickup):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, key_required=None):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 
+		self.key_required = key_required
 		self.rect = self.image.get_rect(bottomleft=pos)
 		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.75, -self.rect.height * 0.75)
 
 	def open(self, dt):
 		if self.rect.colliderect(self.scene.player.rect):
-			
-			self.frame_index += 0.2 * dt
-			if self.frame_index >= len(self.frames) -1:
-				self.frame_index = len(self.frames) -1
+			if self.key_required is None or self.key_required in SAVE_DATA['items']:
+				self.frame_index += 0.2 * dt
+				if self.frame_index >= len(self.frames) -1:
+					self.frame_index = len(self.frames) -1
+				else:
+					self.frame_index = self.frame_index % len(self.frames)
 			else:
-				self.frame_index = self.frame_index % len(self.frames)
-
+				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], f'You need the {self.key_required}', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 		else:
 			self.frame_index -= 0.2 * dt
@@ -276,20 +278,24 @@ class ExitDoor(AnimatedPickup):
 				self.frame_index = self.frame_index % len(self.frames)
 
 		self.image = self.frames[int(self.frame_index)]
+
 		if self.frame_index == len(self.frames) -1:
 			self.scene.exit_sprites.add(self)
 		else:
 			self.scene.exit_sprites.remove(self)
 			
 	def update(self, dt):
+		
 		self.open(dt)
+		# else:
+		# 	self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], f'You need the {self.name} key', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
-class Trigger(ExitDoor):
+class Trigger(Door):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 		self.activated = False
 
-	def open(self, dt):
+	def activate(self, dt):
 		if self.rect.colliderect(self.scene.player.rect) and ACTIONS['up']:
 			self.activated = True
 		
@@ -305,9 +311,9 @@ class Trigger(ExitDoor):
 					barrier.activated = True
 
 	def update(self, dt):
-		self.open(dt)
+		self.activate(dt)
 
-class Barrier(ExitDoor):
+class Barrier(Door):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 		self.activated = False
@@ -327,7 +333,28 @@ class Barrier(ExitDoor):
 			self.scene.block_sprites.add(self)
 
 	def update(self, dt):
+		self.old_hitbox = self.hitbox.copy()
+		self.open(dt)
 
+class Laser(Door):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
+		self.activated = False
+		self.hitbox = self.rect.copy().inflate(0,0)
+		self.old_hitbox = self.hitbox.copy()
+
+	def open(self, dt):
+		if self.activated:
+			self.frame_index += 0.2 * dt
+			if self.frame_index >= len(self.frames) -1:
+				self.frame_index = len(self.frames) -1
+		self.image = self.frames[int(self.frame_index)]
+
+		if self.frame_index < len(self.frames) -1 and self.rect.colliderect(self.scene.player.hitbox):
+			self.scene.player.reduce_health(200)
+
+
+	def update(self, dt):
 		self.old_hitbox = self.hitbox.copy()
 		self.open(dt)
 
