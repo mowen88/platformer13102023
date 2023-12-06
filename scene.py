@@ -90,9 +90,11 @@ class Scene(State):
 		# level = self.current_level if level != self.current_level else self.current_level
 		Scene(self.game, level, scene, self.entry_point).enter_state()
 
-	def respawn(self, scene, entry_pos):
+	def respawn(self):
 		self.game.read_data()
-		Scene(self.game, SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+		self.game.stack.pop()
+		Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+		
 
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
@@ -176,6 +178,14 @@ class Scene(State):
 				# barrels
 				if obj.name == '8': Barrel(self, [self.platform_sprites, self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
+
+		if 'triggers' in layers:
+			for obj in tmx_data.get_layer_by_name('triggers'):
+				for num in range(100):
+					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/triggers/{num}', 'loop', num)
+					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/barriers/{num}', 'loop', num)
+					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/lasers/{num}', 'loop', num)
+
 			
 			# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
 		if 'entries' in layers:
@@ -203,12 +213,6 @@ class Scene(State):
 				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 
-		if 'triggers' in layers:
-			for obj in tmx_data.get_layer_by_name('triggers'):
-				for num in range(100):
-					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/triggers/{num}', 'loop', num)
-					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/barriers/{num}', 'loop', num)
-					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/lasers/{num}', 'loop', num)
 
 		if 'entities' in layers:
 			for obj in tmx_data.get_layer_by_name('entities'):
@@ -500,7 +504,7 @@ class Scene(State):
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('in hazardous liquid: '+ str(self.player.in_hazardous_liquid)),
-					str('hazardous_liquid: '+ str(self.player.hazardous_liquid_timer)),
+					str('data: '+ str(COMMIT_SAVE_DATA['health'])),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

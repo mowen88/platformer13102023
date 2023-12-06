@@ -17,6 +17,23 @@ class Hold:
 
 		player.animate('idle', 0.25 * dt, False)
 
+class Death:
+	def __init__(self, player):
+		
+		player.scene.create_particle('chunk',player.rect.center)
+		player.scene.drawn_sprites.remove(player)
+		player.gun_sprite.kill()
+		self.timer = 100
+
+	def state_logic(self, player):
+		if self.timer < 0:
+			player.scene.respawn()
+
+	def update(self, player, dt):
+		self.timer -= dt
+
+
+
 class Fall:
 	def __init__(self, player):
 		
@@ -391,23 +408,6 @@ class Landing:
 
 		player.animate('land', 0.25 * dt)
 
-class Death(Fall):
-	def __init__(self, player):
-		
-		self.timer = 120
-
-	def state_logic(self, player):
-		if self.timer <= 0:
-			player.zone.restart_zone(player.zone.name)
-
-	def update(self, player, dt):
-		self.timer -= dt
-
-		player.acc.x = 0
-		player.physics_x(dt)
-		player.physics_y(dt)
-
-		player.animate('death', 0.25 * dt, False)
 
 class Jump(Fall):
 	def __init__(self, player):

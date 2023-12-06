@@ -353,7 +353,6 @@ class Laser(Door):
 		if self.frame_index < len(self.frames) -1 and self.rect.colliderect(self.scene.player.hitbox):
 			self.scene.player.reduce_health(200)
 
-
 	def update(self, dt):
 		self.old_hitbox = self.hitbox.copy()
 		self.open(dt)

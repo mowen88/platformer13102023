@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
 		self.name = name
 		self.z = z
 		
-		self.animations = {'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
+		self.animations = {'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
 		self.import_images(SAVE_DATA['armour_type'])
 
 		self.frame_index = 0
@@ -64,6 +64,7 @@ class Player(pygame.sprite.Sprite):
 		self.rebreather = False
 		self.envirosuit = False
 		self.hurt = False
+		self.alive = True
 
 		self.state = Hold(self)
 
@@ -528,6 +529,10 @@ class Player(pygame.sprite.Sprite):
 
 			SAVE_DATA['health'] -= health_reduction
 			SAVE_DATA['health'] = max(0, SAVE_DATA['health'])
+
+		# if dead
+		if SAVE_DATA['health'] <= 0:
+			self.alive = False
 
 	def state_logic(self):
 		new_state = self.state.state_logic(self)
