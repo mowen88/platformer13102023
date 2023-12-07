@@ -6,7 +6,6 @@ from settings import *
 from pytmx.util_pygame import load_pygame
 from timer import Timer
 from message import Message
-from dialogue import Dialogue
 from camera import Camera
 from pause import PauseMenu
 from inventory import Inventory
@@ -56,8 +55,6 @@ class Scene(State):
 		self.fade_surf = FadeSurf(self.game, self, [self.update_sprites], (RES/2))
 		self.hurt_surf = HurtSurf(self.game, self, [self.update_sprites], (RES/2))
 		self.get_fog_surf()
-
-		self.dialogue = Dialogue(self.game, self, DIALOGUE[0], 600)
 		
 		self.exiting = False
 
@@ -98,7 +95,6 @@ class Scene(State):
 		self.game.stack.pop()
 		Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 		
-
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
 		    reader = csv.reader(csvfile, delimiter=',')
@@ -480,8 +476,6 @@ class Scene(State):
 		self.player.rebreather = True if self.rebreather_timer.update(dt) else False
 		self.player.envirosuit = True if self.envirosuit_timer.update(dt) else False
 
-		self.dialogue.update(dt)
-
 		# print(self.breathe_timer.update(dt))
 
 
@@ -503,8 +497,6 @@ class Scene(State):
 
 		self.hud.draw(screen)
 		self.fade_surf.draw(screen)
-
-		self.dialogue.draw(screen)
 
 		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
 					str('entry_point: '+ str(self.entry_point)), 

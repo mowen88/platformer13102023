@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -166,7 +166,7 @@ class Game:
         return surf_list
 
     def render_text(self, text, colour, font, pos, topleft=False):
-        surf = font.render(str(text), False, colour)
+        surf = font.render (str(text), False, colour)
         rect = surf.get_rect(topleft = pos) if topleft else surf.get_rect(center = pos)
         self.screen.blit(surf, rect)
 

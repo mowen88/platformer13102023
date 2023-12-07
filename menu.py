@@ -130,13 +130,13 @@ class MainMenu(State):
 		colour = text_colour
 
 		surf = self.game.font.render(current_menu, False, colour)
-		rect = pygame.Rect(0,0, HALF_WIDTH + 10, surf.get_height() * 2)
+		rect = pygame.Rect(0,0, HALF_WIDTH + 16, surf.get_height() * 2)
 		rect.center = pos
 
 		if rect.collidepoint(mx, my) and not self.transitioning:
-			pygame.draw.rect(screen, hover_colour, rect, 2)#int(HEIGHT * 0.05))
-			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery), 2)
-			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery), 2)
+			pygame.draw.rect(screen, hover_colour, rect, 1)#int(HEIGHT * 0.05))
+			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery), 1)
+			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery), 1)
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.next_menu = next_menu
