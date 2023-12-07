@@ -27,6 +27,8 @@ YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
 LIGHT_GREY = (146,143,184)
 
+DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
+
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
 			   '0':{'unit':'Base', 'level':'Outer Base', '1':'1', '3':'1'}, 
