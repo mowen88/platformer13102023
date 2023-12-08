@@ -3,13 +3,12 @@ from state import State
 from settings import *
 
 class Dialogue(State):
-    def __init__(self, game, scene, text, text_colour):
+    def __init__(self, game, text, text_colour, pos=(HALF_WIDTH,HALF_HEIGHT)):
         super().__init__(game)
 
         self.game = game
-        self.scene = scene
         self.text = text
-
+        self.pos = pos
         # text box variables
         self.text_colour = text_colour
         self.box_width = 0
@@ -35,20 +34,19 @@ class Dialogue(State):
 
     def draw_text(self, screen):
         total_height = len(self.lines) * self.line_spacing
-        start_y = HALF_WIDTH - total_height // 2
+        start_y = self.pos[1] - total_height // 2
         
         for index, line in enumerate(self.lines):
             rendered_line = self.lines[index][:self.char_indices[index]]
             y_position = start_y + self.line_spacing * index
             text_surf = self.game.ui_font.render(str(rendered_line), False, self.text_colour)
-            text_rect = text_surf.get_rect(center = (HALF_WIDTH, y_position))
+            text_rect = text_surf.get_rect(center = (self.pos[0], y_position))
             screen.blit(text_surf, text_rect)
             text_surf.set_alpha(self.alpha)
            # self.game.render_text(rendered_line, self.text_colour, self.game.ui_font, (self.center[0], y_position))
 
     def update(self, dt):
         self.timer += dt
-
         self.text_update(dt)
 
     def draw(self, screen):

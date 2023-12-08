@@ -16,7 +16,6 @@ class Message(pygame.sprite.Sprite):
 		self.text_surf = self.game.ui_font.render(str(self.text), False, self.colour)
 		self.text_rect = self.text_surf.get_rect(center = self.pos)
  
-
 	def update(self, dt):
 		self.timer -= dt
 		if self.timer < 0:
