@@ -12,7 +12,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, Pickup, AnimatedPickup, MovingPlatform, Barrel, Door, Trigger, Barrier, Laser, Lever
+from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, AnimatedPickup, MovingPlatform, Barrel, Door, Trigger, Barrier, Laser, Lever
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -125,38 +125,17 @@ class Scene(State):
 							if obj.name == f'{gun}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
 							(obj.x, obj.y),LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 						for armour in armour_list:
-							if obj.name == f'{armour}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-							pygame.image.load(f'assets/pickups/{obj.name.split("_")[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+							if obj.name == f'{armour}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
+							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 						for ammo in ammo_list:
-							if obj.name == f'{ammo}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-							pygame.image.load(f'assets/pickups/{obj.name.split("_")[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+							if obj.name == f'{ammo}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
+							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
 						for health in health_list:
-							if obj.name == f'{health}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-							pygame.image.load(f'assets/pickups/{obj.name.split("_")[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+							if obj.name == f'{health}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
+							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
 						for item in item_list:
-							if obj.name == f'{item}_{num}': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-							pygame.image.load(f'assets/pickups/{obj.name.split("_")[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-
-				# for gun in gun_list:
-				# 	if obj.name == gun: AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# 		LAYERS['blocks'], f'assets/pickups/{obj.name}', 'loop', obj.name)
-				# for ammo in ammo_list:
-				# 	if obj.name == ammo: Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# 	pygame.image.load(f'assets/pickups/{obj.name}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				
-
-				# if obj.name == 'jacket': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				# if obj.name == 'combat': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				# if obj.name == 'body': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				# if obj.name == 'shard_0': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				# if obj.name == 'shard_1': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
-				# if obj.name == 'shard_3': Pickup([self.pickup_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-				# pygame.image.load(f'assets/pickups/{obj.name.split('_')[0]}.png').convert_alpha(), LAYERS['blocks'], obj.name)
+							if obj.name == f'{item}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
+							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 
 		if 'platforms' in layers:
 			for obj in tmx_data.get_layer_by_name('platforms'):

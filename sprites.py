@@ -163,22 +163,14 @@ class Liquid(pygame.sprite.Sprite):
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.alpha = alpha
 
-
 	def update(self, dt):
 		self.image.set_alpha(self.alpha)
-
-class Pickup(Tile):
-	def __init__(self, groups, pos, surf, z, name):
-		super().__init__(groups, pos, surf, z)
-
-		self.rect = self.image.get_rect(bottomleft = pos)
-		self.hitbox = self.rect.copy().inflate(0,0)
-		self.name = name
 		
 class AnimatedPickup(AnimatedTile):
-	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
+	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, floating = True):
 		super().__init__(game, scene, groups, pos, z, path, animation_type)
 		self.name = name
+		self.rect = self.image.get_rect(midbottom = pos) if not floating else self.image.get_rect(topleft = pos)
 
 	def update(self, dt):
 		self.animate(0.2 * dt)

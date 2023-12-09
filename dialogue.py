@@ -3,7 +3,7 @@ from state import State
 from settings import *
 
 class Dialogue(State):
-    def __init__(self, game, text, text_colour, pos=(HALF_WIDTH,HALF_HEIGHT)):
+    def __init__(self, game, text, text_colour, pos=(RES/2)):
         super().__init__(game)
 
         self.game = game
@@ -16,7 +16,7 @@ class Dialogue(State):
         self.line_spacing = TILESIZE
         self.lines = self.text
         self.char_indices = [0] * len(self.lines)
-
+        self.done = False
         self.timer = 0
         self.alpha = 255
 
@@ -31,6 +31,8 @@ class Dialogue(State):
                         self.char_indices[line] = len(self.lines[line])
                     else:
                         break
+        else:
+            self.done = True
 
     def draw_text(self, screen):
         total_height = len(self.lines) * self.line_spacing
@@ -40,7 +42,7 @@ class Dialogue(State):
             rendered_line = self.lines[index][:self.char_indices[index]]
             y_position = start_y + self.line_spacing * index
             text_surf = self.game.ui_font.render(str(rendered_line), False, self.text_colour)
-            text_rect = text_surf.get_rect(center = (self.pos[0], y_position))
+            text_rect = text_surf.get_rect(topleft = (self.pos[0], y_position))
             screen.blit(text_surf, text_rect)
             text_surf.set_alpha(self.alpha)
            # self.game.render_text(rendered_line, self.text_colour, self.game.ui_font, (self.center[0], y_position))

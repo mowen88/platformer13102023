@@ -150,7 +150,7 @@
   <object id="45" name="machine gun_0" x="432" y="160">
    <point/>
   </object>
-  <object id="47" name="shells_1" x="816" y="112">
+  <object id="47" name="shells_1" x="824" y="112">
    <point/>
   </object>
   <object id="48" name="bullets_0" x="864" y="112">
@@ -159,10 +159,10 @@
   <object id="50" name="jacket_0" x="704" y="160">
    <point/>
   </object>
-  <object id="53" name="quad damage_0" x="704" y="112">
+  <object id="53" name="quad damage_0" x="688" y="96">
    <point/>
   </object>
-  <object id="56" name="rebreather_0" x="720" y="112">
+  <object id="56" name="rebreather_0" x="720" y="96">
    <point/>
   </object>
   <object id="58" name="grenades_0" x="512" y="176">
@@ -183,7 +183,7 @@
   <object id="89" name="shard_2" x="816" y="192">
    <point/>
   </object>
-  <object id="91" name="shells_0" x="800" y="112">
+  <object id="91" name="shells_0" x="808" y="112">
    <point/>
   </object>
   <object id="92" name="jacket_1" x="688" y="160">

@@ -17,8 +17,7 @@ class Intermission(State):
 
 		if len(self.game.stack) > 1:
 			self.game.stack.pop()
-
-		self.game.write_game_time()
+			
 		self.time_elapsed = COMMIT_SAVE_DATA['time_elapsed']
 
 		self.game = game
@@ -28,18 +27,17 @@ class Intermission(State):
 		self.new_unit = SCENE_DATA[self.scene.new_scene]["unit"]
 		self.prev_unit = SCENE_DATA[self.scene.current_scene]['unit']
 		
-		self.units = {'base':(20, 200), 'bunker':(80, 150), 'jail':(120, 150), 'unit 3':(220, 120), 'unit 4':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
-		#self.units = {'unit 1':(20, 200), 'unit 2':(80, 150), 'jail':(120, 150), 'base':(220, 120), 'bunker':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
+		#self.units = {'base':(20, 200), 'bunker':(80, 150), 'jail':(120, 150), 'unit 3':(220, 120), 'unit 4':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
+		self.units = {'unit 1':(20, 200), 'unit 2':(80, 150), 'jail':(120, 150), 'base':(220, 120), 'bunker':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
 
 		self.line_blinker_timer = Timer(20, 5, 10)
 		self.line_blinker_timer.start()
 
-		self.text = ['[ You are entering', f'the {self.new_unit} ]']
-		self.dialogue = Dialogue(self.game, self.text, NEON_GREEN, (WIDTH * 0.7, HEIGHT * 0.8))
-		self.text_2 = ['[ Thanks for playing', 'this demo.','I hope you enjoyed it ]']
-		self.dialogue_2 = Dialogue(self.game, self.text_2, NEON_GREEN, (WIDTH * 0.3, HEIGHT * 0.2))
+		self.acquiring_text = Dialogue(self.game, ['Acquiring.....'], NEON_GREEN, (WIDTH * 0.1, HEIGHT * 0.1))
+		self.exiting_text = Dialogue(self.game, [f'Exiting the {self.prev_unit} area.....'], NEON_GREEN, (WIDTH * 0.1 + TILESIZE, HEIGHT * 0.2))
+		self.entering_text = Dialogue(self.game, [f'Proceeding to the,',f'{self.new_unit} area.....'], NEON_GREEN, (WIDTH * 0.6, HEIGHT * 0.8))
 
-		self.timer = 400
+		self.timer = 500
 		self.opening = True
 		self.bar_count = 10
 		self.bar_width = WIDTH//self.bar_count
@@ -65,12 +63,10 @@ class Intermission(State):
 		for x in range(self.bar_count // 9 * 16):
 			for y in range(self.bar_count):
 				pygame.draw.rect(screen, BLACK, (x * WIDTH/(self.bar_count // 9 * 16), y * HEIGHT/self.bar_count, self.bar_width, self.bar_height))
-		
-		# pygame.draw.rect(screen, BLACK, (0, HEIGHT - self.bar_height, WIDTH, HALF_HEIGHT))
 
-	def draw_mission_blocks(self, points, current_pos, screen):
+	def draw_mission_blocks(self, points, screen):
 		for unit, pos in self.units.items():
-			if pos in points or pos == current_pos:
+			if pos in points:
 				block = Block(pos, unit)
 				screen.blit(block.image, block.rect)
 				pygame.draw.rect(screen, BLACK, (block.rect.x +2, block.rect.y +2, block.rect.width -4, block.rect.height -4))
@@ -81,55 +77,54 @@ class Intermission(State):
 		for unit in unit_keys:
 			pos = self.units[unit]
 
-			if unit_keys.index(unit) < unit_keys.index(self.new_unit):
+			if unit_keys.index(unit) <= unit_keys.index(self.new_unit):
 				points.append(pos)
 
 		if len(points) > 1:
-			pygame.draw.lines(screen, NEON_GREEN, False, points, 2)
+			pygame.draw.lines(screen, NEON_GREEN, False, points[:-1], 2)
+			self.draw_mission_blocks(points[:-1], screen)
 
 		if not self.line_blinker_timer.var:
 			pygame.draw.line(screen, WHITE, self.units[self.new_unit], self.units[self.prev_unit], 2)
+			self.draw_mission_blocks(points, screen)
 			self.draw_time_spent(screen)
-
-		self.draw_mission_blocks(points, self.units[self.new_unit], screen)
 
 	def draw_time_spent(self, screen):
 		self.game.render_text('Time elapsed:', NEON_GREEN, self.game.ui_font, (WIDTH * 0.8, TILESIZE))
 		self.game.render_text(self.time_elapsed, NEON_GREEN, self.game.ui_font, (WIDTH * 0.8, TILESIZE *2))
 
-	def update(self, dt):
-		self.timer -= dt
-
-		# logic to return to menu
-		if ACTIONS['enter']:
-			self.opening = False
-			#self.scene.create_scene(self.scene.prev_level, self.new_scene)
-			ACTIONS['enter'] = False
-
-		self.line_blinker_timer.update(dt)
-
+	def text_interval_logic(self, dt):
+		self.acquiring_text.update(dt)
+		if self.acquiring_text.done:
+			self.timer -= dt
+			if self.timer <= 400:
+				self.exiting_text.update(dt)
+		if self.exiting_text.done:
+			self.line_blinker_timer.update(dt)
 		if not self.line_blinker_timer.running:
-			self.dialogue.update(dt)
+			self.entering_text.update(dt)
+			if self.timer <= 0:
+				self.opening = False
 
-		if self.timer < 200:
-			self.dialogue_2.update(dt)
+	def text_interval_draw(self, screen):
+		self.acquiring_text.draw(screen)
+		if self.timer <= 400:
+			self.exiting_text.draw(screen)
+			pygame.draw.rect(screen, NEON_GREEN, (self.exiting_text.pos[0] - TILESIZE - 2, self.exiting_text.pos[1] -2, TILESIZE//2, TILESIZE//2), 2)
+		if not self.line_blinker_timer.running:
+			self.entering_text.draw(screen)
+			pygame.draw.rect(screen, NEON_GREEN, (self.entering_text.pos[0] - TILESIZE - 2, self.entering_text.pos[1] -TILESIZE//2, TILESIZE//2, TILESIZE//2), 2)
 
+	def update(self, dt):
+
+		self.text_interval_logic(dt)
 		self.blackbar_logic(dt)
+
 
 	def draw(self, screen):
 		screen.fill(DARK_GREEN)
-
-		if not self.line_blinker_timer.running:
-			self.dialogue.draw(screen)
-
-		if self.timer < 200:
-			self.dialogue_2.draw(screen)
-
+		self.text_interval_draw(screen)
 		self.draw_lines(screen)
-
-		# end of demo temp text
-		self.game.render_text('End of Demo', WHITE, self.game.ui_font, RES/2)
-
 		self.draw_blackbars(screen)
 		
 		

@@ -281,10 +281,12 @@ class Player(pygame.sprite.Sprite):
 	def exit_scene(self):
 		for exit in self.scene.exit_sprites:
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
+				self.game.write_game_time()
 				self.scene.exiting = True
 				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
 				self.scene.prev_level = SCENE_DATA[self.scene.current_scene]['level']
 				self.scene.entry_point = exit.name
+
 
 	def hit_liquid(self, dt):
 		#in / out water logic
@@ -320,15 +322,23 @@ class Player(pygame.sprite.Sprite):
 	        		self.in_hazardous_liquid = False
 
 	        	if self.in_hazardous_liquid:
-	        		self.hazardous_liquid_timer += dt
-	        		if self.hazardous_liquid_timer >= self.hazardous_liquid_hurt_interval:
-	        			damage = CONSTANT_DATA['liquid_damage'][self.hazardous_liquid_type.split("_")[0]]
-	        			if self.envirosuit:
+	        		damage = CONSTANT_DATA['liquid_damage'][self.hazardous_liquid_type.split("_")[0]]
+
+	        		if self.hazardous_liquid_timer == 0 and self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+	        			if self.scene.envirosuit_timer.running:
 	        				damage -= 15
         				if damage > 0:
         					self.reduce_health(damage)
-	  
-	        			self.hazardous_liquid_timer = 0
+
+	        		self.hazardous_liquid_timer += dt
+
+	        		if self.hazardous_liquid_timer >= self.hazardous_liquid_hurt_interval:
+	        			if self.scene.envirosuit_timer.running:
+	        				damage -= 15
+        				if damage > 0:
+        					self.reduce_health(damage)
+
+        				self.hazardous_liquid_timer = 0
 	        	else:
 	        		self.hazardous_liquid_timer = 0
 	        		self.hazardous_liquid_type = None
@@ -547,12 +557,13 @@ class Player(pygame.sprite.Sprite):
 		self.state_logic()
 		self.state.update(self, dt)
 
-		self.handle_jumping(dt)
-		self.cooldown_timer(dt)
-		self.chain_gun_spin_up(dt)
-		self.hit_by_bullet()
-		self.collect()
-		self.hit_liquid(dt)
+		if self.alive:
+			self.handle_jumping(dt)
+			self.cooldown_timer(dt)
+			self.chain_gun_spin_up(dt)
+			self.hit_by_bullet()
+			self.collect()
+			self.hit_liquid(dt)
 		# self.hit_secret(dt)
 		
 

@@ -47,9 +47,9 @@ class Inventory(State):
 		rect.center = pos
 
 		if rect.collidepoint(mx, my) and hovered_item != self.no_items_message:
-			pygame.draw.rect(screen, hover_colour, rect, 2)
-			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery), 2)
-			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery), 2)
+			pygame.draw.rect(screen, hover_colour, rect, 1)
+			pygame.draw.line(screen, NEON_GREEN, rect.midleft, (0, rect.centery))
+			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
 			self.game.render_text(hovered_item, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.activated_item = activated_item
