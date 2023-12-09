@@ -41,7 +41,7 @@ SCENE_DATA = { # UNIT 1 - BASE
   			   '3':{'unit':'bunker', 'level':'Ammo Depot', '1':'4','4':'4','3':'2'},
   			   '4':{'unit':'bunker', 'level':'Ammo Depot', '1':'3','2':'3','3':'0'},
   			   # Warehouse
-  			   '5':{'unit':'bunker', 'level':'Warehouse', '2':'1','3':'0'},
+  			   # '5':{'unit':'bunker', 'level':'Warehouse', '2':'1','3':'0'},
   			}
 
 KILLED_SPRITES = []

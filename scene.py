@@ -34,6 +34,9 @@ class Scene(State):
 		self.update_sprites = pygame.sprite.Group()
 		self.drawn_sprites = Camera(self.game, self)
 
+		self.screenshaking = False
+		self.screenshake_timer = 0
+
 		self.block_sprites = pygame.sprite.Group()
 		self.exit_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
@@ -442,7 +445,19 @@ class Scene(State):
 			menu_type.enter_state()
 			self.game.reset_keys()
 
+	def screenshake(self, dt):
+		if self.screenshaking:
+			self.screenshake_timer += dt
+			if self.screenshake_timer < 35: 
+				self.drawn_sprites.offset += [random.randint(-2, 2), random.randint(-2, 2)]
+			else: 
+				self.screenshaking = False
+				self.screenshake_timer = 0
+
 	def update(self, dt):
+
+		self.screenshake(dt)
+
 		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
 		self.pause_or_inventory(ACTIONS['enter'], Inventory(self.game, self))
 		self.hud.update(dt)
@@ -456,7 +471,6 @@ class Scene(State):
 		self.player.envirosuit = True if self.envirosuit_timer.update(dt) else False
 
 		# print(self.breathe_timer.update(dt))
-
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):

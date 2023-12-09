@@ -51,7 +51,7 @@ class FadeSurf(pygame.sprite.Sprite):
 		screen.blit(self.image, self.rect)
 
 		if self.loading_text:
-			self.game.render_text('Saving...', NEON_GREEN, self.game.font, (RES/2))
+			self.game.render_text('loading...', WHITE, self.game.font, (RES/2))
 
 class HurtSurf(FadeSurf):
 	def __init__(self, game, scene, groups, pos, alpha=255, z = LAYERS['foreground']):
@@ -232,7 +232,9 @@ class Barrel(pygame.sprite.Sprite):
 
 	def explode(self):
 		
+		self.scene.screenshaking = True
 		self.scene.create_particle('explosion', self.rect.center)
+
 		for sprite in self.scene.destructible_sprites:
 			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
 			if distance < 50:

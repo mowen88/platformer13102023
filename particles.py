@@ -19,6 +19,8 @@ class Explosion(pygame.sprite.Sprite):
 		self.blast_damage(self.scene.enemy_sprites)
 		self.blast_damage([self.scene.player])
 
+		self.scene.screenshaking = True
+
 	def blast_secret(self):
 		for sprite in self.scene.secret_sprites:
 			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
@@ -60,14 +62,14 @@ class DustParticle(pygame.sprite.Sprite):
 
 		self.frame_index += animation_speed
 
-		if loop:
-			self.frame_index = self.frame_index % len(self.frames)	
-		else:
-			if self.frame_index > len(self.frames)-1:	
+		if self.frame_index > len(self.frames)-1:
+			if loop:
+				self.frame_index = 0	
+			else:	
 				# self.frame_index = len(self.frames)-1
 				self.kill()
 
-		self.image = self.frames[int(self.frame_index)] if self.frame_index >= 0 else 0
+		self.image = self.frames[int(self.frame_index)]
 
 	def update_alpha(self, rate, dt):
 		self.alpha -= rate * dt

@@ -30,13 +30,12 @@ class Game:
         self.last_time = SAVE_DATA['time_elapsed']
         self.timer = GameTimer(self)
         self.slot = None
-        self.slot_data = self.get_slot_dict()
+        self.slot_data = self.get_slot_dict(6)
 
 
-    def get_slot_dict(self):
+    def get_slot_dict(self, num_of_slots):
         slot_data = {}
-        num_of_slots = 5
-        for i in range(1, num_of_slots):
+        for i in range(1, num_of_slots+1):
             slot_data.update({str(i): {"time_spent": None, "percent_complete": f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"}})
         return slot_data
 

@@ -17,7 +17,7 @@ class Intermission(State):
 
 		if len(self.game.stack) > 1:
 			self.game.stack.pop()
-			
+
 		self.time_elapsed = COMMIT_SAVE_DATA['time_elapsed']
 
 		self.game = game
@@ -35,7 +35,7 @@ class Intermission(State):
 
 		self.acquiring_text = Dialogue(self.game, ['Acquiring.....'], NEON_GREEN, (WIDTH * 0.1, HEIGHT * 0.1))
 		self.exiting_text = Dialogue(self.game, [f'Exiting the {self.prev_unit} area.....'], NEON_GREEN, (WIDTH * 0.1 + TILESIZE, HEIGHT * 0.2))
-		self.entering_text = Dialogue(self.game, [f'Proceeding to the,',f'{self.new_unit} area.....'], NEON_GREEN, (WIDTH * 0.6, HEIGHT * 0.8))
+		self.entering_text = Dialogue(self.game, [f'Proceeding to',f'{self.new_unit} area.....'], NEON_GREEN, (WIDTH * 0.6, HEIGHT * 0.8))
 
 		self.timer = 500
 		self.opening = True

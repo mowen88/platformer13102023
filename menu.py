@@ -195,8 +195,11 @@ class SlotMenu(MainMenu):
 		buttons = {}
 		for index, slot in enumerate(self.num_of_slots):
 			start_y = HALF_HEIGHT - len(self.num_of_slots) * 0.5 * self.padding
-			buttons.update({'Slot ' + str(index+1) +' -- '+ str(self.game.read_slot_progress(index+1, 'unit')) +' -- '+ \
-			str(self.game.read_slot_progress(index+1, 'level')) +' -- '+ str(self.game.read_slot_progress(index+1, 'time_elapsed')) :[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
+
+			percent_complete = f"{int(len(self.game.read_slot_progress(index+1, 'scenes_completed'))/self.game.max_num_of_scenes * 100)} %"
+
+			buttons.update({str(self.game.read_slot_progress(index+1, 'unit')) +' -- '+ str(self.game.read_slot_progress(index+1, 'level'))\
+			+' -- '+ str(self.game.read_slot_progress(index+1, 'time_elapsed')) +' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
 		
 		buttons.update({'Back': [(HALF_WIDTH, start_y + self.padding * len(self.num_of_slots)), 'main_menu']})
 		return buttons
