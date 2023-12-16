@@ -9,10 +9,11 @@ HALF_WIDTH, HALF_HEIGHT = RES/2
 ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False, 'enter':False,
 			'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
 
-LAYERS = {'blocks':0,
-		  'player':1,
-		  'particles':2,
-		  'foreground':3}
+LAYERS = {'background':0,
+		  'blocks':1,
+		  'player':2,
+		  'particles':3,
+		  'foreground':4}
 
 FONT = 'fonts/homespun.ttf'
 

@@ -207,6 +207,10 @@ class Scene(State):
 			for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
 				Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
+		if 'bg' in layers:
+			for x, y, surf in tmx_data.get_layer_by_name('bg').tiles():
+				Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
+
 		if 'secret' in layers:
 			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
 				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
