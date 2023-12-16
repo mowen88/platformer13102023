@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -180,7 +180,6 @@ class Game:
         pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
         self.timer.update(dt)
         self.stack[-1].update(dt)
-        print(len(self.stack))
  
     def draw(self, screen):
         self.stack[-1].draw(screen)

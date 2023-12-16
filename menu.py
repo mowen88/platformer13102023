@@ -191,6 +191,8 @@ class SlotMenu(MainMenu):
 		self.num_of_slots = list(self.game.slot_data.keys())
 		self.buttons = self.get_slots()
 
+		print(self.num_of_slots)
+
 	def get_slots(self):
 		buttons = {}
 		for index, slot in enumerate(self.num_of_slots):
@@ -244,19 +246,6 @@ class AreYouSureMenu(MainMenu):
 				'Back': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'slot_menu']
 				}
 
-	def delete_data(self):
-		if self.next_menu == 'delete_confirmed':
-			COMMIT_SAVE_DATA.update({
-			'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
-			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-			'items':[], 'guns_collected':['blaster', 'hand grenade'],
-			'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': "00:00:00"
-			})
-			# 'time': "00:00:00"})
-			COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
-			'grenades':5, 'slugs':0, 'rockets':0})
-			self.game.write_data()
-
 	def update(self, dt):
 
 		for box in self.boxes:
@@ -264,7 +253,6 @@ class AreYouSureMenu(MainMenu):
 
 		self.transition_screen.update(dt)
 		if self.next_menu is not None:
-			self.delete_data()
 			self.transitioning = True
 
 	def draw(self, screen):
@@ -284,9 +272,25 @@ class Confirmation(MainMenu):
 	def __init__(self, game):
 		super().__init__(game)
 
+		self.delete_data()
+
 		self.buttons = {
 				'Continue': [(HALF_WIDTH, HALF_HEIGHT + self.padding * 0.5), 'slot_menu']
 				}
+
+	def delete_data(self):
+		COMMIT_SAVE_DATA.update({
+		'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+		'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+		'items':[], 'guns_collected':['blaster', 'hand grenade'],
+		'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': "00:00:00"
+		})
+		# 'time': "00:00:00"})
+		COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
+		'grenades':5, 'slugs':0, 'rockets':0})
+		# self.game.write_data()
+
+		print(self.game.slot)
 
 	def update(self, dt):
 
