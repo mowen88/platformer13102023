@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -36,7 +36,7 @@ class Game:
     def get_slot_dict(self, num_of_slots):
         slot_data = {}
         for i in range(1, num_of_slots+1):
-            slot_data.update({str(i): {"time_spent": None, "percent_complete": f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"}})
+            slot_data.update({str(i): {"time_spent": "00:00:00", "percent_complete": f"{int(self.completed_scenes/self.max_num_of_scenes * 100)} %"}})
         return slot_data
 
     def write_data(self):

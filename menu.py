@@ -188,27 +188,27 @@ class SlotMenu(MainMenu):
 	def __init__(self, game):
 		super().__init__(game)
 
-		self.num_of_slots = list(self.game.slot_data.keys())
+		self.num_of_slots = len(list(self.game.slot_data.keys()))
 		self.buttons = self.get_slots()
 
 		print(self.num_of_slots)
 
 	def get_slots(self):
 		buttons = {}
-		for index, slot in enumerate(self.num_of_slots):
-			start_y = HALF_HEIGHT - len(self.num_of_slots) * 0.5 * self.padding
+		for slot in range(1, self.num_of_slots+1):
+			start_y = HALF_HEIGHT - self.num_of_slots * 0.5 * self.padding
 
-			percent_complete = f"{int(len(self.game.read_slot_progress(index+1, 'scenes_completed'))/self.game.max_num_of_scenes * 100)} %"
+			percent_complete = f"{int(len(self.game.read_slot_progress(slot, 'scenes_completed'))/self.game.max_num_of_scenes * 100)} %"
 
-			buttons.update({str(self.game.read_slot_progress(index+1, 'unit')) +' -- '+ str(self.game.read_slot_progress(index+1, 'level'))\
-			+' -- '+ str(self.game.read_slot_progress(index+1, 'time_elapsed')) +' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * index), str(index +1)]})
+			buttons.update({f'save {slot}' + ' -- ' + str(self.game.read_slot_progress(slot, 'level')) +' -- '+ str(self.game.read_slot_progress(slot, 'time_elapsed'))\
+			+' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * (slot-1)), str(slot)]})
 		
-		buttons.update({'Back': [(HALF_WIDTH, start_y + self.padding * len(self.num_of_slots)), 'main_menu']})
+		buttons.update({'Back': [(HALF_WIDTH, start_y + self.padding * self.num_of_slots), 'main_menu']})
 		return buttons
 
 	def activate_slot(self):
 		self.game.slot = self.next_menu
-		if self.next_menu in self.num_of_slots:
+		if self.next_menu in list(self.game.slot_data.keys()):
 			self.game.slot = str(self.next_menu)
 
 			self.game.read_data()
@@ -288,7 +288,7 @@ class Confirmation(MainMenu):
 		# 'time': "00:00:00"})
 		COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 		'grenades':5, 'slugs':0, 'rockets':0})
-		# self.game.write_data()
+		self.game.write_data()
 
 		print(self.game.slot)
 
@@ -327,7 +327,7 @@ class StartGameMenu(MainMenu):
 
 	def show_stats(self):
 		if self.game.slot is not None:
-			self.game.render_text(f"Slot {self.game.slot}" +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'unit')) +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'level')), WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 3))
+			self.game.render_text(f"save {self.game.slot}" +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'unit')) +" -- "+ str(self.game.read_slot_progress(self.game.slot, 'level')), WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 3))
 			self.game.render_text(SAVE_DATA['time_elapsed'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 2))
 			self.game.render_text(self.game.slot_data[self.game.slot]['percent_complete'], WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding))
 			
