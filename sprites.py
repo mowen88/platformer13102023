@@ -250,7 +250,7 @@ class Door(AnimatedPickup):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 
 		self.key_required = key_required
-		self.rect = self.image.get_rect(bottomleft=pos)
+		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.75, -self.rect.height * 0.75)
 
 	def open(self, dt):

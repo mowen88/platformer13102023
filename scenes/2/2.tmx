@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="17">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="21">
  <editorsettings>
   <export target="../1/2.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
+ <tileset firstgid="85" source="../../assets/tilesets/doors.tsx"/>
  <layer id="1" name="blocks" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -29,12 +30,8 @@
 </data>
  </layer>
  <objectgroup id="2" name="exits">
-  <object id="5" name="2" x="32" y="160">
-   <point/>
-  </object>
-  <object id="6" name="3" x="192" y="128">
-   <point/>
-  </object>
+  <object id="17" name="2" gid="86" x="48" y="160" width="16" height="24"/>
+  <object id="20" name="3" gid="86" x="208" y="128" width="16" height="24"/>
  </objectgroup>
  <layer id="10" name="secret" width="30" height="20">
   <data encoding="csv">
@@ -87,7 +84,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
