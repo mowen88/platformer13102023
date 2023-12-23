@@ -92,6 +92,13 @@ class Tile(pygame.sprite.Sprite):
 		self.old_hitbox = self.hitbox.copy()
 		self.z = z
 
+class Tutorial(pygame.sprite.Sprite):
+	def __init__(self, groups, rect, text=''):
+		super().__init__(groups)
+
+		self.rect = pygame.Rect(rect)
+		self.text = text
+
 class SecretTile(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
 		super().__init__(groups)

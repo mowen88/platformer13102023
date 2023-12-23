@@ -155,6 +155,14 @@ class Game:
         self.intro = Intro(self)
         self.stack.append(self.intro)
 
+    def get_csv_layer(self, path):
+        grid = []
+        with open(path) as layout:
+            layer = reader(layout, delimiter = ',')
+            for row in layer:
+                grid.append(list(row))
+            return grid
+
     def get_folder_images(self, path):
         surf_list = []
         for _, __, img_files in walk(path):

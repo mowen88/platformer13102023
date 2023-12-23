@@ -4,7 +4,7 @@
   <export target="1.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
- <tileset firstgid="85" source="../../assets/tilesets/doors.tsx"/>
+ <tileset firstgid="73" source="../../assets/tilesets/doors.tsx"/>
  <layer id="1" name="blocks" width="32" height="18">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -93,10 +93,10 @@
   <object id="36" name="shells_3" x="272" y="176">
    <point/>
   </object>
-  <object id="37" name="combat_1" x="192" y="240">
+  <object id="37" name="combat_1" x="220" y="48">
    <point/>
   </object>
-  <object id="38" name="body_1" x="272" y="224">
+  <object id="38" name="body_1" x="244" y="48">
    <point/>
   </object>
   <object id="39" name="first aid_0" x="96" y="80">
@@ -112,9 +112,6 @@
    <point/>
   </object>
   <object id="44" name="stimpack_2" x="272" y="16">
-   <point/>
-  </object>
-  <object id="46" name="adrenaline_0" x="32" y="256">
    <point/>
   </object>
  </objectgroup>
@@ -136,8 +133,8 @@
   <object id="22" name="3" x="416" y="160">
    <point/>
   </object>
-  <object id="48" name="2" gid="86" x="208" y="176" width="16" height="24"/>
-  <object id="49" name="1" gid="86" x="48" y="160" width="16" height="24"/>
+  <object id="48" name="2" gid="74" x="208" y="176" width="16" height="24"/>
+  <object id="49" name="1" gid="74" x="48" y="160" width="16" height="24"/>
  </objectgroup>
  <layer id="11" name="secret" width="32" height="18">
   <data encoding="csv">

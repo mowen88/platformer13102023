@@ -10,10 +10,11 @@ ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, '
 			'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
 
 LAYERS = {'background':0,
-		  'blocks':1,
-		  'player':2,
-		  'particles':3,
-		  'foreground':4}
+	      'background_front':1,
+		  'blocks':2,
+		  'player':3,
+		  'particles':4,
+		  'foreground':5}
 
 FONT = 'fonts/homespun.ttf'
 
@@ -27,6 +28,14 @@ DARK_GREEN = (5, 33, 55)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
 LIGHT_GREY = (146,143,184)
+
+TUTORIALS = {
+		'fire':'Left click to fire, right click to jump',
+		'jump':'Right click to jump',
+		'double_jump':'Right click in air to double jump',
+		'crouch':'Hold down to crouch',
+		'inventory':'Press enter to use use inventory',
+		}
 
 DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 

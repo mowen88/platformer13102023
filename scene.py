@@ -12,7 +12,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, HurtSurf, Collider, Tile, SecretTile, AnimatedTile, Liquid, AnimatedPickup, MovingPlatform, Barrel, Door, Trigger, Barrier, Laser, Lever
+from sprites import FadeSurf, HurtSurf, Collider, Tile, Tutorial, SecretTile, AnimatedTile, Liquid, AnimatedPickup, MovingPlatform, Barrel, Door, Trigger, Barrier, Laser, Lever
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -30,13 +30,15 @@ class Scene(State):
 		
 		if self.current_scene not in SAVE_DATA['scenes_completed']:
 			SAVE_DATA['scenes_completed'].append(self.current_scene)
+	
+		self.screenshaking = False
+		self.screenshake_timer = 0
 
 		self.update_sprites = pygame.sprite.Group()
 		self.drawn_sprites = Camera(self.game, self)
 
-		self.screenshaking = False
-		self.screenshake_timer = 0
-
+		self.bg_sprites = pygame.sprite.Group()
+		self.tutorial_sprites = pygame.sprite.Group()
 		self.block_sprites = pygame.sprite.Group()
 		self.exit_sprites = pygame.sprite.Group()
 		self.platform_sprites = pygame.sprite.Group()
@@ -66,9 +68,11 @@ class Scene(State):
 		self.breathe_timer = Timer(200, 60, 12)
 		self.rebreather_timer = Timer(720, 20, 12)
 		self.envirosuit_timer = Timer(720, 20, 12)
+
+		#self.all_chunks = self.split_scene_into_grid()
 		
 		# create all objects in the scene using tmx data
-		self.create_scene_instances()
+		self.create_scene_instances(0,0)
 		self.hud = HUD(self.game, self)
 
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
@@ -106,7 +110,26 @@ class Scene(State):
 		        cols = len(row)
 		return (cols * TILESIZE, rows * TILESIZE)
 
-	def create_scene_instances(self):
+	# def split_scene_into_grid(self, grid_size=(12 * TILESIZE, 6 * TILESIZE)):
+	#     scene_width, scene_height = self.get_scene_size()
+	#     grid_x, grid_y = grid_size
+
+	#     sections_x = scene_width//grid_x
+	#     sections_y = scene_height//grid_y
+
+	#     grid = []
+	#     for row in range(grid_y):
+	#         for col in range(grid_x):
+	#             x = col * grid_x
+	#             y = row * grid_y
+	#             rect = pygame.Rect(x, y, grid_x, grid_y)
+	#             #pygame.draw.rect(self.game.screen, WHITE, rect, 2)
+	#             grid.append(rect)
+
+	#     return grid
+
+
+	def create_scene_instances(self, chunk_x, chunk_y):
 
 		tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
 
@@ -115,10 +138,33 @@ class Scene(State):
 		armour_list = list(ARMOUR_DATA.keys())
 		health_list = list(HEALTH_DATA.keys())
 		item_list = CONSTANT_DATA['all_items']
+		tutorials_list = list(TUTORIALS.keys())
 
 		layers = []
 		for layer in tmx_data.layers:
 			layers.append(layer.name)
+
+		if 'blocks' in layers:
+			for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
+				Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+
+		if 'bg' in layers:
+			for x, y, surf in tmx_data.get_layer_by_name('bg').tiles():
+				Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
+
+		if 'secret' in layers:
+			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
+				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
+
+		if 'ladders' in layers:
+			for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
+				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+
+		if 'tutorials' in layers:
+			for obj in tmx_data.get_layer_by_name('tutorials'):
+				if obj.name not in SAVE_DATA['killed_sprites']:
+					for tutorial in tutorials_list:
+						if obj.name == tutorial: Tutorial([self.tutorial_sprites], (obj.x, obj.y, obj.width, obj.height), TUTORIALS[tutorial])
 
 		if 'pickups' in layers:
 			for obj in tmx_data.get_layer_by_name('pickups'):
@@ -154,7 +200,7 @@ class Scene(State):
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.025), 64)
 				if obj.name == '6': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
-				if obj.name == '7': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '7': MovingPlatform([self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0), 16)
 				# barrels
 				if obj.name == '8': Barrel(self, [self.platform_sprites, self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -203,26 +249,12 @@ class Scene(State):
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
 
-		if 'blocks' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
-				Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
-
-		if 'bg' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('bg').tiles():
-				Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
-
-		if 'secret' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
-				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
-
-		if 'ladders' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
-				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
-
 
 			# create gun objects for the enemies and player
 			self.create_enemy_guns()
 			self.create_player_gun()
+
+		#Tile([self.drawn_sprites], (0,0), pygame.image.load(f'scenes/{self.current_scene}/{self.current_scene}.png'), LAYERS['background'])
 
 	def create_player_gun(self):
 		self.player.gun_sprite = Gun(self.game, self, self.player, [self.gun_sprites, self.update_sprites, self.drawn_sprites], self.player.hitbox.center, LAYERS['particles'])
@@ -460,6 +492,8 @@ class Scene(State):
 
 	def update(self, dt):
 
+		# self.get_chunk_pos()
+
 		self.screenshake(dt)
 
 		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
@@ -480,6 +514,22 @@ class Scene(State):
 		for index, name in enumerate(debug_list):
 			self.game.render_text(name, WHITE, self.game.font, (10, 15 * index), True)
 
+	def get_chunk_pos(self):
+
+		for i in self.all_chunks:
+			if i.colliderect(self.chunk_check_rect):
+				self.chunk_check_rect.center = self.player.rect.center
+				if (str(i.x),str(i.y)) not in self.chunks.keys():
+					self.chunks.update({(str(i.x),str(i.y)):i})
+					if not self.chunks_updated:
+						self.create_chunk(i.x, i.y) 
+						self.chunks_updated = True
+				else:
+					if (str(i.x),str(i.y)) in self.chunks.keys():
+						self.chunks.update({(str(i.x),str(i.y)):i})
+					self.chunks_updated = False
+
+	
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)

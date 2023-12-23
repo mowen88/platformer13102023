@@ -287,6 +287,12 @@ class Player(pygame.sprite.Sprite):
 				self.scene.prev_level = SCENE_DATA[self.scene.current_scene]['level']
 				self.scene.entry_point = exit.name
 
+	def collide_tutorials(self):
+		for rect in self.scene.tutorial_sprites:
+			if self.hitbox.colliderect(rect.rect):
+				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], rect.text, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5), 200, NEON_GREEN)
+				SAVE_DATA['killed_sprites'].append(rect.text)
+				rect.kill()
 
 	def hit_liquid(self, dt):
 		#in / out water logic
@@ -564,6 +570,7 @@ class Player(pygame.sprite.Sprite):
 			self.hit_by_bullet()
 			self.collect()
 			self.hit_liquid(dt)
+			self.collide_tutorials()
 		# self.hit_secret(dt)
 		
 
