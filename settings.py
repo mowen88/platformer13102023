@@ -23,8 +23,8 @@ WHITE = (255, 255, 255)
 RED = (212, 30, 60)
 BLUE = (20,68,145)
 NEON_BLUE = (120, 215, 225)
-NEON_GREEN = (61, 255, 110)
-DARK_GREEN = (5, 33, 55)
+NEON_GREEN = (150, 225, 60)
+DARK_GREEN = (23, 35, 23)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
 LIGHT_GREY = (146,143,184)
@@ -97,7 +97,7 @@ CONSTANT_DATA = {
 			'lava': 20, 'slime': 5, 'water': 0
 			},
 	'guns':{
-			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':18, 'auto':False},
+			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 30, 'speed': 4, 'damage': 3, 'length':20, 'auto':False},
 			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':25, 'auto':False},
 			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},

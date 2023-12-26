@@ -178,6 +178,7 @@ class AnimatedPickup(AnimatedTile):
 		super().__init__(game, scene, groups, pos, z, path, animation_type)
 		self.name = name
 		self.rect = self.image.get_rect(midbottom = pos) if not floating else self.image.get_rect(topleft = pos)
+		self.hitbox = self.rect.copy().inflate(0,0)
 
 	def update(self, dt):
 		self.animate(0.2 * dt)

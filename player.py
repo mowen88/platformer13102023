@@ -13,11 +13,15 @@ class Player(pygame.sprite.Sprite):
 		self.name = name
 		self.z = z
 		
-		self.animations = {'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
+		self.animations = {'normal':{'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]},
+		'jacket':{'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]},
+		'combat':{'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]},
+		'body':{'death':[], 'crouch':[], 'idle':[], 'run':[], 'land':[], 'jump':[], 'double_jump':[], 'fall':[], 'skid':[], 'on_ladder_idle':[], 'on_ladder_move':[]}
+		}
 		self.import_images(SAVE_DATA['armour_type'])
 
 		self.frame_index = 0
-		self.image = self.animations['fall'][self.frame_index].convert_alpha()
+		self.image = self.animations[SAVE_DATA['armour_type']]['fall'][self.frame_index].convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
 		self.pos = pygame.math.Vector2(self.rect.center)
 		self.old_pos = self.pos.copy()
@@ -65,28 +69,29 @@ class Player(pygame.sprite.Sprite):
 		self.envirosuit = False
 		self.hurt = False
 		self.alive = True
-
 		self.state = Hold(self)
 
 	def import_images(self, armour_type):
 
-		path = f'assets/characters/{self.name + "_" + armour_type}/'
-		
-		for animation in self.animations.keys():
-			full_path = path + animation
-			self.animations[animation] = self.game.get_folder_images(full_path)
+		for armour_type in self.animations.keys():
+
+			path = f'assets/characters/{self.name + "_" + armour_type}/'
+			
+			for animation in self.animations[armour_type].keys():
+				full_path = path + animation
+				self.animations[armour_type][animation] = self.game.get_folder_images(full_path)
 
 	def animate(self, state, speed, loop=True):
 
 		self.frame_index += speed
 
-		if self.frame_index >= len(self.animations[state]):
+		if self.frame_index >= len(self.animations[SAVE_DATA['armour_type']][state]):
 			if loop: 
 				self.frame_index = 0
 			else:
-				self.frame_index = len(self.animations[state]) -1
+				self.frame_index = len(self.animations[SAVE_DATA['armour_type']][state]) -1
 		
-		self.image = pygame.transform.flip(self.animations[state][int(self.frame_index)], self.facing, False)
+		self.image = pygame.transform.flip(self.animations[SAVE_DATA['armour_type']][state][int(self.frame_index)], self.facing, False)
 
 	def jump(self, height):
 		self.vel.y = -height
@@ -98,7 +103,6 @@ class Player(pygame.sprite.Sprite):
 	def input(self):
 		keys = pygame.key.get_pressed()
 		
-
 		if keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
 			self.acc.x = -self.acc_rate
 			
@@ -189,7 +193,7 @@ class Player(pygame.sprite.Sprite):
 						if armour_list.index(name) >= armour_list.index(SAVE_DATA['armour_type']):
 							SAVE_DATA.update({'armour_type':name})
 							SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
-							self.import_images(SAVE_DATA['armour_type'])
+
 						else:
 							SAVE_DATA.update({'armour':min(current_armour + armour_increase, max_armour)})
 
@@ -197,7 +201,7 @@ class Player(pygame.sprite.Sprite):
 						SAVE_DATA.update({'shards':SAVE_DATA['shards'] + armour_increase})
 						SAVE_DATA.update({'armour':current_armour + armour_increase})
 						SAVE_DATA.update({'armour_type':'jacket'})
-						self.import_images(SAVE_DATA['armour_type'])
+
 						max_armour 
 
 					else:
@@ -524,6 +528,7 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(sprite.hitbox):
 				ammo_type = CONSTANT_DATA['guns'][sprite.firer.gun]['ammo_type']
 				self.reduce_health(sprite.damage, ammo_type)
+				self.scene.create_particle('blood', sprite.rect.center)
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=False):

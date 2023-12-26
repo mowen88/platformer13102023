@@ -396,7 +396,7 @@ class Landing:
 			ACTIONS['right_click'] = False
 			return Jump(player)
 
-		if player.frame_index > len(player.animations['land'])-1:
+		if player.frame_index > len(player.animations[SAVE_DATA['armour_type']]['land'])-1:
 			return Idle(player)
 
 	def update(self, player, dt):

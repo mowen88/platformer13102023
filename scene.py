@@ -314,7 +314,9 @@ class Scene(State):
 			self.hitscan(sprite)
 
 	def create_particle(self, particle_type, pos):
-		if particle_type == 'blaster':
+		if particle_type == 'blood':
+			AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/blood')
+		elif particle_type == 'blaster':
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, YELLOW)
 		elif particle_type == 'landing':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/landing')

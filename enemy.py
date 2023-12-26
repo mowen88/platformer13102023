@@ -171,6 +171,7 @@ class Guard(pygame.sprite.Sprite):
 		for sprite in self.scene.bullet_sprites:
 			if self.hitbox.colliderect(sprite.hitbox):
 				self.reduce_health(sprite.damage)
+				self.scene.create_particle('blood', sprite.rect.center)
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=None):
