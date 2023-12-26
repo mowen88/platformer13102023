@@ -202,10 +202,10 @@
   <object id="169" name="collider" x="160" y="400" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="pickups">
-  <object id="84" name="shard_2" x="888" y="544">
+  <object id="84" name="shard_2" x="884" y="539">
    <point/>
   </object>
-  <object id="86" name="shard_0" x="920" y="544">
+  <object id="86" name="shard_0" x="916" y="539">
    <point/>
   </object>
   <object id="153" name="adrenaline_0" x="704" y="544">
@@ -214,7 +214,7 @@
   <object id="165" name="jacket_0" x="488" y="128">
    <point/>
   </object>
-  <object id="167" name="shard_1" x="904" y="544">
+  <object id="167" name="shard_1" x="900" y="539">
    <point/>
   </object>
   <object id="172" name="shotgun_0" x="864" y="408">
