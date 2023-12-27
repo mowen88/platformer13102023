@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="56">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="56">
  <editorsettings>
   <export target="3.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
- <tileset firstgid="85" source="../../assets/liquid/liquid.tsx"/>
+ <tileset firstgid="73" source="../../assets/liquid/liquid.tsx"/>
  <layer id="1" name="blocks" width="30" height="30">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -96,9 +96,6 @@
   <object id="40" x="176" y="64">
    <point/>
   </object>
-  <object id="54" name="blue key_0" x="96" y="272">
-   <point/>
-  </object>
  </objectgroup>
  <objectgroup id="9" name="triggers">
   <object id="42" name="laser_0" x="310" y="176">
@@ -123,32 +120,32 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="liquid">
-  <object id="10" name="slime_top" gid="85" x="128" y="336" width="16" height="16"/>
-  <object id="13" name="slime" gid="89" x="160" y="352" width="16" height="16"/>
-  <object id="14" name="slime_top" gid="85" x="144" y="336" width="16" height="16"/>
-  <object id="15" name="slime_top" gid="85" x="160" y="336" width="16" height="16"/>
-  <object id="16" name="slime" gid="89" x="144" y="352" width="16" height="16"/>
-  <object id="17" name="slime" gid="89" x="144" y="368" width="16" height="16"/>
-  <object id="18" name="slime" gid="89" x="128" y="368" width="16" height="16"/>
-  <object id="19" name="slime" gid="89" x="128" y="352" width="16" height="16"/>
-  <object id="20" name="slime" gid="89" x="160" y="368" width="16" height="16"/>
-  <object id="21" name="water_top" gid="87" x="288" y="336" width="16" height="16"/>
-  <object id="22" name="water" gid="91" x="288" y="352" width="16" height="16"/>
-  <object id="23" name="water_top" gid="87" x="320" y="336" width="16" height="16"/>
-  <object id="24" name="water" gid="91" x="320" y="352" width="16" height="16"/>
-  <object id="25" name="water_top" gid="87" x="304" y="336" width="16" height="16"/>
-  <object id="26" name="water" gid="91" x="304" y="352" width="16" height="16"/>
-  <object id="27" name="water" gid="91" x="288" y="368" width="16" height="16"/>
-  <object id="28" name="water" gid="91" x="320" y="368" width="16" height="16"/>
-  <object id="29" name="water" gid="91" x="304" y="368" width="16" height="16"/>
-  <object id="30" name="lava_top" gid="86" x="368" y="336" width="16" height="16"/>
-  <object id="31" name="lava" gid="90" x="368" y="352" width="16" height="16"/>
-  <object id="32" name="lava_top" gid="86" x="384" y="336" width="16" height="16"/>
-  <object id="33" name="lava" gid="90" x="384" y="352" width="16" height="16"/>
-  <object id="34" name="lava_top" gid="86" x="400" y="336" width="16" height="16"/>
-  <object id="35" name="lava" gid="90" x="400" y="352" width="16" height="16"/>
-  <object id="36" name="lava" gid="90" x="368" y="368" width="16" height="16"/>
-  <object id="37" name="lava" gid="90" x="384" y="368" width="16" height="16"/>
-  <object id="38" name="lava" gid="90" x="400" y="368" width="16" height="16"/>
+  <object id="10" name="slime_top" gid="73" x="128" y="336" width="16" height="16"/>
+  <object id="13" name="slime" gid="77" x="160" y="352" width="16" height="16"/>
+  <object id="14" name="slime_top" gid="73" x="144" y="336" width="16" height="16"/>
+  <object id="15" name="slime_top" gid="73" x="160" y="336" width="16" height="16"/>
+  <object id="16" name="slime" gid="77" x="144" y="352" width="16" height="16"/>
+  <object id="17" name="slime" gid="77" x="144" y="368" width="16" height="16"/>
+  <object id="18" name="slime" gid="77" x="128" y="368" width="16" height="16"/>
+  <object id="19" name="slime" gid="77" x="128" y="352" width="16" height="16"/>
+  <object id="20" name="slime" gid="77" x="160" y="368" width="16" height="16"/>
+  <object id="21" name="water_top" gid="75" x="288" y="336" width="16" height="16"/>
+  <object id="22" name="water" gid="79" x="288" y="352" width="16" height="16"/>
+  <object id="23" name="water_top" gid="75" x="320" y="336" width="16" height="16"/>
+  <object id="24" name="water" gid="79" x="320" y="352" width="16" height="16"/>
+  <object id="25" name="water_top" gid="75" x="304" y="336" width="16" height="16"/>
+  <object id="26" name="water" gid="79" x="304" y="352" width="16" height="16"/>
+  <object id="27" name="water" gid="79" x="288" y="368" width="16" height="16"/>
+  <object id="28" name="water" gid="79" x="320" y="368" width="16" height="16"/>
+  <object id="29" name="water" gid="79" x="304" y="368" width="16" height="16"/>
+  <object id="30" name="lava_top" gid="74" x="368" y="336" width="16" height="16"/>
+  <object id="31" name="lava" gid="78" x="368" y="352" width="16" height="16"/>
+  <object id="32" name="lava_top" gid="74" x="384" y="336" width="16" height="16"/>
+  <object id="33" name="lava" gid="78" x="384" y="352" width="16" height="16"/>
+  <object id="34" name="lava_top" gid="74" x="400" y="336" width="16" height="16"/>
+  <object id="35" name="lava" gid="78" x="400" y="352" width="16" height="16"/>
+  <object id="36" name="lava" gid="78" x="368" y="368" width="16" height="16"/>
+  <object id="37" name="lava" gid="78" x="384" y="368" width="16" height="16"/>
+  <object id="38" name="lava" gid="78" x="400" y="368" width="16" height="16"/>
  </objectgroup>
 </map>
