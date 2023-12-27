@@ -171,7 +171,7 @@ class Crouch:
 		player.physics_x(dt)
 
 		# slow the player if moving when crouched
-		player.vel.x = player.vel.x / 2 * dt
+		# player.vel.x = player.vel.x / 2 * dt
 
 		player.physics_y(dt)
 		player.animate('crouch', 0.2 * dt, False)
