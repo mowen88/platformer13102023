@@ -201,7 +201,7 @@ class Scene(State):
 				if obj.name == '6': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
 				if obj.name == '7': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['blocks'])
 				# barrels
 				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
