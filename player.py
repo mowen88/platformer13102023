@@ -451,7 +451,8 @@ class Player(pygame.sprite.Sprite):
 
 	def got_headroom(self):
 		for sprite in self.scene.block_sprites:
-			if sprite.hitbox.collidepoint((self.hitbox.centerx, self.hitbox.y - TILESIZE/2)):
+			raycast_box = pygame.Rect(self.hitbox.x, self.hitbox.y - TILESIZE/2, self.hitbox.width, self.hitbox.height)
+			if sprite.hitbox.colliderect(raycast_box):
 				return True
 		return False
 

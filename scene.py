@@ -12,7 +12,7 @@ from inventory import Inventory
 from hud import HUD
 from player import Player
 from enemy import Guard
-from sprites import FadeSurf, HurtSurf, Collider, Tile, Tutorial, SecretTile, AnimatedTile, Liquid, AnimatedPickup, MovingPlatform, Barrel, Door, Trigger, Barrier, Laser, Lever
+from sprites import FadeSurf, HurtSurf, Collider, Tile, Tutorial, SecretTile, AnimatedTile, Liquid, AnimatedPickup, Platform, Barrel, MovingPlatform, Door, Trigger, Barrier, Laser, Lever
 from weapons import Gun 
 from bullets import BlasterBullet, HyperBlasterBullet, Grenade
 from particles import DustParticle, GibbedChunk, MuzzleFlash, FadeParticle, ShotgunParticle, RocketParticle, RailParticle, Explosion, Flash
@@ -188,22 +188,22 @@ class Scene(State):
 
 		if 'platforms' in layers:
 			for obj in tmx_data.get_layer_by_name('platforms'):
-				if obj.name == '1': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '1': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 80)
-				if obj.name == '2': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '2': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 48)
-				if obj.name == '3': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '3': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.01, 0), 64)
-				if obj.name == '4': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '4': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (-0.025, 0.025), 48, 'circular')
-				if obj.name == '5': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '5': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.025), 64)
-				if obj.name == '6': MovingPlatform([self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '6': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
-				if obj.name == '7': MovingPlatform([self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0), 16)
+				if obj.name == '7': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'])
 				# barrels
-				if obj.name == '8': Barrel(self, [self.platform_sprites, self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
 
 		if 'triggers' in layers:
@@ -552,7 +552,7 @@ class Scene(State):
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('in hazardous liquid: '+ str(self.player.in_hazardous_liquid)),
-					str('data: '+ str(COMMIT_SAVE_DATA['health'])),
+					str('state: '+ str(self.player.state)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

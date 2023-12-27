@@ -81,7 +81,7 @@ class Idle:
 		
 		player.jump_counter = 1
 		player.frame_index = 0
-
+		player.drop_through = False
 
 	def state_logic(self, player):
 
@@ -104,7 +104,7 @@ class Idle:
 		if ACTIONS['left_click']:
 			player.fire()
 
-		if ACTIONS['down']:
+		if ACTIONS['down'] and not player.drop_through:
 			return Crouch(player)
 
 		if ACTIONS['right_click']:
@@ -149,15 +149,16 @@ class Crouch:
 		if not player.alive:
 			return Death(player)
 
-		if not ACTIONS['down'] and not player.got_headroom():
+		if not ACTIONS['down'] and not player.got_headroom() or player.vel.y > 1:
 			player.acc_rate = 0.4
 			return Idle(player)
 
 		if ACTIONS['left_click']:
 			player.fire()
 
-		if ACTIONS['right_click'] and player.platform:
+		if ACTIONS['right_click']:
 			player.drop_through = True
+			ACTIONS['right_click'] = False
 
 		if abs(player.vel.x) >= 0.1:
 			return CrouchMove(player)
@@ -193,17 +194,19 @@ class CrouchMove:
 		if not player.alive:
 			return Death(player)
 
-		if not ACTIONS['down'] and not player.got_headroom():
+		if not ACTIONS['down'] and not player.got_headroom() or player.vel.y > 1:
 			player.acc_rate = 0.4
 			return Idle(player)
 
 		if ACTIONS['left_click']:
 			player.fire()
 
-		if ACTIONS['right_click'] and player.platform:
+		if ACTIONS['right_click']:
 			player.drop_through = True
+			ACTIONS['right_click'] = False
 
 		if not ACTIONS['left'] and not ACTIONS['right'] or (ACTIONS['left'] and ACTIONS['right']):
+			player.acc_rate = 0.4
 			return Crouch(player)
 
 	def update(self, player, dt):

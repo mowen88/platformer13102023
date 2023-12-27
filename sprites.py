@@ -183,10 +183,54 @@ class AnimatedPickup(AnimatedTile):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
-class MovingPlatform(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, surf, z, direction, amplitude, circular=None):
+class Platform(pygame.sprite.Sprite):
+	def __init__(self, scene, groups, pos, surf, z):
 		super().__init__(groups)
 
+		self.scene = scene
+		self.image = surf
+		self.rect = self.image.get_rect(bottomleft = pos)	
+		self.z = z
+		self.hitbox = self.rect.copy()
+		self.old_hitbox = self.hitbox.copy()
+		self.exploded = False
+
+	def on_off(self):
+		if not self.scene.player.drop_through and self.scene.player.old_hitbox.bottom <= self.hitbox.top +4 and self.scene.player.hitbox.bottom +4 >= self.hitbox.top:
+			self.scene.block_sprites.add(self)
+		else:
+			self.scene.block_sprites.remove(self)
+
+	def update(self, dt):
+		self.on_off()
+
+class Barrel(Platform):
+	def __init__(self, scene, groups, pos, surf, z):
+		super().__init__(scene, groups, pos, surf, z)
+
+		self.exploded = False
+
+	def explode(self):
+		
+		self.scene.screenshaking = True
+		self.scene.create_particle('explosion', self.rect.center)
+
+		for sprite in self.scene.destructible_sprites:
+			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
+			if distance < 50:
+				sprite.scene.create_particle('explosion', sprite.rect.center)
+				sprite.kill()
+
+	def update(self, dt):
+		self.on_off()
+		if self.exploded:
+			self.explode()
+
+class MovingPlatform(Platform):
+	def __init__(self, scene, groups, pos, surf, z, direction, amplitude, circular=None):
+		super().__init__(scene, groups, pos, surf, z)
+
+		self.scene = scene
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)	
 		self.z = z
@@ -222,36 +266,6 @@ class MovingPlatform(pygame.sprite.Sprite):
 		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 		self.move(dt)
-
-class Barrel(pygame.sprite.Sprite):
-	def __init__(self, scene,  groups, pos, surf, z):
-		super().__init__(groups)
-
-		self.scene = scene
-		self.image = surf
-		self.rect = self.image.get_rect(bottomleft = pos)	
-		self.z = z
-		self.hitbox = self.rect.copy()
-		self.raycast_box = self.hitbox.copy().inflate(0,2)
-		self.old_hitbox = self.hitbox.copy()
-		self.pos = pygame.math.Vector2(self.rect.bottomleft)
-		self.vel = pygame.math.Vector2()
-		self.exploded = False
-
-	def explode(self):
-		
-		self.scene.screenshaking = True
-		self.scene.create_particle('explosion', self.rect.center)
-
-		for sprite in self.scene.destructible_sprites:
-			distance = self.scene.get_distance_direction_and_angle(sprite.rect.center, self.rect.center - self.scene.drawn_sprites.offset)[0]
-			if distance < 50:
-				sprite.scene.create_particle('explosion', sprite.rect.center)
-				sprite.kill()
-
-	def update(self, dt):
-		if self.exploded:
-			self.explode()
 
 class Door(AnimatedPickup):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name, key_required=None):
