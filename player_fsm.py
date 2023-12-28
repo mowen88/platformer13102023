@@ -12,8 +12,8 @@ class Hold:
 
 	def update(self, player, dt):
 		player.acc.x = 0
-		player.physics_x(dt)
-		player.physics_y(dt)
+		
+		player.vel = pygame.math.Vector2()
 
 		player.animate('idle', 0.25 * dt, False)
 

@@ -35,6 +35,7 @@ TUTORIALS = {
 		'double_jump':'Right click in air to double jump',
 		'crouch':'Hold down to crouch',
 		'inventory':'Press enter to use use inventory and click item to use',
+		'door':'Press up at a door to enter',
 		}
 
 DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
