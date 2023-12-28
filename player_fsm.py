@@ -204,10 +204,8 @@ class CrouchMove:
 			player.drop_through = True
 			ACTIONS['right_click'] = False
 
-		if not ACTIONS['left'] and not ACTIONS['right'] or (ACTIONS['left'] and ACTIONS['right']):
-			player.acc_rate = 0.4
-			if abs(player.vel.x) < 0.1:
-				return Crouch(player)
+		if abs(player.vel.x) < 0.1:
+			return Crouch(player)
 
 	def update(self, player, dt):
 
