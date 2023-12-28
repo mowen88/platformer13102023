@@ -118,6 +118,8 @@ class MainMenu(State):
 		self.transition_screen = MenuTransition(self)
 		self.boxes = self.get_boxes()
 
+		self.scene = Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos'])
+
 	def get_boxes(self):
 		boxes = []
 		for x in range(int(RES.magnitude()//2)):
@@ -162,7 +164,7 @@ class MainMenu(State):
 			StartGameMenu(self.game).enter_state()
  
 		else:
-			Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+			self.scene.enter_state()
 
 	def update(self, dt):
 

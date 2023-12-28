@@ -59,28 +59,28 @@ class DustParticle(pygame.sprite.Sprite):
 		self.alpha = 255
 
 	def animate(self, animation_speed, loop=True):
+		if self.alive:
+			self.frame_index += animation_speed
 
-		self.frame_index += animation_speed
+			if self.frame_index > len(self.frames)-1:
+				if loop:
+					self.frame_index = 0	
+				else:	
+					# self.frame_index = len(self.frames)-1
+					self.kill()
 
-		if self.frame_index > len(self.frames)-1:
-			if loop:
-				self.frame_index = 0	
-			else:	
-				# self.frame_index = len(self.frames)-1
-				self.kill()
-				
-		if self:
 			self.image = self.frames[int(self.frame_index)]
 
-	def update_alpha(self, rate, dt):
-		self.alpha -= rate * dt
-		if self.alpha < 0:
+	def update_alpha(self, rate):
+		self.alpha -= rate
+		if self.alpha <= 0:
 			self.kill()
 		self.image.set_alpha(self.alpha)
 
 	def update(self, dt):
 		self.animate(0.2 * dt, False)
-		self.update_alpha(10, dt)
+		self.update_alpha(12 * dt)
+		
 
 class GibbedChunk(DustParticle):
 	def __init__(self, game, scene, groups, pos, z, path):
@@ -103,7 +103,7 @@ class GibbedChunk(DustParticle):
 	def update(self, dt):
 		self.move(dt)
 		self.animate(0.2 * dt, False)
-		self.update_alpha(2, dt)
+		self.update_alpha(2 * dt)
 
 class MuzzleFlash(DustParticle):
 	def __init__(self, game, scene, groups, pos, z, path, firer):
@@ -114,7 +114,7 @@ class MuzzleFlash(DustParticle):
 
 	def update(self, dt):
 		self.animate(0.2 * dt, False)
-		self.update_alpha(20, dt)
+		self.update_alpha(20 * dt)
 		self.rect.center = self.firer.muzzle_pos + self.scene.drawn_sprites.offset
 
 class FadeParticle(pygame.sprite.Sprite):
