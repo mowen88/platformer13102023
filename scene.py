@@ -1,4 +1,4 @@
-import pygame, csv, math, random
+import pygame, threading, csv, math, random
 from math import atan2, degrees, pi
 from state import State
 from settings import *
@@ -73,7 +73,7 @@ class Scene(State):
 		
 		# create all objects in the scene using tmx data
 		self.tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
-		self.create_scene_instances(0,0)
+		self.create_scene_instances = self.create_scene_instances()
 		self.add_player_instance()
 		self.hud = HUD(self.game, self)
 
@@ -82,6 +82,8 @@ class Scene(State):
 			COMMIT_AMMO_DATA.update(AMMO_DATA)
 			self.game.write_data()
 			self.message = Message(self.game, self, [self.update_sprites], SCENE_DATA[self.current_scene]['level'], (HALF_WIDTH, HALF_HEIGHT - TILESIZE * 2), 220)
+
+		threading.Thread(target=self.create_scene_instances).start()
 
 	def get_fog_surf(self):
 		self.glow_surf = pygame.Surface(self.scene_size)
@@ -136,7 +138,7 @@ class Scene(State):
 
 		self.create_player_gun()
 
-	def create_scene_instances(self, chunk_x, chunk_y):
+	def create_scene_instances(self):
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())

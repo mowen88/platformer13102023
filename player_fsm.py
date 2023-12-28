@@ -81,6 +81,7 @@ class Idle:
 		
 		player.jump_counter = 1
 		player.frame_index = 0
+		player.acc_rate = 0.4
 		player.drop_through = False
 
 	def state_logic(self, player):
@@ -149,7 +150,6 @@ class Crouch:
 			return Death(player)
 
 		if not ACTIONS['down'] and not player.got_headroom() or player.vel.y > 1:
-			player.acc_rate = 0.4
 			return Idle(player)
 
 		if ACTIONS['left_click']:
