@@ -73,8 +73,11 @@ class Scene(State):
 		
 		# create all objects in the scene using tmx data
 		self.tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
-		self.create_scene_instances = self.create_scene_instances()
-		self.add_player_instance()
+
+		self.thread = threading.Thread(target=self.create_scene_instances)
+
+		self.thread.start()
+		self.thread.join()
 		self.hud = HUD(self.game, self)
 
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
@@ -83,7 +86,7 @@ class Scene(State):
 			self.game.write_data()
 			self.message = Message(self.game, self, [self.update_sprites], SCENE_DATA[self.current_scene]['level'], (HALF_WIDTH, HALF_HEIGHT - TILESIZE * 2), 220)
 
-		threading.Thread(target=self.create_scene_instances).start()
+		
 
 	def get_fog_surf(self):
 		self.glow_surf = pygame.Surface(self.scene_size)
@@ -131,12 +134,6 @@ class Scene(State):
 	#             grid.append(rect)
 
 	#     return grid
-	def add_player_instance(self):
-		for obj in self.tmx_data.get_layer_by_name('entries'):
-			if obj.name == self.entry_point:
-				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
-
-		self.create_player_gun()
 
 	def create_scene_instances(self):
 
@@ -207,11 +204,23 @@ class Scene(State):
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.025), 64)
 				if obj.name == '6': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
+				# static platforms and crates
 				if obj.name == '7': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'red_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'blue_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/blue_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'green_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/green_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'grey_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/grey_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'red_small_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
 				# barrels
 				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
+
 
 		if 'triggers' in layers:
 			for obj in self.tmx_data.get_layer_by_name('triggers'):
@@ -221,8 +230,12 @@ class Scene(State):
 					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/lasers/{num}', 'loop', num)
 
 			
-			# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
-		
+		# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
+		if 'entries' in layers:
+			for obj in self.tmx_data.get_layer_by_name('entries'):
+				if obj.name == self.entry_point:
+					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
+
 		if 'exits' in layers:
 			for obj in self.tmx_data.get_layer_by_name('exits'):
 					if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -254,6 +267,7 @@ class Scene(State):
 		
 				
 		# create gun objects for the enemies and player
+		self.create_player_gun()
 		self.create_enemy_guns()
 
 		#Tile([self.drawn_sprites], (0,0), pygame.image.load(f'scenes/{self.current_scene}/{self.current_scene}.png'), LAYERS['background'])
@@ -518,22 +532,6 @@ class Scene(State):
 		for index, name in enumerate(debug_list):
 			self.game.render_text(name, WHITE, self.game.font, (10, 15 * index), True)
 
-	def get_chunk_pos(self):
-
-		for i in self.all_chunks:
-			if i.colliderect(self.chunk_check_rect):
-				self.chunk_check_rect.center = self.player.rect.center
-				if (str(i.x),str(i.y)) not in self.chunks.keys():
-					self.chunks.update({(str(i.x),str(i.y)):i})
-					if not self.chunks_updated:
-						self.create_chunk(i.x, i.y) 
-						self.chunks_updated = True
-				else:
-					if (str(i.x),str(i.y)) in self.chunks.keys():
-						self.chunks.update({(str(i.x),str(i.y)):i})
-					self.chunks_updated = False
-
-	
 	def draw(self, screen):
 
 		self.drawn_sprites.offset_draw(self.player.rect.center)
@@ -554,7 +552,7 @@ class Scene(State):
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('in hazardous liquid: '+ str(self.player.in_hazardous_liquid)),
-					str('state: '+ str(self.player.state)),
+					str('drop ?: '+ str(self.player.drop_through)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

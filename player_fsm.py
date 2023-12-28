@@ -164,8 +164,6 @@ class Crouch:
 
 	def update(self, player, dt):
 
-		player.get_on_ground()
-
 		player.acc.x = 0
 		player.input()
 		player.physics_x(dt)
@@ -175,6 +173,8 @@ class Crouch:
 
 		player.physics_y(dt)
 		player.animate('crouch', 0.2 * dt, False)
+
+		player.get_on_ground()
 
 class CrouchMove:
 	def __init__(self, player):
@@ -209,14 +209,12 @@ class CrouchMove:
 
 	def update(self, player, dt):
 
-		player.get_on_ground()
-
 		player.acc.x = 0
 		player.input()
-		
 		player.physics_x(dt)
 		player.physics_y(dt)
 		player.animate('crouch', 0.25 * dt, False)
+		player.get_on_ground()
 
 class Move:
 	def __init__(self, player):

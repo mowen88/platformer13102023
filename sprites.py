@@ -196,7 +196,7 @@ class Platform(pygame.sprite.Sprite):
 		self.exploded = False
 
 	def on_off(self):
-		if not self.scene.player.drop_through and self.scene.player.old_hitbox.bottom <= self.hitbox.top +4 and self.scene.player.hitbox.bottom +4 >= self.hitbox.top:
+		if not self.scene.player.drop_through and self.scene.player.old_hitbox.bottom <= self.hitbox.top and self.scene.player.hitbox.bottom >= self.hitbox.top -4:
 			self.scene.block_sprites.add(self)
 		else:
 			self.scene.block_sprites.remove(self)
