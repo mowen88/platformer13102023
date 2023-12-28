@@ -128,7 +128,6 @@ class Idle:
 		player.get_on_ground()
 		player.exit_scene()
 		
-
 class Crouch:
 	def __init__(self, player):
 		
@@ -207,7 +206,8 @@ class CrouchMove:
 
 		if not ACTIONS['left'] and not ACTIONS['right'] or (ACTIONS['left'] and ACTIONS['right']):
 			player.acc_rate = 0.4
-			return Crouch(player)
+			if abs(player.vel.x) < 0.1:
+				return Crouch(player)
 
 	def update(self, player, dt):
 

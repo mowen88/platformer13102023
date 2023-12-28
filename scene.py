@@ -72,7 +72,9 @@ class Scene(State):
 		#self.all_chunks = self.split_scene_into_grid()
 		
 		# create all objects in the scene using tmx data
+		self.tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
 		self.create_scene_instances(0,0)
+		self.add_player_instance()
 		self.hud = HUD(self.game, self)
 
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
@@ -127,11 +129,14 @@ class Scene(State):
 	#             grid.append(rect)
 
 	#     return grid
+	def add_player_instance(self):
+		for obj in self.tmx_data.get_layer_by_name('entries'):
+			if obj.name == self.entry_point:
+				self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
 
+		self.create_player_gun()
 
 	def create_scene_instances(self, chunk_x, chunk_y):
-
-		tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
 		ammo_list = list(AMMO_DATA.keys())
@@ -141,33 +146,33 @@ class Scene(State):
 		tutorials_list = list(TUTORIALS.keys())
 
 		layers = []
-		for layer in tmx_data.layers:
+		for layer in self.tmx_data.layers:
 			layers.append(layer.name)
 
 		if 'blocks' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('blocks').tiles():
+			for x, y, surf in self.tmx_data.get_layer_by_name('blocks').tiles():
 				Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
-		if 'bg' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('bg').tiles():
-				Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
+		# if 'bg' in layers:
+		# 	for x, y, surf in self.tmx_data.get_layer_by_name('bg').tiles():
+		# 		Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
 
 		if 'secret' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('secret').tiles():
+			for x, y, surf in self.tmx_data.get_layer_by_name('secret').tiles():
 				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
 
 		if 'ladders' in layers:
-			for x, y, surf in tmx_data.get_layer_by_name('ladders').tiles():
+			for x, y, surf in self.tmx_data.get_layer_by_name('ladders').tiles():
 				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
 
 		if 'tutorials' in layers:
-			for obj in tmx_data.get_layer_by_name('tutorials'):
+			for obj in self.tmx_data.get_layer_by_name('tutorials'):
 				if obj.name not in SAVE_DATA['killed_sprites']:
 					for tutorial in tutorials_list:
 						if obj.name == tutorial: Tutorial([self.tutorial_sprites], (obj.x, obj.y, obj.width, obj.height), TUTORIALS[tutorial])
 
 		if 'pickups' in layers:
-			for obj in tmx_data.get_layer_by_name('pickups'):
+			for obj in self.tmx_data.get_layer_by_name('pickups'):
 				if obj.name not in SAVE_DATA['killed_sprites']:
 					for num in range(100):
 						for gun in gun_list:
@@ -187,7 +192,7 @@ class Scene(State):
 							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 
 		if 'platforms' in layers:
-			for obj in tmx_data.get_layer_by_name('platforms'):
+			for obj in self.tmx_data.get_layer_by_name('platforms'):
 				if obj.name == '1': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 80)
 				if obj.name == '2': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -207,7 +212,7 @@ class Scene(State):
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
 
 		if 'triggers' in layers:
-			for obj in tmx_data.get_layer_by_name('triggers'):
+			for obj in self.tmx_data.get_layer_by_name('triggers'):
 				for num in range(100):
 					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/triggers/{num}', 'loop', num)
 					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/barriers/{num}', 'loop', num)
@@ -215,13 +220,9 @@ class Scene(State):
 
 			
 			# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
-		if 'entries' in layers:
-			for obj in tmx_data.get_layer_by_name('entries'):
-				if obj.name == self.entry_point:
-					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
-
+		
 		if 'exits' in layers:
-			for obj in tmx_data.get_layer_by_name('exits'):
+			for obj in self.tmx_data.get_layer_by_name('exits'):
 					if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '2': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -232,7 +233,7 @@ class Scene(State):
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
 
 		if 'liquid' in layers:
-			for obj in tmx_data.get_layer_by_name('liquid'):
+			for obj in self.tmx_data.get_layer_by_name('liquid'):
 				if obj.name == 'water': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'water_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
@@ -240,19 +241,18 @@ class Scene(State):
 				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
 
-
 		if 'entities' in layers:
-			for obj in tmx_data.get_layer_by_name('entities'):
+			for obj in self.tmx_data.get_layer_by_name('entities'):
 				if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
 				if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
-
-
-			# create gun objects for the enemies and player
-			self.create_enemy_guns()
-			self.create_player_gun()
+				if obj.name == 'bg': Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
+		
+				
+		# create gun objects for the enemies and player
+		self.create_enemy_guns()
 
 		#Tile([self.drawn_sprites], (0,0), pygame.image.load(f'scenes/{self.current_scene}/{self.current_scene}.png'), LAYERS['background'])
 
