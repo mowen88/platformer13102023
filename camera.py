@@ -10,7 +10,6 @@ class Camera(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.camera_lag = 40
 
-
     # def zone_limits(self):
     #     if self.offset[0] <= 0: self.offset[0] = 0
     #     elif self.offset[0] >= self.zone.size[0] - WIDTH: self.offset[0] = self.zone.size[0] - WIDTH
@@ -26,8 +25,9 @@ class Camera(pygame.sprite.Group):
         self.offset.x += (target[0] - HALF_WIDTH - (HALF_WIDTH - pygame.mouse.get_pos()[0])/3 - self.offset.x)/self.camera_lag
         self.offset.y += (target[1] - HALF_HEIGHT - (HALF_HEIGHT - pygame.mouse.get_pos()[1])/3 - self.offset.y)/self.camera_lag
 
+
         for layer in LAYERS.values():
             for sprite in self.scene.drawn_sprites:
-                if sprite.z == layer:
+                if sprite.z == layer and self.scene.visible_window.contains(sprite.rect): #or layer == 0:# and sprite.rect.x > self.offset.x + HALF_WIDTH - 60 and sprite.rect.x < self.offset.x + HALF_WIDTH + 60:
                     offset = sprite.rect.topleft - self.offset
                     self.game.screen.blit(sprite.image, offset)

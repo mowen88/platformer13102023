@@ -35,6 +35,7 @@ class Scene(State):
 		self.screenshake_timer = 0
 
 		self.update_sprites = pygame.sprite.Group()
+		self.visible_window = pygame.Rect(VISIBLE_WINDOW_RECT)
 		self.drawn_sprites = Camera(self.game, self)
 
 		self.bg_sprites = pygame.sprite.Group()
@@ -74,19 +75,20 @@ class Scene(State):
 		# create all objects in the scene using tmx data
 		self.tmx_data = load_pygame(f'scenes/{self.current_scene}/{self.current_scene}.tmx')
 
-		self.thread = threading.Thread(target=self.create_scene_instances)
+		self.hud = HUD(self.game, self)
+		self.save_point = self.get_save_point()
 
+		# wait for instances to load in
+		self.thread = threading.Thread(target=self.create_scene_instances)
 		self.thread.start()
 		self.thread.join()
-		self.hud = HUD(self.game, self)
 
+	def get_save_point(self):
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
 			COMMIT_SAVE_DATA.update(SAVE_DATA)
 			COMMIT_AMMO_DATA.update(AMMO_DATA)
 			self.game.write_data()
 			self.message = Message(self.game, self, [self.update_sprites], SCENE_DATA[self.current_scene]['level'], (HALF_WIDTH, HALF_HEIGHT - TILESIZE * 2), 220)
-
-		
 
 	def get_fog_surf(self):
 		self.glow_surf = pygame.Surface(self.scene_size)
@@ -173,7 +175,7 @@ class Scene(State):
 		if 'pickups' in layers:
 			for obj in self.tmx_data.get_layer_by_name('pickups'):
 				if obj.name not in SAVE_DATA['killed_sprites']:
-					for num in range(100):
+					for num in range(100): # range must cover the amount of the most numerous pickup
 						for gun in gun_list:
 							if obj.name == f'{gun}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
 							(obj.x, obj.y),LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
@@ -262,9 +264,9 @@ class Scene(State):
 				if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-				if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
-				if obj.name == 'bg': Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
-		
+				#if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
+				#if obj.name == 'bg': self.bg = Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
+
 				
 		# create gun objects for the enemies and player
 		self.create_player_gun()
@@ -510,14 +512,14 @@ class Scene(State):
 
 	def update(self, dt):
 
-		# self.get_chunk_pos()
-
 		self.screenshake(dt)
 
 		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
 		self.pause_or_inventory(ACTIONS['enter'], Inventory(self.game, self))
 		self.hud.update(dt)
 		self.update_sprites.update(dt)
+
+
 
 		# update quad damage timer
 		self.player.quad_damage = True if self.quad_timer.update(dt) else False
@@ -526,7 +528,8 @@ class Scene(State):
 		self.player.rebreather = True if self.rebreather_timer.update(dt) else False
 		self.player.envirosuit = True if self.envirosuit_timer.update(dt) else False
 
-		# print(self.breathe_timer.update(dt))
+		self.visible_window.center = self.player.rect.center
+
 
 	def debug(self, debug_list):
 		for index, name in enumerate(debug_list):

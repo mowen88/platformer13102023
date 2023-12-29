@@ -1,4 +1,4 @@
-import pygame, sys, json
+import pygame, sys, json, cProfile
 from os import walk
 from menu import Intro
 from timer import GameTimer
@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -204,3 +204,5 @@ if __name__ == "__main__":
     game = Game()
     while game.running:
         game.main_loop()
+        #cProfile.run("game.main_loop()", sort="cumulative")
+

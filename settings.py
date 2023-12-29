@@ -4,6 +4,8 @@ TILESIZE = 16
 
 RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
 
+VISIBLE_WINDOW_RECT = 0,0, WIDTH * 1.5, HEIGHT * 1.5
+
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
 ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False, 'enter':False,
