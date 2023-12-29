@@ -35,8 +35,8 @@ class Scene(State):
 		self.screenshake_timer = 0
 
 		self.update_sprites = pygame.sprite.Group()
-		self.visible_window = pygame.Rect(VISIBLE_WINDOW_RECT)
 		self.drawn_sprites = Camera(self.game, self)
+		self.visible_window = pygame.Rect(VISIBLE_WINDOW_RECT)
 
 		self.bg_sprites = pygame.sprite.Group()
 		self.tutorial_sprites = pygame.sprite.Group()
@@ -266,7 +266,6 @@ class Scene(State):
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				#if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
 				#if obj.name == 'bg': self.bg = Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
-
 				
 		# create gun objects for the enemies and player
 		self.create_player_gun()
