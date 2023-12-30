@@ -4,7 +4,7 @@ TILESIZE = 16
 
 RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
 
-VISIBLE_WINDOW_RECT = 0,0, WIDTH * 1.5, HEIGHT * 1.5
+VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 1.5, HEIGHT * 2
 
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
@@ -35,7 +35,7 @@ TUTORIALS = {
 		'fire':'Left click to fire, right click to jump',
 		'jump':'Right click to jump',
 		'double_jump':'Right click in air to double jump',
-		'crouch':'Hold down to crouch',
+		'crouch':'Hold down to crouch and right click to drop through platform',
 		'inventory':'Press enter to use use inventory and click item to use',
 		'door':'Press up at a door to enter',
 		}
@@ -56,8 +56,6 @@ SCENE_DATA = { # UNIT 1 - BASE
   			   # Warehouse
   			   # '5':{'unit':'bunker', 'level':'Warehouse', '2':'1','3':'0'},
   			}
-
-KILLED_SPRITES = []
 
 AMMO_LIMITS = {'normal':{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
@@ -116,6 +114,7 @@ CONSTANT_DATA = {
 			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
 			'sg_guard': {'weapon':'machine gun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
 			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
+			'enforcer': {'weapon':'chain gun', 'damage': 3, 'health': 40, 'telegraph_time': 30, 'cooldown': 8, 'burst_count': 12},
 			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
 			},
 

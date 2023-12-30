@@ -9,7 +9,10 @@ class Gun(pygame.sprite.Sprite):
 		self.scene = scene
 		self.owner = owner
 		self.z = z
-		self.image = pygame.image.load(f'assets/guns/{self.owner.gun}.png').convert_alpha()
+		if self.owner == self.scene.player:
+			self.image = pygame.image.load(f'assets/guns/{self.owner.gun}.png').convert_alpha()
+		else:
+			self.image = pygame.image.load(f'assets/enemy_guns/{self.owner.gun}.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)
 
 		self.gun_data = CONSTANT_DATA['guns'][self.owner.gun]

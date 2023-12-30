@@ -150,6 +150,10 @@ class Scene(State):
 		for layer in self.tmx_data.layers:
 			layers.append(layer.name)
 
+		if 'secret' in layers:
+			for x, y, surf in self.tmx_data.get_layer_by_name('secret').tiles():
+				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
+
 		if 'blocks' in layers:
 			for x, y, surf in self.tmx_data.get_layer_by_name('blocks').tiles():
 				Tile([self.block_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
@@ -158,10 +162,7 @@ class Scene(State):
 			for x, y, surf in self.tmx_data.get_layer_by_name('bg').tiles():
 				Tile([self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['background'])
 
-		if 'secret' in layers:
-			for x, y, surf in self.tmx_data.get_layer_by_name('secret').tiles():
-				SecretTile(self.game, self, [self.block_sprites, self.secret_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf)
-
+		
 		if 'ladders' in layers:
 			for x, y, surf in self.tmx_data.get_layer_by_name('ladders').tiles():
 				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
@@ -264,6 +265,7 @@ class Scene(State):
 				if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+				if obj.name == 'enforcer':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				#if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
 				#if obj.name == 'bg': self.bg = Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
 				
