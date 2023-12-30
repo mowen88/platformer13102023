@@ -29,6 +29,7 @@ NEON_GREEN = (150, 225, 60)
 DARK_GREEN = (23, 35, 23)
 YELLOW = (255, 255, 64)
 BROWN = (110, 74, 57)
+DARK_BROWN = (23, 15, 11)
 LIGHT_GREY = (146,143,184)
 
 TUTORIALS = {
@@ -45,7 +46,7 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
 			   '0':{'unit':'base', 'level':'outer base', '1':'1', '3':'1'}, 
-  			   '1':{'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0'},
+  			   '1':{'unit':'base', 'level':'inner base', '1':'0', '2':'2', '3':'0'},
   			   # Comm Center
   			   '2':{'unit':'base', 'level':'comm center', '2':'1','3':'3'},
 

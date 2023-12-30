@@ -33,11 +33,11 @@ class Death:
 		self.timer -= dt
 
 
-
 class Fall:
 	def __init__(self, player):
 		
 		player.frame_index = 0
+		self.timer = 10
 
 	def state_logic(self, player):
 
@@ -69,6 +69,11 @@ class Fall:
 				return Landing(player)
 
 	def update(self, player, dt):
+
+		self.timer -= dt
+		if self.timer < 0:
+			player.drop_through = False
+
 		player.acc.x = 0
 		player.input()
 		player.physics_x(dt)
@@ -82,7 +87,6 @@ class Idle:
 		player.jump_counter = 1
 		player.frame_index = 0
 		player.acc_rate = 0.4
-		player.drop_through = False
 
 	def state_logic(self, player):
 
@@ -133,7 +137,6 @@ class Crouch:
 	def __init__(self, player):
 		
 		player.frame_index = 0
-
 		# slow the player if moving when crouched
 		player.acc_rate = 0.2
 
@@ -150,6 +153,11 @@ class Crouch:
 			return Death(player)
 
 		if not ACTIONS['down'] and not player.got_headroom() or player.vel.y > 1:
+			if hasattr(player.platform, 'direction'):
+				player.hitbox.bottom = player.platform.hitbox.bottom
+			elif player.platform is not None:
+				if player.platform.vel == pygame.math.Vector2():
+					player.hitbox.bottom = player.platform.hitbox.bottom
 			return Idle(player)
 
 		if ACTIONS['left_click']:
@@ -194,7 +202,11 @@ class CrouchMove:
 			return Death(player)
 
 		if not ACTIONS['down'] and not player.got_headroom() or player.vel.y > 1:
-			player.acc_rate = 0.4
+			if hasattr(player.platform, 'direction'):
+				player.hitbox.bottom = player.platform.hitbox.bottom
+			elif player.platform is not None:
+				if player.platform.vel == pygame.math.Vector2():
+					player.hitbox.bottom = player.platform.hitbox.bottom
 			return Idle(player)
 
 		if ACTIONS['left_click']:
@@ -420,7 +432,7 @@ class Jump(Fall):
 		if not player.alive:
 			return Death(player)
 
-		if player.vel.y > 0:
+		if player.vel.y >= 0:
 			return Fall(player)
 
 		if ACTIONS['left_click']:
@@ -458,7 +470,7 @@ class DoubleJump(Fall):
 			return Death(player)
 
 		# self.gun is the gun you have before the double jump, and comparing it with a new one if you collected one while double jumping 
-		if player.vel.y > 0:
+		if player.vel.y >= 0:
 			if player.gun == self.gun:
 				player.scene.create_player_gun()
 			return Fall(player)

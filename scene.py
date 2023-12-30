@@ -198,7 +198,7 @@ class Scene(State):
 				if obj.name == '1': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 80)
 				if obj.name == '2': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 48)
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 64)
 				if obj.name == '3': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.01, 0), 64)
 				if obj.name == '4': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -208,17 +208,23 @@ class Scene(State):
 				if obj.name == '6': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
 				# static platforms and crates
-				if obj.name == '7': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == '7': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['blocks'])
-				if obj.name == 'red_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'red_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['blocks'])
-				if obj.name == 'blue_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'blue_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/blue_crate.png').convert_alpha(), LAYERS['blocks'])
-				if obj.name == 'green_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'green_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/green_crate.png').convert_alpha(), LAYERS['blocks'])
-				if obj.name == 'grey_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'grey_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/grey_crate.png').convert_alpha(), LAYERS['blocks'])
-				if obj.name == 'red_small_crate': Platform(self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'red_small_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'grey_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'blue_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == 'green_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
 				# barrels
 				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
@@ -249,6 +255,8 @@ class Scene(State):
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '4': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
+					if obj.name == '5': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 		if 'liquid' in layers:
 			for obj in self.tmx_data.get_layer_by_name('liquid'):
@@ -555,8 +563,8 @@ class Scene(State):
 					str('entry_point: '+ str(self.entry_point)), 
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-					str('in hazardous liquid: '+ str(self.player.in_hazardous_liquid)),
-					str('drop ?: '+ str(self.player.drop_through)),
+					str('on ground: '+ str(self.player.state)),
+					str('platform: '+ str(self.player.platform)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

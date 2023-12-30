@@ -183,26 +183,42 @@ class AnimatedPickup(AnimatedTile):
 	def update(self, dt):
 		self.animate(0.2 * dt)
 
+# class Platform(pygame.sprite.Sprite):
+# 	def __init__(self, scene, groups, pos, surf, z):
+# 		super().__init__(groups)
+
+# 		self.scene = scene
+# 		self.image = surf
+# 		self.rect = self.image.get_rect(bottomleft = pos)	
+# 		self.z = z
+# 		self.hitbox = self.rect.copy()
+# 		self.old_hitbox = self.hitbox.copy()
+# 		self.raycast_box = pygame.Rect(self.hitbox.x, self.hitbox.y -4, self.hitbox.width, 4)
+
+# 	def on_off(self):
+# 		if not self.scene.player.drop_through and self.scene.player.old_hitbox.bottom <= self.hitbox.top and self.scene.player.hitbox.bottom > self.hitbox.top:
+# 			if self.scene.player.hitbox.colliderect(self.raycast_box):
+# 				self.scene.block_sprites.add(self)
+# 		else:
+# 			self.scene.block_sprites.remove(self)
+
+# 	def update(self, dt):
+# 		self.on_off()
+
+
 class Platform(pygame.sprite.Sprite):
 	def __init__(self, scene, groups, pos, surf, z):
 		super().__init__(groups)
 
 		self.scene = scene
 		self.image = surf
-		self.rect = self.image.get_rect(bottomleft = pos)	
+		self.rect = self.image.get_rect(topleft = pos)	
 		self.z = z
 		self.hitbox = self.rect.copy()
+		self.raycast_box = pygame.Rect(self.hitbox.x, self.hitbox.y -4, self.hitbox.width, 4)#self.hitbox.copy().inflate(0,2)
 		self.old_hitbox = self.hitbox.copy()
-		self.exploded = False
-
-	def on_off(self):
-		if not self.scene.player.drop_through and self.scene.player.old_hitbox.bottom <= self.hitbox.top and self.scene.player.hitbox.bottom >= self.hitbox.top -4:
-			self.scene.block_sprites.add(self)
-		else:
-			self.scene.block_sprites.remove(self)
-
-	def update(self, dt):
-		self.on_off()
+		self.pos = pygame.math.Vector2(self.rect.topleft)
+		self.vel = pygame.math.Vector2(0,0)
 
 class Barrel(Platform):
 	def __init__(self, scene, groups, pos, surf, z):
@@ -222,7 +238,7 @@ class Barrel(Platform):
 				sprite.kill()
 
 	def update(self, dt):
-		self.on_off()
+		#self.on_off()
 		if self.exploded:
 			self.explode()
 
@@ -234,14 +250,15 @@ class MovingPlatform(Platform):
 		self.image = surf
 		self.rect = self.image.get_rect(topleft = pos)	
 		self.z = z
-		self.circular = circular
+		
 		self.hitbox = self.rect.copy()
-		self.raycast_box = self.hitbox.copy().inflate(0,2)
+		self.raycast_box = pygame.Rect(self.hitbox.x, self.hitbox.y -4, self.hitbox.width, 4)#self.hitbox.copy().inflate(0,2)
 		self.old_hitbox = self.hitbox.copy()
 		self.pos = pygame.math.Vector2(self.rect.topleft)
 		
-		self.direction = pygame.math.Vector2(direction)
 		self.vel = pygame.math.Vector2()
+		self.direction = pygame.math.Vector2(direction)
+		self.circular = circular
 		self.start_pos = pygame.math.Vector2(self.rect.center)
 		self.amplitude = amplitude
 

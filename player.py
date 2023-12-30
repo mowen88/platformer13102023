@@ -394,9 +394,9 @@ class Player(pygame.sprite.Sprite):
 
 		for sprite in group:
 			if self.hitbox.colliderect(sprite.raycast_box): 
-				if self.old_hitbox.bottom <= sprite.hitbox.top + 4 and self.hitbox.bottom + 4 >= sprite.hitbox.top:
+				if self.old_hitbox.bottom <= sprite.hitbox.top + 4 and self.hitbox.bottom >= sprite.hitbox.top -4:
 					if self.vel.y >= 0 and not self.drop_through:
-						self.hitbox.bottom = sprite.rect.top
+						self.hitbox.bottom = sprite.hitbox.top
 						self.on_ground = True
 						self.vel.y = 0
 
@@ -404,9 +404,9 @@ class Player(pygame.sprite.Sprite):
 						self.pos.y = self.hitbox.centery
 
 						self.platform = sprite
+
 						self.relative_position = self.pos - self.platform.pos
-				else:
-					self.drop_through = False
+
 
 	def collide_ladders(self):
 		for sprite in self.scene.ladder_sprites:
@@ -430,24 +430,29 @@ class Player(pygame.sprite.Sprite):
 
 		self.collisions_x(self.scene.block_sprites)
 
-		self.collide_platforms(self.scene.platform_sprites, dt)
-
 	def physics_y(self, dt):
 
+
 		self.vel.y += self.acc.y * dt
+
+		if self.platform:
+			self.pos.y = round(self.platform.pos.y) +round(self.relative_position.y)
+
 		self.pos.y += self.vel.y * dt + (0.5 * self.acc.y) * dt
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
 
 		self.collisions_y(self.scene.block_sprites)
+		self.collide_platforms(self.scene.platform_sprites, dt)
 	
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed
 
-		if abs(self.vel.y) >= 0.5: 
+		elif abs(self.vel.y) >= 0.5:
 			self.on_ground = False
 			self.platform = None
+
 
 	def got_headroom(self):
 		for sprite in self.scene.block_sprites:

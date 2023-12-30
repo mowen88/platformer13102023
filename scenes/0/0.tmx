@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="221">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="223">
  <editorsettings>
   <export target="0.csv" format="csv"/>
  </editorsettings>
@@ -175,10 +175,10 @@
   <object id="203" name="door" x="80" y="448" width="48" height="64"/>
  </objectgroup>
  <objectgroup id="2" name="platforms">
-  <object id="14" name="7" x="416" y="464">
+  <object id="14" name="7" x="416" y="448">
    <point/>
   </object>
-  <object id="16" name="7" x="416" y="416">
+  <object id="16" name="7" x="416" y="400">
    <point/>
   </object>
   <object id="83" name="8" x="772" y="432">
@@ -190,46 +190,46 @@
   <object id="156" name="8" x="736" y="432">
    <point/>
   </object>
-  <object id="157" name="7" x="560" y="416">
+  <object id="157" name="7" x="560" y="400">
    <point/>
   </object>
-  <object id="179" name="4" x="832" y="368">
+  <object id="179" name="4" x="832" y="304">
    <point/>
   </object>
-  <object id="190" name="green_crate" x="176" y="512">
+  <object id="190" name="green_crate" x="184" y="488">
    <point/>
   </object>
-  <object id="192" name="red_crate" x="200" y="512">
+  <object id="192" name="red_crate" x="208" y="488">
    <point/>
   </object>
-  <object id="193" name="blue_crate" x="280" y="512">
+  <object id="194" name="blue_crate" x="208" y="464">
    <point/>
   </object>
-  <object id="194" name="blue_crate" x="198.75" y="488.25">
+  <object id="195" name="red_crate" x="256" y="488">
    <point/>
   </object>
-  <object id="195" name="red_crate" x="260" y="512">
+  <object id="196" name="green_crate" x="232" y="464">
    <point/>
   </object>
-  <object id="196" name="green_crate" x="248" y="488">
+  <object id="197" name="grey_crate" x="232" y="488">
    <point/>
   </object>
-  <object id="197" name="grey_crate" x="240" y="512">
+  <object id="198" name="grey_crate" x="256" y="464">
    <point/>
   </object>
-  <object id="198" name="grey_crate" x="272" y="488">
+  <object id="199" name="red_crate" x="256" y="440">
    <point/>
   </object>
-  <object id="199" name="red_crate" x="260" y="464">
+  <object id="200" name="red_small_crate" x="304" y="432">
    <point/>
   </object>
-  <object id="200" name="red_small_crate" x="304" y="448">
-   <point/>
-  </object>
-  <object id="202" name="red_small_crate" x="240" y="384">
+  <object id="202" name="red_small_crate" x="240" y="368">
    <point/>
   </object>
   <object id="204" name="6" x="912" y="368">
+   <point/>
+  </object>
+  <object id="222" name="blue_crate" x="280" y="488">
    <point/>
   </object>
  </objectgroup>
@@ -242,12 +242,11 @@
   <object id="188" name="bg" x="0" y="0">
    <point/>
   </object>
-  <object id="215" name="collider" x="688" y="384" width="16" height="16"/>
-  <object id="217" name="collider" x="592" y="352" width="16" height="16"/>
-  <object id="218" name="enforcer" x="624" y="304">
+  <object id="215" name="collider" x="848" y="544" width="16" height="16"/>
+  <object id="218" name="enforcer" x="736" y="512">
    <point/>
   </object>
-  <object id="220" name="collider" x="640" y="384" width="16" height="16"/>
+  <object id="220" name="collider" x="688" y="544" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="pickups">
   <object id="153" name="adrenaline_0" x="832" y="544">
@@ -273,7 +272,7 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="entries">
-  <object id="41" name="0" x="944" y="396">
+  <object id="41" name="0" x="736" y="384">
    <point/>
   </object>
   <object id="43" name="1" x="80" y="476">
