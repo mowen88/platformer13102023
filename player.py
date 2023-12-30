@@ -420,8 +420,11 @@ class Player(pygame.sprite.Sprite):
 		self.acc.x += self.vel.x * self.fric
 		self.vel.x += self.acc.x * dt
 
-		if self.platform and self.platform.vel.x != 0:
-			self.pos.x = round(self.platform.pos.x) +round(self.relative_position.x)
+		if self.platform: 
+			if self.hitbox.right < self.platform.hitbox.left or self.hitbox.left > self.platform.hitbox.right:
+				self.platform = None
+			elif self.platform.vel.x != 0:
+				self.pos.x = round(self.platform.pos.x) +round(self.relative_position.x)
 
 		self.pos.x += self.vel.x * dt + (0.5 * self.acc.x) * dt
 
@@ -429,6 +432,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centerx = self.hitbox.centerx
 
 		self.collisions_x(self.scene.block_sprites)
+
 
 	def physics_y(self, dt):
 
@@ -452,7 +456,6 @@ class Player(pygame.sprite.Sprite):
 		elif abs(self.vel.y) >= 0.5:
 			self.on_ground = False
 			self.platform = None
-
 
 	def got_headroom(self):
 		for sprite in self.scene.block_sprites:

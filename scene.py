@@ -165,7 +165,7 @@ class Scene(State):
 		
 		if 'ladders' in layers:
 			for x, y, surf in self.tmx_data.get_layer_by_name('ladders').tiles():
-				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['blocks'])
+				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['objects'])
 
 		if 'tutorials' in layers:
 			for obj in self.tmx_data.get_layer_by_name('tutorials'):
@@ -179,64 +179,64 @@ class Scene(State):
 					for num in range(100): # range must cover the amount of the most numerous pickup
 						for gun in gun_list:
 							if obj.name == f'{gun}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
-							(obj.x, obj.y),LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
+							(obj.x, obj.y),LAYERS['objects'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 						for armour in armour_list:
 							if obj.name == f'{armour}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
-							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
+							(obj.x, obj.y), LAYERS['objects'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 						for ammo in ammo_list:
 							if obj.name == f'{ammo}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
-							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
+							(obj.x, obj.y), LAYERS['objects'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
 						for health in health_list:
 							if obj.name == f'{health}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
-							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
+							(obj.x, obj.y), LAYERS['objects'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name, False)
 						for item in item_list:
 							if obj.name == f'{item}_{num}': AnimatedPickup(self.game, self, [self.pickup_sprites, self.update_sprites, self.drawn_sprites],\
-							(obj.x, obj.y), LAYERS['blocks'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
+							(obj.x, obj.y), LAYERS['objects'], f'assets/pickups/{obj.name.split("_")[0]}', 'loop', obj.name)
 
 		if 'platforms' in layers:
 			for obj in self.tmx_data.get_layer_by_name('platforms'):
 				if obj.name == '1': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.02, 0), 80)
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (0.02, 0), 80)
 				if obj.name == '2': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.02), 64)
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (0, 0.02), 64)
 				if obj.name == '3': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.01, 0), 64)
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (0.01, 0), 64)
 				if obj.name == '4': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (-0.025, 0.025), 48, 'circular')
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (-0.025, 0.025), 48, 'circular')
 				if obj.name == '5': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0, 0.025), 64)
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (0, 0.025), 64)
 				if obj.name == '6': MovingPlatform(self, [self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['blocks'], (0.025, -0.025), 48, 'circular')
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'], (0.025, -0.025), 48, 'circular')
 				# static platforms and crates
 				if obj.name == '7': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'red_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'blue_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/blue_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/blue_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'green_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/green_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/green_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'grey_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/grey_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/grey_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'red_small_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'grey_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'blue_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'green_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['blocks'])
+					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
 				# barrels
-				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['blocks'])
+				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['objects'])
 
 
 		if 'triggers' in layers:
 			for obj in self.tmx_data.get_layer_by_name('triggers'):
 				for num in range(100):
-					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/triggers/{num}', 'loop', num)
-					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/barriers/{num}', 'loop', num)
-					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['blocks'], f'assets/lasers/{num}', 'loop', num)
+					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/triggers/{num}', 'loop', num)
+					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/barriers/{num}', 'loop', num)
+					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/lasers/{num}', 'loop', num)
 
 			
 		# add the player, must be after moving platforms so the player speed and position matches correctly (due to update order)
@@ -248,24 +248,24 @@ class Scene(State):
 		if 'exits' in layers:
 			for obj in self.tmx_data.get_layer_by_name('exits'):
 					if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '2': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
 					if obj.name == '4': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
 					if obj.name == '5': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['blocks'], f'assets/doors/{obj.name}', 'loop', obj.name)
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 		if 'liquid' in layers:
 			for obj in self.tmx_data.get_layer_by_name('liquid'):
-				if obj.name == 'water': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'water_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'slime_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
-				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['foreground'], obj.name)
+				if obj.name == 'water': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
+				if obj.name == 'water_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
+				if obj.name == 'slime': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
+				if obj.name == 'slime_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
+				if obj.name == 'lava': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
+				if obj.name == 'lava_top': Liquid([self.liquid_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.image, LAYERS['liquid'], obj.name)
 
 		if 'entities' in layers:
 			for obj in self.tmx_data.get_layer_by_name('entities'):

@@ -12,11 +12,13 @@ ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, '
 			'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
 
 LAYERS = {'background':0,
-	      'background_front':1,
-		  'blocks':2,
-		  'player':3,
-		  'particles':4,
-		  'foreground':5}
+		  'objects':1,
+		  'player':2,
+		  'particles':3,
+		  'liquid':4,
+		  'blocks':5,
+		  'secret_blocks':6,
+		  'foreground':7}
 
 FONT = 'fonts/homespun.ttf'
 

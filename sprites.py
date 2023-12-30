@@ -100,7 +100,7 @@ class Tutorial(pygame.sprite.Sprite):
 		self.text = text
 
 class SecretTile(pygame.sprite.Sprite):
-	def __init__(self, game, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['foreground']):
+	def __init__(self, game, scene, groups, pos, surf=pygame.Surface((TILESIZE, TILESIZE)), z= LAYERS['secret_blocks']):
 		super().__init__(groups)
 		self.game = game
 		self.scene = scene
