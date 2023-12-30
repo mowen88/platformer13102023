@@ -5,7 +5,7 @@
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
  <tileset firstgid="73" source="../../assets/tilesets/doors.tsx"/>
- <tileset firstgid="75" source="../../assets/tilesets/0.tsx"/>
+ <tileset firstgid="75" source="../../assets/tilesets/background.tsx"/>
  <layer id="12" name="bg" width="64" height="18">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -5,7 +5,7 @@
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
  <tileset firstgid="73" source="../../assets/liquid/liquid.tsx"/>
- <tileset firstgid="81" source="../../assets/tilesets/0.tsx"/>
+ <tileset firstgid="81" source="../../assets/tilesets/background.tsx"/>
  <tileset firstgid="337" source="../../assets/tilesets/doors.tsx"/>
  <layer id="15" name="bg" width="64" height="36">
   <data encoding="csv">
@@ -175,10 +175,10 @@
   <object id="203" name="door" x="80" y="448" width="48" height="64"/>
  </objectgroup>
  <objectgroup id="2" name="platforms">
-  <object id="14" name="7" x="416" y="448">
+  <object id="14" name="7" x="416" y="464">
    <point/>
   </object>
-  <object id="16" name="7" x="416" y="400">
+  <object id="16" name="7" x="416" y="416">
    <point/>
   </object>
   <object id="83" name="8" x="772" y="432">
@@ -190,7 +190,7 @@
   <object id="156" name="8" x="736" y="432">
    <point/>
   </object>
-  <object id="157" name="7" x="560" y="400">
+  <object id="157" name="7" x="560" y="416">
    <point/>
   </object>
   <object id="179" name="4" x="832" y="368">
