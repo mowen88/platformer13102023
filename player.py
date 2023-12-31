@@ -389,6 +389,7 @@ class Player(pygame.sprite.Sprite):
 
 				self.rect.centery = self.hitbox.centery
 				self.pos.y = self.hitbox.centery
+				self.platform = None
 
 	def collide_platforms(self, group, dt):
 
@@ -436,7 +437,6 @@ class Player(pygame.sprite.Sprite):
 
 	def physics_y(self, dt):
 
-
 		self.vel.y += self.acc.y * dt
 
 		if self.platform:
@@ -447,8 +447,8 @@ class Player(pygame.sprite.Sprite):
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
 
-		self.collisions_y(self.scene.block_sprites)
 		self.collide_platforms(self.scene.platform_sprites, dt)
+		self.collisions_y(self.scene.block_sprites)
 	
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed

@@ -4,7 +4,7 @@ TILESIZE = 16
 
 RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
 
-VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 1.5, HEIGHT * 2
+VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 2, HEIGHT * 2
 
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
@@ -47,10 +47,12 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
-			   '0':{'unit':'base', 'level':'outer base', '1':'1', '3':'1'}, 
-  			   '1':{'unit':'base', 'level':'inner base', '1':'0', '2':'2', '3':'0'},
+			   '0':{'unit':'base', 'level':'outer base', '1':'1', '3':'1', '6':'2'}, 
+  			   '1':{'unit':'base', 'level':'inner base', '1':'0', '2':'2', '3':'0','5':'2'},
+  			   '2':{'unit':'base', 'level':'outer base', '2':'1','3':'3','7':'0'},
   			   # Comm Center
-  			   '2':{'unit':'base', 'level':'comm center', '2':'1','3':'3'},
+  			   
+
 
   			   # UNIT 2 - BUNKER
   			   # Ammo Depot

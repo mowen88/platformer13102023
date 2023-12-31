@@ -216,7 +216,7 @@ class CrouchMove:
 			player.drop_through = True
 			ACTIONS['right_click'] = False
 
-		if abs(player.vel.x) < 0.1:
+		if abs(player.vel.x) <= 0.1:
 			return Crouch(player)
 
 	def update(self, player, dt):

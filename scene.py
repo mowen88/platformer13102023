@@ -243,7 +243,8 @@ class Scene(State):
 		if 'entries' in layers:
 			for obj in self.tmx_data.get_layer_by_name('entries'):
 				if obj.name == self.entry_point:
-					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])	
+					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
+					self.player.hitbox.topleft = (obj.x, obj.y)	
 
 		if 'exits' in layers:
 			for obj in self.tmx_data.get_layer_by_name('exits'):
@@ -256,6 +257,10 @@ class Scene(State):
 					if obj.name == '4': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
 					if obj.name == '5': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
+					if obj.name == '6': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
+					if obj.name == '7': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
 
 		if 'liquid' in layers:
