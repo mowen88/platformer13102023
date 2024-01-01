@@ -22,7 +22,7 @@ class Dialogue(State):
 
     def text_update(self, dt):
         if not self.char_indices[-1] >= len(self.lines[-1]):
-            if self.timer > 12 * dt:
+            if self.timer > 0.5:
                 self.timer = 0
 
                 for line in range(len(self.lines)):

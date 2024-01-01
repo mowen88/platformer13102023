@@ -210,6 +210,8 @@ class Scene(State):
 				# static platforms and crates
 				if obj.name == '7': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['objects'])
+				if obj.name == '8': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
+					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'red_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'blue_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
@@ -227,7 +229,7 @@ class Scene(State):
 				if obj.name == 'green_small_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
 				# barrels
-				if obj.name == '8': Barrel(self, [self.destructible_sprites, self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'barrel': Barrel(self, [self.destructible_sprites, self.platform_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/objects/barrel.png').convert_alpha(), LAYERS['objects'])
 
 

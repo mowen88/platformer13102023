@@ -182,13 +182,13 @@
   <object id="16" name="7" x="416" y="400">
    <point/>
   </object>
-  <object id="83" name="8" x="772" y="412">
+  <object id="83" name="barrel" x="772" y="412">
    <point/>
   </object>
-  <object id="155" name="8" x="756" y="412">
+  <object id="155" name="barrel" x="756" y="412">
    <point/>
   </object>
-  <object id="156" name="8" x="736" y="412">
+  <object id="156" name="barrel" x="736" y="412">
    <point/>
   </object>
   <object id="157" name="7" x="560" y="400">
@@ -268,7 +268,7 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="entries">
-  <object id="41" name="0" x="272" y="112">
+  <object id="41" name="0" x="944" y="400">
    <point/>
   </object>
   <object id="43" name="1" x="64" y="480">

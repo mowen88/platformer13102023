@@ -62,7 +62,7 @@ class Intro(State):
 
 		self.text = Dialogue(self.game, ['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.15))
 		self.text2 = Dialogue(self.game, ['Humanity launches operation overlord', 'to counter-attack Stroggos.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.45))
-		self.text3 = Dialogue(self.game, ["Marine Bitterman's drop pod is knocked of", "course by the Strogg's planetry defences, and",'lands miles away from the target drop zone...'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.75))
+		self.text3 = Dialogue(self.game, ["Marine Bitterman's drop pod is knocked of", "course by the Strogg's planetary defences, and",'lands miles away from the target drop zone...'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.75))
 
 		# menu transitioning
 		self.transitioning = False
