@@ -185,7 +185,7 @@ class Game:
         screen.blit(surf, rect)
 
     def update(self, dt):
-        pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
+        #pygame.display.set_caption(str(round(self.clock.get_fps(), 2)))
         self.timer.update(dt)
         self.stack[-1].update(dt)
  

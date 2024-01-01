@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="68">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="70">
  <editorsettings>
   <export target="1.csv" format="csv"/>
  </editorsettings>
@@ -140,13 +140,13 @@
   <object id="24" name="3" x="960" y="48">
    <point/>
   </object>
-  <object id="58" name="2" x="640" y="176">
+  <object id="58" name="4" x="640" y="192">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="7" name="exits">
   <object id="53" name="1" gid="73" x="32" y="272" width="48" height="40"/>
-  <object id="57" name="5" gid="73" x="624" y="224" width="48" height="40"/>
   <object id="67" name="3" gid="75" x="944" y="96" width="48" height="40"/>
+  <object id="68" name="4" gid="76" x="624" y="224" width="48" height="40"/>
  </objectgroup>
 </map>

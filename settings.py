@@ -48,16 +48,17 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
 			   '0':{'unit':'base', 'level':'outer base', '1':'1', '3':'1', '6':'2'}, 
-  			   '1':{'unit':'base', 'level':'inner base', '1':'0', '2':'2', '3':'0','5':'2'},
-  			   '2':{'unit':'base', 'level':'outer base', '2':'1','3':'3','7':'0'},
+  			   '1':{'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
+  			   '2':{'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
+  			   '3':{'unit':'base', 'level':'outer base', '4':'1','2':'2'},
   			   # Comm Center
   			   
 
 
   			   # UNIT 2 - BUNKER
   			   # Ammo Depot
-  			   '3':{'unit':'bunker', 'level':'ammo depot', '1':'4','4':'4','3':'2'},
-  			   '4':{'unit':'bunker', 'level':'ammo depot', '1':'3','2':'3','3':'0'},
+  			   #'3':{'unit':'bunker', 'level':'ammo depot', '1':'4','4':'4','3':'2'},
+  			   #'4':{'unit':'bunker', 'level':'ammo depot', '1':'3','2':'3','3':'0'},
   			   # Warehouse
   			   # '5':{'unit':'bunker', 'level':'Warehouse', '2':'1','3':'0'},
   			}

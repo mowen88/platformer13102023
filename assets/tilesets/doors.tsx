@@ -11,7 +11,7 @@
   <image width="48" height="40" source="../doors/3/00.png"/>
  </tile>
  <tile id="3">
-  <image width="48" height="40" source="../doors/4/00.png"/>
+  <image width="48" height="40" source="../doors/4/0.png"/>
  </tile>
  <tile id="4">
   <image width="48" height="40" source="../doors/5/00.png"/>
