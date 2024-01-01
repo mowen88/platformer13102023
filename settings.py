@@ -43,6 +43,12 @@ TUTORIALS = {
 		'door':'Press up at a door to enter',
 		}
 
+INTRO_TEXT = {
+			  0:['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'],
+			  1: ['Humanity launches operation overlord', 'to counter-attack Stroggos.'],
+			  2:["Marine Bitterman's drop pod is knocked of", "course by the Strogg's planetry defences, and",'lands miles away from the target drop zone...']
+			  }
+
 DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 
 SCENE_DATA = { # UNIT 1 - BASE

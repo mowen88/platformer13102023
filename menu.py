@@ -2,9 +2,10 @@
 import random
 from state import State
 from scene import Scene
+from dialogue import Dialogue
 from settings import *
 
-class Intro(State):
+class PygameLogo(State):
 	def __init__(self, game):
 		State.__init__(self, game)
 
@@ -20,7 +21,7 @@ class Intro(State):
 		self.transition_screen = MenuTransition(self)
 
 	def go_to(self, state):
-		MainMenu(self.game).enter_state()
+		Intro(self.game).enter_state()
 
 	def update(self, dt):
 		# if ACTIONS['space']:
@@ -40,6 +41,64 @@ class Intro(State):
 		screen.blit(self.logo_surf, self.logo_rect)
 		self.game.render_text('Made with', BLACK, self.game.font, (HALF_WIDTH, HEIGHT * 0.3))
 		self.transition_screen.draw(screen)
+
+class Intro(State):
+	def __init__(self, game):
+		State.__init__(self, game)
+
+		self.game = game
+		self.timer = 1500
+
+		self.text_blocks = list(INTRO_TEXT.keys())
+
+		#dialogue
+		# The strogg relentlessly assimulate all races in its path as they
+		# Years have passed since the Strogg attacked Earth.
+		# Their mission to relentlessly assimulate all races in their path.
+
+		# Years have passed since the Strogg attacked earth. Harvesting many humans, augmenting themselves with the biological components of all who stand in their way.
+		# Humanity launches operation overlord to counter-attack Stroggos.
+		# Marine Bitterman's drop pod is knocked of course by the Strogg's planetry defences, and lands miles away from the target drop zone...
+
+		self.text = Dialogue(self.game, ['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.15))
+		self.text2 = Dialogue(self.game, ['Humanity launches operation overlord', 'to counter-attack Stroggos.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.45))
+		self.text3 = Dialogue(self.game, ["Marine Bitterman's drop pod is knocked of", "course by the Strogg's planetry defences, and",'lands miles away from the target drop zone...'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.75))
+
+		# menu transitioning
+		self.transitioning = False
+		self.transition_screen = MenuTransition(self)
+
+	def go_to(self, state):
+		MainMenu(self.game).enter_state()
+
+	def update(self, dt):
+
+		self.transition_screen.update(dt)
+		self.timer -= dt
+
+		if self.timer < 1400:
+			self.text.update(dt)
+
+		if self.timer < 900:
+			self.text2.update(dt)
+
+		if self.timer < 500:
+			self.text3.update(dt)
+
+		if self.timer <= 0 or ACTIONS['enter']:
+			self.next_menu = 'main_menu'
+			self.transitioning = True
+			self.game.reset_keys()
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+		self.text.draw(screen)
+		self.text2.draw(screen)
+		self.text3.draw(screen)
+		if self.timer < 1400:
+			self.game.render_text('Press enter to skip', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.95))
+		self.transition_screen.draw(screen)
+
 
 class MenuTransition(pygame.sprite.Sprite):
 	def __init__(self, menu):

@@ -75,9 +75,9 @@ class HurtSurf(FadeSurf):
 
 
 class Collider(pygame.sprite.Sprite):
-	def __init__(self, groups, pos, name=None):
+	def __init__(self, groups, pos, size, name=None):
 		super().__init__(groups)
-		self.image = pygame.Surface((TILESIZE, TILESIZE))
+		self.image = pygame.Surface((size))
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.copy().inflate(2,0)
 		self.name = name

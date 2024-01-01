@@ -287,13 +287,13 @@ class Player(pygame.sprite.Sprite):
 			if self.hitbox.colliderect(exit.hitbox) and ACTIONS['up']:
 				self.game.write_game_time()
 				self.scene.exiting = True
-				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name]
+				self.scene.new_scene = SCENE_DATA[self.scene.current_scene][exit.name.split("_")[0]]
 				self.scene.prev_level = SCENE_DATA[self.scene.current_scene]['level']
-				self.scene.entry_point = exit.name
+				self.scene.entry_point = exit.name.split("_")[0]
 
 	def collide_tutorials(self):
 		for rect in self.scene.tutorial_sprites:
-			if self.hitbox.colliderect(rect.rect):
+			if self.hitbox.colliderect(rect.rect) and rect not in SAVE_DATA['killed_sprites']:
 				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], rect.text, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5), 200, NEON_GREEN)
 				SAVE_DATA['killed_sprites'].append(rect.text)
 				rect.kill()
@@ -360,7 +360,6 @@ class Player(pygame.sprite.Sprite):
 	    else:
 	    	self.scene.breathe_timer.stop()
 	    	self.drown_damage = 4
-
 	
 	def collisions_x(self, group):
 		for sprite in group:

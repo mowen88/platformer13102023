@@ -1,6 +1,6 @@
 import pygame, sys, json, cProfile
 from os import walk
-from menu import Intro
+from menu import PygameLogo
 from timer import GameTimer
 from settings import *
 
@@ -152,8 +152,8 @@ class Game:
             ACTIONS[action] = False
 
     def load_states(self):
-        self.intro = Intro(self)
-        self.stack.append(self.intro)
+        self.pygame_logo = PygameLogo(self)
+        self.stack.append(self.pygame_logo)
 
     def get_csv_layer(self, path):
         grid = []

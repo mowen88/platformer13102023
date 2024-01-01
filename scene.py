@@ -246,22 +246,14 @@ class Scene(State):
 					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
 					self.player.hitbox.topleft = (obj.x, obj.y)	
 
+		key_dict = {'3':'blue key'}
 		if 'exits' in layers:
 			for obj in self.tmx_data.get_layer_by_name('exits'):
-					if obj.name == '1': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '2': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '3': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '4': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name, 'blue key')
-					if obj.name == '5': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '6': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
-					if obj.name == '7': Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
-											LAYERS['objects'], f'assets/doors/{obj.name}', 'loop', obj.name)
+				for num in range(100):
+					key_name = key_dict[str(num)] if str(num) in list(key_dict.keys()) else None
+
+					if obj.name.split("_")[0] == str(num): Door(self.game, self, [self.exit_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y),\
+											LAYERS['objects'], f'assets/doors/{obj.name.split("_")[0]}', 'loop', obj.name, key_name)
 
 		if 'liquid' in layers:
 			for obj in self.tmx_data.get_layer_by_name('liquid'):
@@ -274,7 +266,7 @@ class Scene(State):
 
 		if 'entities' in layers:
 			for obj in self.tmx_data.get_layer_by_name('entities'):
-				if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y))
+				if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y), (obj.width, obj.height))
 				if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
 				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
