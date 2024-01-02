@@ -252,8 +252,6 @@ class SlotMenu(MainMenu):
 		self.num_of_slots = len(list(self.game.slot_data.keys()))
 		self.buttons = self.get_slots()
 
-		print(self.num_of_slots)
-
 	def get_slots(self):
 		buttons = {}
 		for slot in range(1, self.num_of_slots+1):
@@ -273,7 +271,6 @@ class SlotMenu(MainMenu):
 			self.game.slot = str(self.next_menu)
 
 			self.game.read_data()
-			print(self.game.slot)
 			#self.game.read_data()
 
 	def update(self, dt):
@@ -350,8 +347,6 @@ class Confirmation(MainMenu):
 		COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 		'grenades':5, 'slugs':0, 'rockets':0})
 		self.game.write_data()
-
-		print(self.game.slot)
 
 	def update(self, dt):
 

@@ -37,7 +37,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 				sprite.exploded = True
 				self.kill()
 
-		for sprite in self.scene.block_sprites:
+		for sprite in pygame.sprite.spritecollide(self, self.scene.block_sprites, False):
 			if self.rect.colliderect(sprite.hitbox):
 				self.kill()
 

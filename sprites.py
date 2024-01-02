@@ -35,7 +35,7 @@ class FadeSurf(pygame.sprite.Sprite):
 				self.scene.exit_state()
 				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
 					#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
-					Intermission(self.game, self.scene).enter_state()
+					Intermission(self.game).enter_state()
 				else:
 					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
 		
@@ -116,11 +116,18 @@ class SecretTile(pygame.sprite.Sprite):
 
 	def update_alpha(self, rate, dt):
 		if self.activated:
+			
+			# play sound once when alpha is 255
+			if self.alpha == 255:
+				self.scene.world_fx['secret'].play()
+
 			self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'You have found a secret', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 			self.alpha -= rate * dt
+
 			if self.alpha < 0:
 				for sprite in self.scene.secret_sprites:
 					sprite.kill()
+
 			self.image.set_alpha(self.alpha)
 
 	def update(self, dt):
@@ -293,10 +300,26 @@ class Door(AnimatedPickup):
 		self.key_required = key_required
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.75, -self.rect.height * 0.75)
+		self.play_sound = True
+
+	def play_sfx(self):
+		if len(self.frames) > 1 and self.play_sound:
+			if self.key_required in SAVE_DATA['items']:
+				self.scene.world_fx['key_use'].play()
+			elif self.key_required is not None:
+				self.scene.world_fx['key_try'].play()
+			else:
+				self.scene.world_fx['door'].play()
+
+			self.play_sound = False
 
 	def open(self, dt):
+
 		if self.rect.colliderect(self.scene.player.rect):
+
+			self.play_sfx()
 			if self.key_required is None or self.key_required in SAVE_DATA['items']:
+
 				self.frame_index += 0.2 * dt
 				if self.frame_index >= len(self.frames) -1:
 					self.frame_index = len(self.frames) -1
@@ -306,6 +329,8 @@ class Door(AnimatedPickup):
 				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], f'You need the {self.key_required}', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 		else:
+			self.play_sound = True
+
 			self.frame_index -= 0.2 * dt
 			if self.frame_index <= 0: 
 				self.frame_index = 0

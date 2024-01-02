@@ -24,5 +24,5 @@ class Intermission(State):
 	def draw(self, screen):
 		screen.fill(BLACK)
 		self.game.render_text('Thanks for playing this demo !', WHITE, self.game.ui_font, (WIDTH * 0.5, HEIGHT * 0.4))
-		self.game.render_text('Completion time:', NEON_GREEN, self.game.font, (WIDTH * 0.5, HEIGHT * 0.55))
+		self.game.render_text('Completion time', NEON_GREEN, self.game.font, (WIDTH * 0.5, HEIGHT * 0.55))
 		self.game.render_text(str(self.time_elapsed), NEON_GREEN, self.game.font, (WIDTH * 0.5, HEIGHT * 0.6))

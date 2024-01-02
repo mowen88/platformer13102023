@@ -1,4 +1,5 @@
-import pygame, sys, json, cProfile
+import pygame, sys, os, json, cProfile
+from pygame import mixer
 from os import walk
 from menu import PygameLogo
 from timer import GameTimer
@@ -6,11 +7,16 @@ from settings import *
 
 class Game:
     def __init__(self):
-
+ 
+        mixer.init()
         pygame.init()
 
+        pygame.mixer.music.load('audio/music/soundtrack.mp3')
+        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.play(-1, 0.2, 5000)
+
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -32,6 +38,27 @@ class Game:
         self.slot = None
         self.slot_data = self.get_slot_dict(6)
 
+        self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
+        self.world_fx = self.import_sfx('audio/sfx/world') 
+        self.item_fx = self.import_sfx(f'audio/sfx/items') 
+
+    def import_sfx(self, path, volume=0.2):
+        sfx_dict = {}
+
+        for root, _, sfx_files in os.walk(path):
+            for sfx in sfx_files:
+                full_path = os.path.join(root, sfx)
+                sfx_name, sfx_ext = os.path.splitext(sfx)
+
+                if sfx_ext.lower() == '.wav':
+                    sound = pygame.mixer.Sound(full_path)
+                    sound.set_volume(volume)
+                    sfx_dict[sfx_name] = sound
+
+        return sfx_dict
+
+        # self.landing_fx = pygame.mixer.Sound('audio/sfx/player/landing_grunt.wav') 
+        # self.landing_fx.set_volume(0.2)
 
     def get_slot_dict(self, num_of_slots):
         slot_data = {}

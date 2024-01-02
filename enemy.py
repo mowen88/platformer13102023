@@ -100,8 +100,12 @@ class Guard(pygame.sprite.Sprite):
 	def jump(self, height):
 		self.vel.y = -height
 
-	def collisions_x(self, group):
-		for sprite in group:
+	def get_collidable_sprites(self):
+		collidable_list = pygame.sprite.spritecollide(self, self.scene.block_sprites, False)
+		return collidable_list
+
+	def collisions_x(self):
+		for sprite in self.get_collidable_sprites():
 			if self.hitbox.colliderect(sprite.hitbox):
 				if self.hitbox.right >= sprite.hitbox.left and self.old_hitbox.right <= sprite.old_hitbox.left:
 					self.hitbox.right = sprite.hitbox.left
@@ -113,8 +117,8 @@ class Guard(pygame.sprite.Sprite):
 				self.rect.centerx = self.hitbox.centerx
 				self.pos.x = self.hitbox.centerx
 
-	def collisions_y(self, group):
-		for sprite in group:
+	def collisions_y(self):
+		for sprite in self.get_collidable_sprites():
 			if self.hitbox.colliderect(sprite.hitbox):
 				if self.hitbox.bottom >= sprite.hitbox.top and self.old_hitbox.bottom <= sprite.old_hitbox.top:
 					self.hitbox.bottom = sprite.hitbox.top
@@ -198,7 +202,7 @@ class Guard(pygame.sprite.Sprite):
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
 
-		self.collisions_x(self.scene.block_sprites)
+		self.collisions_x()
 
 		self.collide_platforms(self.scene.platform_sprites, dt)
 
@@ -210,7 +214,7 @@ class Guard(pygame.sprite.Sprite):
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
 
-		self.collisions_y(self.scene.block_sprites)
+		self.collisions_y()
 
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed

@@ -70,6 +70,8 @@ class DustParticle(pygame.sprite.Sprite):
 					self.kill()
 
 			self.image = self.frames[int(self.frame_index)]
+		else:
+			self.image = self.frames[0]
 
 	def update_alpha(self, rate):
 		self.alpha -= rate

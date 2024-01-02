@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, random
 from settings import *
 from message import Message
 from player_fsm import Hold
@@ -95,6 +95,7 @@ class Player(pygame.sprite.Sprite):
 
 	def jump(self, height):
 		self.vel.y = -height
+		self.scene.world_fx['jump'].play()
 
 	def get_on_ground(self):
 		self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
@@ -132,6 +133,7 @@ class Player(pygame.sprite.Sprite):
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
 					if AMMO_DATA[ammo_type] < max_ammo:
+
 						sprite.kill()
 						if name not in SAVE_DATA['guns_collected']:
 							SAVE_DATA['guns_collected'].append(name)
@@ -159,6 +161,7 @@ class Player(pygame.sprite.Sprite):
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 					
 					if AMMO_DATA[ammo_type] < max_ammo:
+						self.scene.item_fx['shard'].play()
 						sprite.kill()
 						AMMO_DATA[ammo_type] = min(AMMO_DATA[ammo_type] + ammo_added, max_ammo)
 
@@ -174,7 +177,7 @@ class Player(pygame.sprite.Sprite):
 						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'max capacity reached', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 
 				elif name in list(ARMOUR_DATA.keys()):
-
+					self.scene.item_fx['shard'].play()
 					sprite.kill()
 					self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 					self.scene.create_particle('flash', sprite.hitbox.center)
@@ -217,6 +220,7 @@ class Player(pygame.sprite.Sprite):
 					max_health = max(max_health + SAVE_DATA['stimpacks'], SAVE_DATA['max_health'])
 
 					if name == 'stimpack':
+						self.scene.item_fx['medkit'].play()
 						SAVE_DATA.update({'max_health':max_health + health_added})
 						SAVE_DATA.update({'health':current_health + health_added})
 						sprite.kill()
@@ -225,6 +229,7 @@ class Player(pygame.sprite.Sprite):
 						SAVE_DATA['killed_sprites'].append(sprite.name)
 
 					elif SAVE_DATA['health'] < max_health:
+						self.scene.item_fx['medkit'].play()
 						SAVE_DATA.update({'health':min(max_health, current_health + health_added)})
 						sprite.kill()
 						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
@@ -235,6 +240,7 @@ class Player(pygame.sprite.Sprite):
 
 				elif name in CONSTANT_DATA['all_items']: 
 					if name not in SAVE_DATA['items']:
+						self.scene.item_fx['collect'].play()
 						SAVE_DATA['items'].append(name)
 						sprite.kill()
 						self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], message, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
@@ -310,10 +316,12 @@ class Player(pygame.sprite.Sprite):
 		                self.scene.breathe_timer.start()
 		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
 		                	if 'top' in sprite.name:
+		                		self.scene.world_fx['splash'].play()
 		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 
 		        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
 		        	if 'top' in sprite.name:
+		        		self.scene.world_fx['splash'].play()
 		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 	        		self.underwater = False
 
@@ -324,10 +332,12 @@ class Player(pygame.sprite.Sprite):
 		                self.hazardous_liquid_type = sprite.name
 		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
 		                	if 'top' in sprite.name:
+		                		self.scene.world_fx['splash'].play()
 		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 
 		        elif self.in_hazardous_liquid and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
 		        	if 'top' in sprite.name:
+		        		self.scene.world_fx['splash'].play()
 		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 	        		self.in_hazardous_liquid = False
 
@@ -361,8 +371,12 @@ class Player(pygame.sprite.Sprite):
 	    	self.scene.breathe_timer.stop()
 	    	self.drown_damage = 4
 	
-	def collisions_x(self, group):
-		for sprite in group:
+	def get_collidable_sprites(self):
+		collidable_list = pygame.sprite.spritecollide(self, self.scene.block_sprites, False)
+		return collidable_list
+
+	def collisions_x(self):
+		for sprite in self.get_collidable_sprites():
 			if self.hitbox.colliderect(sprite.hitbox):
 				if self.hitbox.right >= sprite.hitbox.left and self.old_hitbox.right <= sprite.old_hitbox.left:
 					self.hitbox.right = sprite.hitbox.left
@@ -374,8 +388,8 @@ class Player(pygame.sprite.Sprite):
 				self.rect.centerx = self.hitbox.centerx
 				self.pos.x = self.hitbox.centerx
 
-	def collisions_y(self, group):
-		for sprite in group:
+	def collisions_y(self):
+		for sprite in self.get_collidable_sprites():
 			if self.hitbox.colliderect(sprite.hitbox):
 				if self.hitbox.bottom >= sprite.hitbox.top and self.old_hitbox.bottom <= sprite.old_hitbox.top:
 					self.hitbox.bottom = sprite.hitbox.top
@@ -431,7 +445,7 @@ class Player(pygame.sprite.Sprite):
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
 
-		self.collisions_x(self.scene.block_sprites)
+		self.collisions_x()
 
 
 	def physics_y(self, dt):
@@ -447,7 +461,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centery = self.hitbox.centery
 
 		self.collide_platforms(self.scene.platform_sprites, dt)
-		self.collisions_y(self.scene.block_sprites)
+		self.collisions_y()
 	
 		if self.vel.y >= self.max_fall_speed: 
 			self.vel.y = self.max_fall_speed
@@ -472,8 +486,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.hitbox.centerx = round(self.pos.x)
 		self.rect.centerx = self.hitbox.centerx
-
-		self.collisions_x(self.scene.block_sprites)
+		self.collisions_x()
 		
 		#y direction
 		self.acc.y += self.vel.y * self.fric * 2
@@ -482,8 +495,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.hitbox.centery = round(self.pos.y)
 		self.rect.centery = self.hitbox.centery
-
-		self.collisions_y(self.scene.block_sprites)
+		self.collisions_y()
 
 	def handle_jumping(self, dt):
 		# Double the gravity if not holding jump key to allow variale jump height
@@ -537,6 +549,7 @@ class Player(pygame.sprite.Sprite):
 				ammo_type = CONSTANT_DATA['guns'][sprite.firer.gun]['ammo_type']
 				self.reduce_health(sprite.damage, ammo_type)
 				self.scene.create_particle('blood', sprite.rect.center)
+				self.scene.world_fx[random.choice(['pain_0', 'pain_1'])].play()
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=False):

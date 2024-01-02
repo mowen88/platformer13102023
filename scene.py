@@ -78,6 +78,10 @@ class Scene(State):
 		self.hud = HUD(self.game, self)
 		self.save_point = self.get_save_point()
 
+		self.weapon_fx = self.game.weapon_fx
+		self.world_fx = self.game.world_fx
+		self.item_fx = self.game.item_fx
+
 		# wait for instances to load in
 		self.thread = threading.Thread(target=self.create_scene_instances)
 		self.thread.start()
@@ -306,6 +310,7 @@ class Scene(State):
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
 			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], 6)
+			self.weapon_fx['blaster'].play()
 
 		if sprite.gun == 'hyper blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
@@ -317,8 +322,10 @@ class Scene(State):
 			Grenade(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
+
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
-			
+			self.weapon_fx['shotgun'].play()
+
 			lower = -2 # if sprite.gun == 'shotgun' else -4
 			upper = 3 # if sprite.gun == 'shotgun' else 6 
 
@@ -328,8 +335,10 @@ class Scene(State):
 				pellet *= spread_offset
 				self.hitscan(sprite, pellet)
 
+
 		elif sprite.gun == 'machine gun':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
+			self.weapon_fx['machine gun'].play()
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
@@ -342,16 +351,23 @@ class Scene(State):
 	def create_particle(self, particle_type, pos):
 		if particle_type == 'blood':
 			AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/blood')
+
 		elif particle_type == 'blaster':
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, YELLOW)
+
 		elif particle_type == 'landing':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/landing')
+
 		elif particle_type == 'jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/jump')
+
 		elif particle_type == 'double_jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/double_jump')
+
 		elif particle_type == 'explosion':
 			Explosion(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/mushroom')
+			self.weapon_fx['explode'].play()
+
 		elif particle_type == 'flash':
 			Flash(self.game, self, [self.update_sprites, self.drawn_sprites], pos, WHITE, 8, LAYERS['foreground'])
 		elif particle_type == 'splash':
@@ -520,6 +536,7 @@ class Scene(State):
 
 	def update(self, dt):
 
+
 		self.screenshake(dt)
 
 		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
@@ -527,7 +544,7 @@ class Scene(State):
 		self.hud.update(dt)
 		self.update_sprites.update(dt)
 
-
+		#print(round(self.game.clock.get_fps(), 2))
 
 		# update quad damage timer
 		self.player.quad_damage = True if self.quad_timer.update(dt) else False
