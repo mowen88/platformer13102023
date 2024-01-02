@@ -547,8 +547,7 @@ class Player(pygame.sprite.Sprite):
 
 		if CONSTANT_DATA['guns'][self.gun]['ammo_used'] > SAVE_DATA['ammo'] and self.cooldown <= 0:
 			self.game.weapon_fx['no_ammo'].play()
-			self.cooldown = 20
-
+			self.cooldown = CONSTANT_DATA['guns']['blaster']['cooldown']
 
 	def hit_by_bullet(self):
 		for sprite in self.scene.bullet_sprites:

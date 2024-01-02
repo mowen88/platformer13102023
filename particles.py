@@ -62,7 +62,7 @@ class DustParticle(pygame.sprite.Sprite):
 		if self.alive:
 			self.frame_index += animation_speed
 
-			if self.frame_index > len(self.frames)-1:
+			if self.frame_index >= len(self.frames)-1:
 				if loop:
 					self.frame_index = 0	
 				else:	

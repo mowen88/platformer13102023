@@ -10,7 +10,7 @@ class PygameLogo(State):
 		State.__init__(self, game)
 
 		self.game = game
-		self.timer = 50
+		self.timer = 200
 
 		# logo
 		self.logo_surf = pygame.image.load('assets/pygame_logo.png').convert_alpha()
@@ -85,7 +85,7 @@ class Intro(State):
 		if self.timer < 300:
 			self.text3.update(dt)
 
-		if self.timer <= 0 or ACTIONS['enter']:
+		if self.timer <= 0 or ACTIONS['enter'] and self.timer < 800:
 			self.next_menu = 'main_menu'
 			self.transitioning = True
 			self.game.reset_keys()
@@ -95,7 +95,7 @@ class Intro(State):
 		self.text.draw(screen)
 		self.text2.draw(screen)
 		self.text3.draw(screen)
-		if self.timer < 1400:
+		if self.timer < 800:
 			self.game.render_text('Press enter to skip', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.95))
 		self.transition_screen.draw(screen)
 
@@ -167,9 +167,8 @@ class MainMenu(State):
 		self.padding = 24
 
 		self.buttons = {
-						'Start': [(HALF_WIDTH, HALF_HEIGHT - self.padding), 'slot_menu'],
-						'Options': [(HALF_WIDTH, HALF_HEIGHT), 'options_menu'],
-						'Quit': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'quit_game'],
+						'Start': [(HALF_WIDTH, HEIGHT * 0.25), 'slot_menu'],
+						'Quit': [(HALF_WIDTH, HEIGHT * 0.25 + self.padding), 'quit_game'],
 						}
 
 		# menu transitioning
@@ -178,6 +177,9 @@ class MainMenu(State):
 		self.boxes = self.get_boxes()
 
 		self.scene = Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos'])
+
+		self.logo_surf = pygame.image.load('assets/quake_logo.png').convert_alpha()
+		self.logo_rect = self.logo_surf.get_rect(center = RES/2)
 
 	def get_boxes(self):
 		boxes = []
@@ -240,6 +242,9 @@ class MainMenu(State):
 
 		for box in self.boxes:
 			box.draw(screen)
+
+		screen.blit(self.logo_surf, self.logo_rect)
+		self.game.render_text('a fan game by Matt Owen', WHITE, self.game.font, (WIDTH * 0.82, HEIGHT * 0.95))
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
