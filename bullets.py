@@ -100,13 +100,19 @@ class Grenade(BlasterBullet):
 				self.kill()
 				sprite.activated = True
 
+	def get_collidable_sprites(self):
+		collidable_list = pygame.sprite.spritecollide(self, self.scene.block_sprites, False)
+		return collidable_list
+
 	def collisions_x(self):
 
 		self.collide()
 
-		for sprite in self.scene.block_sprites:
+		for sprite in self.get_collidable_sprites():
 			if self.rect.colliderect(sprite.hitbox):
-				
+
+				self.scene.weapon_fx['grenade_bounce'].play()
+								
 				if self.rect.right >= sprite.hitbox.left and self.old_rect.right <= sprite.hitbox.right:
 					self.rect.right = sprite.hitbox.left
 					self.pos.x = self.rect.x
@@ -118,8 +124,10 @@ class Grenade(BlasterBullet):
 					self.vel.x *= -1
 
 	def collisions_y(self):
-		for sprite in self.scene.block_sprites:
+		for sprite in self.get_collidable_sprites():
 			if self.rect.colliderect(sprite.hitbox):
+
+				self.scene.weapon_fx['grenade_bounce'].play()
 			
 				if self.rect.bottom >= sprite.hitbox.top and self.old_rect.bottom <= sprite.hitbox.top:
 					self.rect.bottom = sprite.hitbox.top

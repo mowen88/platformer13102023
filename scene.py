@@ -320,6 +320,7 @@ class Scene(State):
 
 			speed = 7 if sprite.gun in ['grenade launcher'] else 4
 			Grenade(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
+			self.weapon_fx['throw_grenade'].play()
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
 
