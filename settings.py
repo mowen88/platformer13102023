@@ -54,7 +54,7 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
 			   '0':{'unit':'base', 'level':'outer base', '1':'1', '3':'1', '6':'2'}, 
-  			   '1':{'unit':'bunker', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
+  			   '1':{'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
   			   '2':{'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
   			   '3':{'unit':'base', 'level':'outer base', '4':'1','2':'2'},
   			   # Comm Center
@@ -124,7 +124,7 @@ CONSTANT_DATA = {
 			},
 	'enemies' :{
 			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
-			'sg_guard': {'weapon':'machine gun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
+			'sg_guard': {'weapon':'shotgun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 80, 'burst_count': 1},
 			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
 			'enforcer': {'weapon':'chain gun', 'damage': 3, 'health': 40, 'telegraph_time': 30, 'cooldown': 8, 'burst_count': 12},
 			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},

@@ -158,7 +158,7 @@ class MainMenu(State):
 	def __init__(self, game):
 		State.__init__(self, game)
 
-		if len(self.game.stack) > 1:
+		if len(self.game.stack) > 2:
 			self.game.stack.pop()
 
 		self.game = game

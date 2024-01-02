@@ -2,7 +2,7 @@ import pygame, math
 from settings import *
 from message import Message
 #from intermission import Intermission
-from demo_end import Intermission
+from demo_end import DemoEnd
 
 class FadeSurf(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
@@ -35,7 +35,7 @@ class FadeSurf(pygame.sprite.Sprite):
 				self.scene.exit_state()
 				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
 					#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
-					Intermission(self.game).enter_state()
+					DemoEnd(self.game).enter_state()
 				else:
 					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
 		

@@ -3,8 +3,8 @@ import pygame, math
 from state import State
 from settings import *
 
-class Intermission(State):
-	def __init__(self, game, scene):
+class DemoEnd(State):
+	def __init__(self, game):
 		State.__init__(self, game)
 
 		self.time_elapsed = COMMIT_SAVE_DATA['time_elapsed']

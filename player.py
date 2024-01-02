@@ -126,6 +126,8 @@ class Player(pygame.sprite.Sprite):
 					message = name
 	
 				if name in list(CONSTANT_DATA['guns'].keys()):
+
+					self.game.item_fx['shard'].play()
 				
 					ammo_type = CONSTANT_DATA['guns'][name]['ammo_type']
 					ammo_added = CONSTANT_DATA['guns'][name]['ammo_given']
@@ -133,7 +135,6 @@ class Player(pygame.sprite.Sprite):
 					max_ammo = AMMO_LIMITS[capacity_type][ammo_type]
 
 					if AMMO_DATA[ammo_type] < max_ammo:
-
 						sprite.kill()
 						if name not in SAVE_DATA['guns_collected']:
 							SAVE_DATA['guns_collected'].append(name)
@@ -305,7 +306,7 @@ class Player(pygame.sprite.Sprite):
 				rect.kill()
 
 	def hit_liquid(self, dt):
-		
+
 		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
 	    	if 'water' in sprite.name:
@@ -543,6 +544,11 @@ class Player(pygame.sprite.Sprite):
 			if not self.scene.exiting:
 				self.scene.create_bullet(self, CONSTANT_DATA['guns'][self.gun]['auto'])
 				self.cooldown = CONSTANT_DATA['guns'][self.gun]['cooldown']
+
+		if CONSTANT_DATA['guns'][self.gun]['ammo_used'] > SAVE_DATA['ammo'] and self.cooldown <= 0:
+			self.game.weapon_fx['no_ammo'].play()
+			self.cooldown = 20
+
 
 	def hit_by_bullet(self):
 		for sprite in self.scene.bullet_sprites:

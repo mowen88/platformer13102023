@@ -6,7 +6,7 @@ class PauseMenu(State):
 		State.__init__(self, game)
 
 		self.next_menu = None
-		self.padding = 24
+		self.padding = 16
 		self.controls_screen = ControlsScreen(self.game)
 
 		self.buttons = {
@@ -65,7 +65,7 @@ class PauseMenu(State):
 		self.fade_surf.set_alpha(180)
 		screen.blit(self.fade_surf, (0,0))
 
-		self.game.render_text('Paused', WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 1.5))
+		self.game.render_text('Paused', WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 2.5))
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])
@@ -79,7 +79,7 @@ class ControlsScreen(PauseMenu):
 		self.controls_image = pygame.image.load('assets/controls.png').convert_alpha()
 		self.controls_rect = self.controls_image.get_rect(center = RES/2)
 
-		self.buttons = {'back': [(HALF_WIDTH, HEIGHT * 0.8), 'back']}
+		self.buttons = {'back': [(HALF_WIDTH, HEIGHT * 0.9), 'back']}
 
 		self.fade_surf = pygame.Surface((RES))
 		self.fade_surf.fill(BLACK)
@@ -107,6 +107,9 @@ class ControlsScreen(PauseMenu):
 		self.game.render_text('inventory', WHITE, self.game.font, (164,150), True)
 		self.game.render_text('enter door /', WHITE, self.game.font, (284,45), True)
 		self.game.render_text('climb ladder', WHITE, self.game.font, (284,55), True)
+		self.game.render_text('move right', WHITE, self.game.font, (284,130), True)
+		self.game.render_text('crouch / descend ladder', WHITE, self.game.font, (284,150), True)
+		self.game.render_text('move left', WHITE, self.game.font, (284,170), True)
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])
