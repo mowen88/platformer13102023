@@ -118,6 +118,7 @@ class Telegraph(Move):
 		enemy.frame_index = 0
 		self.timer = enemy.data['telegraph_time']
 		self.angle = enemy.gun_sprite.get_angle(enemy.rect.center, enemy.scene.player.rect.center)
+		enemy.fx['sight'].play()
 
 	def gun_angle(self, enemy):
 		if enemy.scene.player.hitbox.colliderect(enemy.vision_box) and enemy.has_los():

@@ -16,7 +16,7 @@ class Game:
         pygame.mixer.music.play(-1, 0.2, 5000)
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -40,7 +40,7 @@ class Game:
 
         self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
         self.world_fx = self.import_sfx('audio/sfx/world') 
-        self.item_fx = self.import_sfx(f'audio/sfx/items') 
+        self.item_fx = self.import_sfx(f'audio/sfx/items')
 
     def import_sfx(self, path, volume=0.2):
         sfx_dict = {}

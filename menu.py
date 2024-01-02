@@ -47,7 +47,7 @@ class Intro(State):
 		State.__init__(self, game)
 
 		self.game = game
-		self.timer = 1500
+		self.timer = 900
 
 		self.text_blocks = list(INTRO_TEXT.keys())
 
@@ -76,13 +76,13 @@ class Intro(State):
 		self.transition_screen.update(dt)
 		self.timer -= dt
 
-		if self.timer < 1400:
+		if self.timer < 800:
 			self.text.update(dt)
 
-		if self.timer < 900:
+		if self.timer < 500:
 			self.text2.update(dt)
 
-		if self.timer < 500:
+		if self.timer < 300:
 			self.text3.update(dt)
 
 		if self.timer <= 0 or ACTIONS['enter']:
@@ -201,6 +201,7 @@ class MainMenu(State):
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
 				self.next_menu = next_menu
+				self.game.item_fx['menu'].play()
 		else:
 			#pygame.draw.rect(screen, button_colour, rect)#int(HEIGHT * 0.05))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)

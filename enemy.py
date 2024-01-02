@@ -47,6 +47,8 @@ class Guard(pygame.sprite.Sprite):
 		self.move = {'left':False, 'right':False}
 		self.cooldown = 0
 
+		self.fx = self.game.import_sfx(f'audio/sfx/{self.name}')
+
 	def move_logic(self):
 		if self.move['right']:
 			self.move['left'] = False

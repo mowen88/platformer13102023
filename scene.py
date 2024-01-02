@@ -78,10 +78,6 @@ class Scene(State):
 		self.hud = HUD(self.game, self)
 		self.save_point = self.get_save_point()
 
-		self.weapon_fx = self.game.weapon_fx
-		self.world_fx = self.game.world_fx
-		self.item_fx = self.game.item_fx
-
 		# wait for instances to load in
 		self.thread = threading.Thread(target=self.create_scene_instances)
 		self.thread.start()
@@ -310,7 +306,7 @@ class Scene(State):
 		if sprite.gun == 'blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
 			BlasterBullet(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], 6)
-			self.weapon_fx['blaster'].play()
+			self.game.weapon_fx['blaster'].play()
 
 		if sprite.gun == 'hyper blaster':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites],sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}',sprite)
@@ -320,12 +316,12 @@ class Scene(State):
 
 			speed = 7 if sprite.gun in ['grenade launcher'] else 4
 			Grenade(self.game, self, sprite, [self.bullet_sprites, self.update_sprites, self.drawn_sprites], sprite.muzzle_pos + self.drawn_sprites.offset, LAYERS['particles'], speed)
-			self.weapon_fx['throw_grenade'].play()
+			self.game.weapon_fx['throw_grenade'].play()
 
 		elif sprite.gun in ['shotgun', 'super shotgun']:
 
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
-			self.weapon_fx['shotgun'].play()
+			self.game.weapon_fx['shotgun'].play()
 
 			lower = -2 # if sprite.gun == 'shotgun' else -4
 			upper = 3 # if sprite.gun == 'shotgun' else 6 
@@ -339,7 +335,7 @@ class Scene(State):
 
 		elif sprite.gun == 'machine gun':
 			MuzzleFlash(self.game, self, [self.update_sprites, self.drawn_sprites], sprite.muzzle_pos, LAYERS['particles'], f'assets/muzzle_flash/{sprite.gun}', sprite)
-			self.weapon_fx['machine gun'].play()
+			self.game.weapon_fx['machine gun'].play()
 			self.hitscan(sprite, random.uniform(-0.04, 0.04))
 
 		elif sprite.gun == 'chain gun':
@@ -367,7 +363,7 @@ class Scene(State):
 
 		elif particle_type == 'explosion':
 			Explosion(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/mushroom')
-			self.weapon_fx['explode'].play()
+			self.game.weapon_fx['explode'].play()
 
 		elif particle_type == 'flash':
 			Flash(self.game, self, [self.update_sprites, self.drawn_sprites], pos, WHITE, 8, LAYERS['foreground'])

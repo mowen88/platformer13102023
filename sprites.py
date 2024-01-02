@@ -116,10 +116,10 @@ class SecretTile(pygame.sprite.Sprite):
 
 	def update_alpha(self, rate, dt):
 		if self.activated:
-			
+
 			# play sound once when alpha is 255
 			if self.alpha == 255:
-				self.scene.world_fx['secret'].play()
+				self.game.world_fx['secret'].play()
 
 			self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], 'You have found a secret', (HALF_WIDTH, HEIGHT - TILESIZE * 1.5))
 			self.alpha -= rate * dt
@@ -305,11 +305,11 @@ class Door(AnimatedPickup):
 	def play_sfx(self):
 		if len(self.frames) > 1 and self.play_sound:
 			if self.key_required in SAVE_DATA['items']:
-				self.scene.world_fx['key_use'].play()
+				self.game.world_fx['key_use'].play()
 			elif self.key_required is not None:
-				self.scene.world_fx['key_try'].play()
+				self.game.world_fx['key_try'].play()
 			else:
-				self.scene.world_fx['door'].play()
+				self.game.world_fx['door'].play()
 
 			self.play_sound = False
 

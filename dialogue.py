@@ -24,6 +24,7 @@ class Dialogue(State):
         if not self.char_indices[-1] >= len(self.lines[-1]):
             if self.timer > 0.5:
                 self.timer = 0
+                self.game.item_fx['key_press'].play()
 
                 for line in range(len(self.lines)):
                     self.char_indices[line] += 1 

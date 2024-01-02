@@ -7,10 +7,12 @@ class PauseMenu(State):
 
 		self.next_menu = None
 		self.padding = 24
+		self.controls_screen = ControlsScreen(self.game)
 
 		self.buttons = {
-						'Continue': [(HALF_WIDTH, HALF_HEIGHT), 'unpause'],
-						'Quit to Menu': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'main_menu']
+						'continue': [(HALF_WIDTH, HALF_HEIGHT - self.padding), 'unpause'],
+						'controls': [(HALF_WIDTH, HALF_HEIGHT), 'controls'],
+						'quit to menu': [(HALF_WIDTH, HALF_HEIGHT + self.padding), 'main_menu']
 						}
 		self.fade_surf = pygame.Surface((RES))
 		self.fade_surf.fill(BLACK)
@@ -40,6 +42,10 @@ class PauseMenu(State):
 			self.exit_state()
 			self.game.reset_keys()
 
+		elif self.next_menu == 'controls':
+			self.controls_screen.enter_state()
+			self.next_menu = None
+
 		elif self.next_menu == 'main_menu':
 			self.next_menu = None
 
@@ -60,6 +66,47 @@ class PauseMenu(State):
 		screen.blit(self.fade_surf, (0,0))
 
 		self.game.render_text('Paused', WHITE, self.game.font, (HALF_WIDTH, HALF_HEIGHT - self.padding * 1.5))
+
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])
+
+class ControlsScreen(PauseMenu):
+	def __init__(self, game):
+		State.__init__(self, game)
+
+		self.next_menu = None
+
+		self.controls_image = pygame.image.load('assets/controls.png').convert_alpha()
+		self.controls_rect = self.controls_image.get_rect(center = RES/2)
+
+		self.buttons = {'back': [(HALF_WIDTH, HEIGHT * 0.8), 'back']}
+
+		self.fade_surf = pygame.Surface((RES))
+		self.fade_surf.fill(BLACK)
+
+	def update(self, dt):
+		if self.next_menu == 'back':
+			self.exit_state()
+			self.next_menu = None
+			
+	def draw(self, screen):
+		self.prev_state.prev_state.draw(screen)
+
+		self.fade_surf.set_alpha(180)
+		screen.blit(self.fade_surf, (0,0))
+
+		screen.blit(self.controls_image, self.controls_rect)
+
+		self.game.render_text('Controls', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.1))
+
+		self.game.render_text('shoot', WHITE, self.game.font, (60,48), True)
+		self.game.render_text('mouse to aim', WHITE, self.game.font, (60,60), True)
+		self.game.render_text('jump', WHITE, self.game.font, (70,150), True)
+		self.game.render_text('change weapon', WHITE, self.game.font, (70,164), True)
+		self.game.render_text('pause', WHITE, self.game.font, (128,150), True)
+		self.game.render_text('inventory', WHITE, self.game.font, (164,150), True)
+		self.game.render_text('enter door /', WHITE, self.game.font, (284,45), True)
+		self.game.render_text('climb ladder', WHITE, self.game.font, (284,55), True)
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, NEON_GREEN, NEON_GREEN, values[0])

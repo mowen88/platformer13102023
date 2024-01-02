@@ -7,6 +7,7 @@ class BlasterBullet(pygame.sprite.Sprite):
 	def __init__(self, game, scene, firer, groups, pos, z, speed):
 		super().__init__(groups)
 
+		self.game = game
 		self.scene = scene
 		self.firer = firer
 		self.z = z
@@ -111,7 +112,7 @@ class Grenade(BlasterBullet):
 		for sprite in self.get_collidable_sprites():
 			if self.rect.colliderect(sprite.hitbox):
 
-				self.scene.weapon_fx['grenade_bounce'].play()
+				self.game.weapon_fx['grenade_bounce'].play()
 								
 				if self.rect.right >= sprite.hitbox.left and self.old_rect.right <= sprite.hitbox.right:
 					self.rect.right = sprite.hitbox.left
@@ -127,7 +128,7 @@ class Grenade(BlasterBullet):
 		for sprite in self.get_collidable_sprites():
 			if self.rect.colliderect(sprite.hitbox):
 
-				self.scene.weapon_fx['grenade_bounce'].play()
+				self.game.weapon_fx['grenade_bounce'].play()
 			
 				if self.rect.bottom >= sprite.hitbox.top and self.old_rect.bottom <= sprite.hitbox.top:
 					self.rect.bottom = sprite.hitbox.top
