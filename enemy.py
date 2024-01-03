@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from enemy_fsm import Fall
+from enemy_fsm import Hold
 
 class Guard(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, name, z):
@@ -10,8 +10,8 @@ class Guard(pygame.sprite.Sprite):
 		self.scene = scene
 		self.name = name
 		self.z = z
-		self.state = Fall(self)
-		self.animations = {'idle':[], 'run':[], 'land':[], 'jump':[], 'fall':[]}
+		self.state = Hold(self)
+		self.animations = {'idle':[], 'run':[], 'land':[], 'telegraph':[], 'jump':[], 'fall':[]}
 		self.import_images(self.animations)
 		self.frame_index = 0
 		self.image = self.animations['fall'][self.frame_index].convert_alpha()
@@ -241,7 +241,7 @@ class Guard(pygame.sprite.Sprite):
 		return CONSTANT_DATA['guns']['chain gun']['cooldown']
 
 	def player_seen(self):
-		if self.vision_box.colliderect(self.scene.player.hitbox) and self.has_los():
+		if self.vision_box.colliderect(self.scene.player.hitbox) and self.has_los() and self.scene.player.alive:
 			return True
 		else:
 			return False

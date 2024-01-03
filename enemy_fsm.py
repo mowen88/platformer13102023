@@ -1,6 +1,22 @@
 import pygame, random
 from settings import *
 
+class Hold:
+	def __init__(self, enemy):
+		
+		enemy.frame_index = 0
+
+	def state_logic(self, enemy):
+		if enemy.scene.fade_surf.alpha < 255 and not enemy.scene.exiting:
+			return Idle(enemy)
+
+	def update(self, enemy, dt):
+		enemy.acc.x = 0
+		
+		enemy.vel = pygame.math.Vector2()
+
+		enemy.animate('idle', 0.25 * dt, False)
+
 class Fall:
 	def __init__(self, enemy):
 		
@@ -141,7 +157,7 @@ class Telegraph(Move):
 		enemy.physics_x(dt)
 		enemy.physics_y(dt)
 
-		enemy.animate('land', 0.25 * dt)
+		enemy.animate('telegraph', 0.25 * dt, True)
 
 class Shoot(Telegraph):
 	def __init__(self, enemy):
