@@ -10,7 +10,7 @@ class PygameLogo(State):
 		State.__init__(self, game)
 
 		self.game = game
-		self.timer = 200
+		self.timer = 100
 
 		# logo
 		self.logo_surf = pygame.image.load('assets/pygame_logo.png').convert_alpha()
@@ -60,9 +60,9 @@ class Intro(State):
 		# Humanity launches operation overlord to counter-attack Stroggos.
 		# Marine Bitterman's drop pod is knocked of course by the Strogg's planetry defences, and lands miles away from the target drop zone...
 
-		self.text = Dialogue(self.game, ['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.15))
-		self.text2 = Dialogue(self.game, ['Humanity launches operation overlord', 'to counter-attack Stroggos.'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.45))
-		self.text3 = Dialogue(self.game, ["Marine Bitterman's drop pod is knocked of", "course by the Strogg's planetary defences, and",'lands miles away from the target drop zone...'], NEON_GREEN, (WIDTH * 0.05, HEIGHT * 0.75))
+		self.text = Dialogue(self.game, ['Years have passed since the Strogg attacked, earth, harvesting humans', 'continuing to augment themselves with the biological components of all', 'who stand in their way.'], NEON_GREEN, (WIDTH * 0.075, HEIGHT * 0.2))
+		self.text2 = Dialogue(self.game, ['Humanity launches operation overlord to counter-attack Stroggos.'], NEON_GREEN, (WIDTH * 0.075, HEIGHT * 0.45))
+		self.text3 = Dialogue(self.game, ["Marine Bitterman's drop pod is knocked off course by the Strogg's", "planetary defences and lands miles away from the target drop zone..."], NEON_GREEN, (WIDTH * 0.075, HEIGHT * 0.7))
 
 		# menu transitioning
 		self.transitioning = False
@@ -341,6 +341,8 @@ class SlotMenu(MainMenu):
 
 		for box in self.boxes:
 			box.draw(screen)
+
+		self.game.render_text('Select Slot', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.15))
 
 		for name, values in self.buttons.items():
 			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])

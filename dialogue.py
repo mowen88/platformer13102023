@@ -24,7 +24,7 @@ class Dialogue(State):
         if not self.char_indices[-1] >= len(self.lines[-1]):
             if self.timer > 0.5:
                 self.timer = 0
-                self.game.item_fx['key_press'].play()
+                
 
                 for line in range(len(self.lines)):
                     self.char_indices[line] += 1 
@@ -42,13 +42,16 @@ class Dialogue(State):
         for index, line in enumerate(self.lines):
             rendered_line = self.lines[index][:self.char_indices[index]]
             y_position = start_y + self.line_spacing * index
-            text_surf = self.game.ui_font.render(str(rendered_line), False, self.text_colour)
+            text_surf = self.game.font.render(str(rendered_line), False, self.text_colour)
             text_rect = text_surf.get_rect(topleft = (self.pos[0], y_position))
             screen.blit(text_surf, text_rect)
             text_surf.set_alpha(self.alpha)
            # self.game.render_text(rendered_line, self.text_colour, self.game.ui_font, (self.center[0], y_position))
 
     def update(self, dt):
+        if not self.done:
+            self.game.item_fx['key_press'].play()
+
         self.timer += dt
         self.text_update(dt)
 
