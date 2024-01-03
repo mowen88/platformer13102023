@@ -517,10 +517,11 @@ class Scene(State):
 			self.render_fog(self.player, (NEON_GREEN), screen)
 			self.game.render_text(str(round(self.envirosuit_timer.countdown)), WHITE, self.game.ui_font, (WIDTH - TILESIZE * 2, HEIGHT - TILESIZE * 2))
 		
-	def pause_or_inventory(self, action, menu_type):
-		if action:
-			menu_type.enter_state()
-			self.game.reset_keys()
+	def pause_or_inventory(self, actions, menu_type):
+		for i in actions:
+			if i:
+				menu_type.enter_state()
+				self.game.reset_keys()
 
 	def screenshake(self, dt):
 		if self.screenshaking:
@@ -533,11 +534,10 @@ class Scene(State):
 
 	def update(self, dt):
 
-
 		self.screenshake(dt)
 
-		self.pause_or_inventory(ACTIONS['space'], PauseMenu(self.game))
-		self.pause_or_inventory(ACTIONS['enter'], Inventory(self.game, self))
+		self.pause_or_inventory([ACTIONS['space']], PauseMenu(self.game))
+		self.pause_or_inventory([ACTIONS['e'],ACTIONS['tab']], Inventory(self.game, self))
 		self.hud.update(dt)
 		self.update_sprites.update(dt)
 

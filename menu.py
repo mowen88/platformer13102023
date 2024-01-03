@@ -85,7 +85,7 @@ class Intro(State):
 		if self.timer < 300:
 			self.text3.update(dt)
 
-		if self.timer <= 0 or ACTIONS['enter'] and self.timer < 800:
+		if self.timer <= 0 or ACTIONS['space'] and self.timer < 800:
 			self.next_menu = 'main_menu'
 			self.transitioning = True
 			self.game.reset_keys()
@@ -96,9 +96,8 @@ class Intro(State):
 		self.text2.draw(screen)
 		self.text3.draw(screen)
 		if self.timer < 800:
-			self.game.render_text('Press enter to skip', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.95))
+			self.game.render_text('Press space to skip', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.95))
 		self.transition_screen.draw(screen)
-
 
 class MenuTransition(pygame.sprite.Sprite):
 	def __init__(self, menu):
@@ -167,8 +166,9 @@ class MainMenu(State):
 		self.padding = 24
 
 		self.buttons = {
-						'Start': [(HALF_WIDTH, HEIGHT * 0.25), 'slot_menu'],
-						'Quit': [(HALF_WIDTH, HEIGHT * 0.25 + self.padding), 'quit_game'],
+						'Start': [(HALF_WIDTH, HEIGHT * 0.2), 'slot_menu'],
+						'Controls': [(HALF_WIDTH, HEIGHT * 0.2 + self.padding), 'controls_menu'],
+						'Quit': [(HALF_WIDTH, HEIGHT * 0.2 + self.padding * 2), 'quit_game'],
 						}
 
 		# menu transitioning
@@ -193,7 +193,7 @@ class MainMenu(State):
 		colour = text_colour
 
 		surf = self.game.font.render(current_menu, False, colour)
-		rect = pygame.Rect(0,0, HALF_WIDTH + 16, surf.get_height() * 2)
+		rect = pygame.Rect(0,0, surf.get_width() + 16, surf.get_height() * 2)
 		rect.center = pos
 
 		if rect.collidepoint(mx, my) and not self.transitioning:
@@ -214,6 +214,8 @@ class MainMenu(State):
 
 		elif state == 'main_menu':
 			MainMenu(self.game).enter_state()
+		elif state == 'controls_menu':
+			ControlsMenu(self.game).enter_state()
 		elif state == 'slot_menu':
 			SlotMenu(self.game).enter_state()
 		elif state == 'options_menu':
@@ -251,6 +253,50 @@ class MainMenu(State):
 
 		self.transition_screen.draw(screen)
 
+class ControlsMenu(MainMenu):
+	def __init__(self, game):
+		super().__init__(game)
+
+		self.controls_image = pygame.image.load('assets/controls.png').convert_alpha()
+		self.controls_rect = self.controls_image.get_rect(center = RES/2)
+
+		self.buttons = {'Back': [(HALF_WIDTH, HEIGHT * 0.9), 'main_menu']}
+
+	def update(self, dt):
+	
+		for box in self.boxes:
+			box.update(dt)
+
+		self.transition_screen.update(dt)
+		if self.next_menu is not None:
+			self.transitioning = True
+
+	def draw(self, screen):
+		screen.fill(BLACK)
+
+		for box in self.boxes:
+			box.draw(screen)
+
+		screen.blit(self.controls_image, self.controls_rect)
+		self.game.render_text('Controls', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.1))
+
+		self.game.render_text('shoot', WHITE, self.game.font, (60,48), True)
+		self.game.render_text('mouse to aim', WHITE, self.game.font, (60,60), True)
+		self.game.render_text('jump', WHITE, self.game.font, (70,150), True)
+		self.game.render_text('change weapon', WHITE, self.game.font, (70,164), True)
+		self.game.render_text('pause', WHITE, self.game.font, (128,150), True)
+		self.game.render_text('inventory', WHITE, self.game.font, (164,150), True)
+		self.game.render_text('enter door /', WHITE, self.game.font, (284,45), True)
+		self.game.render_text('climb ladder', WHITE, self.game.font, (284,55), True)
+		self.game.render_text('move right', WHITE, self.game.font, (284,130), True)
+		self.game.render_text('crouch / descend ladder', WHITE, self.game.font, (284,150), True)
+		self.game.render_text('move left', WHITE, self.game.font, (284,170), True)
+
+		for name, values in self.buttons.items():
+			self.render_button(screen, name, values[1], NEON_GREEN, BLACK, NEON_GREEN, values[0])
+
+		self.transition_screen.draw(screen)	
+
 class SlotMenu(MainMenu):
 	def __init__(self, game):
 		super().__init__(game)
@@ -268,7 +314,7 @@ class SlotMenu(MainMenu):
 			buttons.update({f'save {slot}' + ' -- ' + str(self.game.read_slot_progress(slot, 'level')) +' -- '+ str(self.game.read_slot_progress(slot, 'time_elapsed'))\
 			+' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * (slot-1)), str(slot)]})
 		
-		buttons.update({'Back': [(HALF_WIDTH, start_y + self.padding * self.num_of_slots), 'main_menu']})
+		buttons.update({'Back': [(HALF_WIDTH, start_y + 8 + self.padding * self.num_of_slots), 'main_menu']})
 		return buttons
 
 	def activate_slot(self):

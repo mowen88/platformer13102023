@@ -94,9 +94,8 @@ class ControlsScreen(PauseMenu):
 
 		self.fade_surf.set_alpha(180)
 		screen.blit(self.fade_surf, (0,0))
-
+		
 		screen.blit(self.controls_image, self.controls_rect)
-
 		self.game.render_text('Controls', WHITE, self.game.font, (HALF_WIDTH, HEIGHT * 0.1))
 
 		self.game.render_text('shoot', WHITE, self.game.font, (60,48), True)

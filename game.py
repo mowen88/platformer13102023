@@ -36,7 +36,7 @@ class Game:
         self.last_time = SAVE_DATA['time_elapsed']
         self.timer = GameTimer(self)
         self.slot = None
-        self.slot_data = self.get_slot_dict(6)
+        self.slot_data = self.get_slot_dict(4)
 
         self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
         self.world_fx = self.import_sfx('audio/sfx/world') 
@@ -112,6 +112,7 @@ class Game:
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 self.write_game_time()
+                self.running = False
                 pygame.quit()
                 sys.exit()
                 
@@ -121,6 +122,10 @@ class Game:
                     self.write_game_time()
                     self.running = False
 
+                elif event.key == pygame.K_e:
+                    ACTIONS['e'] = True
+                elif event.key == pygame.K_TAB:
+                    ACTIONS['tab'] = True
                 elif event.key == pygame.K_SPACE:
                     ACTIONS['space'] = True
                 elif event.key == pygame.K_LEFT:
@@ -131,11 +136,13 @@ class Game:
                     ACTIONS['up'] = True
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = True
-                elif event.key == pygame.K_RETURN:
-                    ACTIONS['enter'] = True
                
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_e:
+                    ACTIONS['e'] = False
+                elif event.key == pygame.K_TAB:
+                    ACTIONS['tab'] = False
+                elif event.key == pygame.K_SPACE:
                     ACTIONS['space'] = False 
                 elif event.key == pygame.K_LEFT:
                     ACTIONS['left'] = False
@@ -145,8 +152,6 @@ class Game:
                     ACTIONS['up'] = False
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = False
-                elif event.key == pygame.K_RETURN:
-                    ACTIONS['enter'] = False
 
             if event.type == pygame.MOUSEWHEEL:
                 if event.y == 1:

@@ -58,7 +58,7 @@ class Inventory(State):
 
 
 	def update(self, dt):
-		if ACTIONS['enter'] or self.activated_item == 'exit':
+		if ACTIONS['e'] or ACTIONS['tab'] or self.activated_item == 'exit':
 			self.activated_item = None 
 			self.exit_state()
 			self.game.reset_keys()

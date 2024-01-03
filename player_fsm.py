@@ -393,6 +393,7 @@ class Landing:
 
 		player.jump_counter = 1
 		player.frame_index = 0
+		player.game.world_fx['land_tile'].play()
 		player.scene.create_particle('landing', player.hitbox.midbottom)
 
 	def state_logic(self, player):

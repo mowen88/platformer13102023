@@ -8,8 +8,8 @@ VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 2, HEIGHT * 2
 
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
-ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False, 'enter':False,
-			'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
+ACTIONS = {'escape':False, 'space':False, 'z':False, 'up':False, 'down':False, 'left':False, 'right':False, 'e':False,
+			'tab':False, 'left_click':False, 'right_click':False, 'scroll_up':False, 'scroll_down':False}
 
 LAYERS = {'background':0,
 		  'objects':1,
@@ -111,10 +111,10 @@ CONSTANT_DATA = {
 			},
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 25, 'speed': 4, 'damage': 3, 'length':20, 'auto':False},
-			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 5, 'length':25, 'auto':False},
+			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 6, 'length':25, 'auto':False},
 			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},
-			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 7, 'length':25, 'auto':False},
+			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 8, 'length':25, 'auto':False},
 			'chain gun': {'ammo_given': 200, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':22, 'auto':True},
 			'grenade launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades', 'cooldown': 50, 'speed': 0, 'damage': 0, 'length':15, 'auto':False},
 			'rocket launcher': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'rockets', 'cooldown': 50, 'speed': 2, 'damage': 400, 'length':20, 'auto':False},
