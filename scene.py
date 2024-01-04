@@ -588,7 +588,7 @@ class Scene(State):
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('on ground: '+ str(self.player.state)),
 					str('breathe timer: '+ str(self.breathe_timer.timer)),
-					str('underwater: '+ str(self.player.underwater)),
+					str('hazardous: '+ str(self.player.in_hazardous_liquid)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

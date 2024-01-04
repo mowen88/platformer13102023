@@ -320,16 +320,15 @@ class Player(pygame.sprite.Sprite):
 	        	if 'top' in sprite.name:
 	        		self.game.world_fx['splash'].play()
 	        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+	        		self.in_hazardous_liquid = False
 
 	    	if 'water' in sprite.name:
 		        if self.hitbox.colliderect(sprite.hitbox) and 'top' not in sprite.name:
-
 		            if not self.underwater:
 		                self.underwater = True
-		                #if sprite.hitbox.top <= self.hitbox.top:
 		                self.scene.breathe_timer.start()
-
-		        else: 
+		       
+		        elif self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom: 
 	        		self.underwater = False
 
 	    	elif 'slime' in sprite.name or 'lava' in sprite.name:
@@ -337,16 +336,6 @@ class Player(pygame.sprite.Sprite):
 		            if not self.in_hazardous_liquid:
 		                self.in_hazardous_liquid = True
 		                self.hazardous_liquid_type = sprite.name
-		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
-		                	if 'top' in sprite.name:
-		                		self.game.world_fx['splash'].play()
-		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-
-		        elif self.in_hazardous_liquid and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
-		        	if 'top' in sprite.name:
-		        		self.game.world_fx['splash'].play()
-		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-	        		self.in_hazardous_liquid = False
 
 	        	if self.in_hazardous_liquid:
 	        		damage = CONSTANT_DATA['liquid_damage'][self.hazardous_liquid_type.split("_")[0]]
