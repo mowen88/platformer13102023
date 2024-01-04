@@ -236,7 +236,8 @@ class Scene(State):
 		if 'triggers' in layers:
 			for obj in self.tmx_data.get_layer_by_name('triggers'):
 				for num in range(100):
-					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/triggers/{num}', 'loop', num)
+					if obj.name == f'trigger_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/triggers/trigger_{num}', 'loop', f'trigger_{num}')
+					if obj.name == f'button_{num}': Trigger(self.game, self, [self.trigger_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/triggers/button_{num}', 'loop', f'button_{num}')
 					if obj.name == f'barrier_{num}': Barrier(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/barriers/{num}', 'loop', num)
 					if obj.name == f'laser_{num}': Laser(self.game, self, [self.barrier_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), LAYERS['objects'], f'assets/lasers/{num}', 'loop', num)
 
@@ -438,6 +439,14 @@ class Scene(State):
 						if sprite.hitbox.collidepoint(point):
 							sprite.exploded = True
 							return True
+
+					for sprite in self.trigger_sprites:
+						if sprite.hitbox.collidepoint(point) and 'button' in sprite.name:
+							sprite.activated = True
+							for barrier in self.barrier_sprites:
+								if barrier.name == int(sprite.name.split("_")[1]):
+									barrier.activated = True
+
 
 					for sprite in self.secret_sprites:
 						if sprite.hitbox.collidepoint(point):

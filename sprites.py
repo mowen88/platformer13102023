@@ -356,18 +356,23 @@ class Trigger(Door):
 		self.activated = False
 
 	def activate(self, dt):
-		if self.rect.colliderect(self.scene.player.rect) and ACTIONS['up']:
-			self.activated = True
+
+		print(int(self.name.split("_")[1]))
+
+		if self.rect.colliderect(self.scene.player.rect): 
+			if ACTIONS['up'] and 'trigger' in self.name:
+				self.activated = True
 		
 		if self.activated:
 			self.frame_index += 0.2 * dt
 			if self.frame_index >= len(self.frames) -1:
 				self.frame_index = len(self.frames) -1
+
 		self.image = self.frames[int(self.frame_index)]
 
 		if self.frame_index == len(self.frames) -1:
 			for barrier in self.scene.barrier_sprites:
-				if barrier.name == self.name:
+				if barrier.name == int(self.name.split("_")[1]):
 					barrier.activated = True
 
 	def update(self, dt):
