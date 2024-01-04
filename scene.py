@@ -347,14 +347,15 @@ class Scene(State):
 			self.hitscan(sprite)
 
 	def create_particle(self, particle_type, pos):
-		if particle_type == 'blood':
+		if particle_type == 'landing':
+			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/landing')
+
+		elif particle_type == 'blood':
 			AnimatedTile(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/blood')
 
 		elif particle_type == 'blaster':
 			FadeParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], None, YELLOW)
 
-		elif particle_type == 'landing':
-			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/landing')
 
 		elif particle_type == 'jump':
 			DustParticle(self.game, self, [self.update_sprites, self.drawn_sprites], pos, LAYERS['particles'], f'assets/particles/jump')
@@ -586,7 +587,8 @@ class Scene(State):
 					str('gun: '+ str(self.player.gun)),
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('on ground: '+ str(self.player.state)),
-					str('platform: '+ str(self.player.platform)),
+					str('breathe timer: '+ str(self.breathe_timer.timer)),
+					str('underwater: '+ str(self.player.underwater)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

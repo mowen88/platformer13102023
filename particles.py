@@ -59,19 +59,18 @@ class DustParticle(pygame.sprite.Sprite):
 		self.alpha = 255
 
 	def animate(self, animation_speed, loop=True):
-		if self.alive:
-			self.frame_index += animation_speed
 
-			if self.frame_index >= len(self.frames)-1:
-				if loop:
-					self.frame_index = 0	
-				else:	
-					# self.frame_index = len(self.frames)-1
-					self.kill()
+		self.frame_index += animation_speed
 
-			self.image = self.frames[int(self.frame_index)]
-		else:
-			self.image = self.frames[0]
+		if self.frame_index >= len(self.frames)-1:
+			if loop:
+				self.frame_index = 0	
+			else:	
+				# self.frame_index = len(self.frames)-1
+				self.kill()
+
+		self.image = self.frames[int(self.frame_index)]
+
 
 	def update_alpha(self, rate):
 		self.alpha -= rate

@@ -19,9 +19,10 @@ class PygameLogo(State):
 		# menu transitioning
 		self.transitioning = False
 		self.transition_screen = MenuTransition(self)
+		self.intro = Intro(self.game)
 
 	def go_to(self, state):
-		Intro(self.game).enter_state()
+		self.intro.enter_state()
 
 	def update(self, dt):
 		# if ACTIONS['space']:

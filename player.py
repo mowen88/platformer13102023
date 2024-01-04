@@ -309,22 +309,27 @@ class Player(pygame.sprite.Sprite):
 
 		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
+
+	    	if self.hitbox.colliderect(sprite.hitbox):
+	    		if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+	    			if 'top' in sprite.name:
+	    				self.game.world_fx['splash'].play()
+	    				self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+
+	    	elif self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
+	        	if 'top' in sprite.name:
+	        		self.game.world_fx['splash'].play()
+	        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+
 	    	if 'water' in sprite.name:
-		        if self.hitbox.colliderect(sprite.hitbox):
+		        if self.hitbox.colliderect(sprite.hitbox) and 'top' not in sprite.name:
 
 		            if not self.underwater:
 		                self.underwater = True
-
+		                #if sprite.hitbox.top <= self.hitbox.top:
 		                self.scene.breathe_timer.start()
-		                if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
-		                	if 'top' in sprite.name:
-		                		self.game.world_fx['splash'].play()
-		                		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 
-		        elif self.underwater and self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
-		        	if 'top' in sprite.name:
-		        		self.game.world_fx['splash'].play()
-		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+		        else: 
 	        		self.underwater = False
 
 	    	elif 'slime' in sprite.name or 'lava' in sprite.name:
@@ -364,6 +369,7 @@ class Player(pygame.sprite.Sprite):
 	        	else:
 	        		self.hazardous_liquid_timer = 0
 	        		self.hazardous_liquid_type = None
+
 
 	    if self.underwater and not self.scene.rebreather_timer.running and not self.scene.envirosuit_timer.running:
 	    	if self.scene.breathe_timer.timer == self.scene.breathe_timer.duration:

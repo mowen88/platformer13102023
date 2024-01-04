@@ -16,7 +16,7 @@ class Game:
         pygame.mixer.music.play(-1, 0.2, 5000)
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True

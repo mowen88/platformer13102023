@@ -395,6 +395,7 @@ class Landing:
 		player.frame_index = 0
 		player.game.world_fx['land_tile'].play()
 		player.scene.create_particle('landing', player.hitbox.midbottom)
+		self.last_frame = len(player.animations[SAVE_DATA['armour_type']]['land'])-1
 
 	def state_logic(self, player):
 
@@ -408,7 +409,7 @@ class Landing:
 			ACTIONS['right_click'] = False
 			return Jump(player)
 
-		if player.frame_index > len(player.animations[SAVE_DATA['armour_type']]['land'])-1:
+		if player.frame_index > self.last_frame:
 			return Idle(player)
 
 	def update(self, player, dt):

@@ -33,9 +33,13 @@ class FadeSurf(pygame.sprite.Sprite):
 			if self.alpha >= 255: 
 				self.alpha = 255
 				self.scene.exit_state()
+
 				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
 					#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
-					DemoEnd(self.game).enter_state()
+					if SCENE_DATA[self.scene.current_scene]['unit'] == 'tutorial':
+						DemoEnd(self.game).enter_state()
+					else:
+						DemoEnd(self.game).enter_state()
 				else:
 					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
 		
