@@ -87,7 +87,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,59,2,41,2,2,41,2,2,41,2,20,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="13" name="secret" width="64" height="36" visible="0">
+ <layer id="13" name="secret" width="64" height="36">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -269,7 +269,7 @@
   <object id="41" name="0" x="880" y="400">
    <point/>
   </object>
-  <object id="43" name="1" x="64" y="480">
+  <object id="43" name="1" x="624" y="336">
    <point/>
   </object>
   <object id="237" name="7" x="96" y="96">
@@ -277,7 +277,7 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="exits">
-  <object id="108" name="1" gid="337" x="48" y="512" width="48" height="40"/>
+  <object id="108" name="1" gid="337" x="608" y="368" width="48" height="40"/>
   <object id="236" name="6" gid="342" x="80" y="128" width="48" height="40"/>
  </objectgroup>
  <objectgroup id="14" name="liquid">

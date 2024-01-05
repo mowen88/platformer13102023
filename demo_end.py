@@ -11,7 +11,7 @@ class DemoEnd(State):
 
 	def update(self, dt):
 
-		if ACTIONS['enter']:
+		if ACTIONS['space']:
 			# timer reset and stop 
 			self.game.timer.stop_start()
 			self.game.timer.reset()
