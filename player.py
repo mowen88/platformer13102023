@@ -24,8 +24,8 @@ class Player(pygame.sprite.Sprite):
 		self.image = self.animations[SAVE_DATA['armour_type']]['fall'][self.frame_index].convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
 		self.pos = pygame.math.Vector2(self.rect.center)
-		self.old_pos = self.pos.copy()
 		self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.5,- self.rect.height * 0.5)
+		self.old_pos = self.pos.copy()
 		self.old_hitbox = self.hitbox.copy()
 
 		self.gravity = 0.15

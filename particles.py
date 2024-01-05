@@ -79,7 +79,7 @@ class DustParticle(pygame.sprite.Sprite):
 		self.image.set_alpha(self.alpha)
 
 	def update(self, dt):
-		self.animate(0.2 * dt, False)
+		self.animate(0.2 * dt)
 		self.update_alpha(12 * dt)
 		
 

@@ -16,7 +16,7 @@ class Game:
         pygame.mixer.music.play(-1, 0.2, 5000)
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -136,6 +136,8 @@ class Game:
                     ACTIONS['up'] = True
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = True
+                elif event.key == pygame.K_r:
+                    ACTIONS['r'] = True
                
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_e:
@@ -152,6 +154,8 @@ class Game:
                     ACTIONS['up'] = False
                 elif event.key == pygame.K_DOWN:
                     ACTIONS['down'] = False
+                elif event.key == pygame.K_r:
+                    ACTIONS['r'] = False
 
             if event.type == pygame.MOUSEWHEEL:
                 if event.y == 1:

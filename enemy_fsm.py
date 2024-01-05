@@ -13,6 +13,7 @@ class Hold:
 	def update(self, enemy, dt):
 		enemy.acc.x = 0
 		
+		#enemy.acc = pygame.math.Vector2()
 		enemy.vel = pygame.math.Vector2()
 
 		enemy.animate('idle', 0.25 * dt, False)

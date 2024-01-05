@@ -83,6 +83,9 @@ class Scene(State):
 		self.thread.start()
 		self.thread.join()
 
+		self.player.hitbox.topleft = self.start_pos
+
+
 	def get_save_point(self):
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
 			COMMIT_SAVE_DATA.update(SAVE_DATA)
@@ -110,6 +113,12 @@ class Scene(State):
 		self.game.read_data()
 		self.game.stack.pop()
 		Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
+	
+	def respawn_if_bug(self):
+		if ACTIONS['r']:
+			self.game.stack.pop()
+			Scene(self.game, SCENE_DATA[self.current_scene]['level'], self.current_scene, self.entry_point).enter_state()
+			ACTIONS['r'] = False
 		
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
@@ -247,7 +256,8 @@ class Scene(State):
 			for obj in self.tmx_data.get_layer_by_name('entries'):
 				if obj.name == self.entry_point:
 					self.player = Player(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'player', LAYERS['player'])
-					self.player.hitbox.topleft = (obj.x, obj.y)	
+					#self.player.hitbox.topleft = (obj.x, obj.y)
+					self.start_pos = (obj.x, obj.y)
 
 		key_dict = {'3':'blue key'}
 		if 'exits' in layers:
@@ -542,7 +552,9 @@ class Scene(State):
 				self.screenshaking = False
 				self.screenshake_timer = 0
 
+
 	def update(self, dt):
+		self.respawn_if_bug()
 
 		self.screenshake(dt)
 
@@ -588,7 +600,7 @@ class Scene(State):
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('on ground: '+ str(self.player.state)),
 					str('breathe timer: '+ str(self.breathe_timer.timer)),
-					str('hazardous: '+ str(self.player.in_hazardous_liquid)),
+					str('in_hazardous_liquid: '+ str(self.player.in_hazardous_liquid)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

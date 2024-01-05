@@ -28,7 +28,7 @@ class Intermission(State):
 		self.prev_unit = SCENE_DATA[self.scene.current_scene]['unit']
 		
 		#self.units = {'base':(20, 200), 'bunker':(80, 150), 'jail':(120, 150), 'unit 3':(220, 120), 'unit 4':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
-		self.units = {'unit 1':(20, 200), 'unit 2':(80, 150), 'jail':(120, 150), 'base':(220, 120), 'bunker':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
+		self.units = {'unit 1':(20, 200), 'unit 2':(80, 150), 'tutorial':(20, 200), 'jail':(120, 150), 'base':(220, 120), 'bunker':(300, 100), 'unit 6':(350, 80), 'unit 7':(380, 40)}
 
 		self.line_blinker_timer = Timer(20, 5, 10)
 		self.line_blinker_timer.start()

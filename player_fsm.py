@@ -11,8 +11,9 @@ class Hold:
 			return Idle(player)
 
 	def update(self, player, dt):
-		player.acc.x = 0
+		#player.acc.x = 0
 		
+		player.acc = pygame.math.Vector2()
 		player.vel = pygame.math.Vector2()
 
 		player.animate('idle', 0.25 * dt, False)
