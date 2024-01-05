@@ -5,6 +5,7 @@ class Inventory(State):
 	def __init__(self, game, scene):
 		State.__init__(self, game)
 
+		self.game = game
 		self.scene = scene
 		self.activated_item = None
 		self.padding = 24
@@ -66,22 +67,27 @@ class Inventory(State):
 		elif self.activated_item in SAVE_DATA['items']:
 
 			if self.activated_item == 'quad damage' and not self.scene.player.quad_damage:
+				self.game.item_fx['quad_start'].play()
 				self.scene.quad_timer.start()
 				SAVE_DATA['items'].remove(self.activated_item)
 
 			if self.activated_item == 'invulnerability' and not self.scene.player.invulnerable:
+				self.game.item_fx['invulnerability_start'].play()
 				self.scene.invulnerability_timer.start()
 				SAVE_DATA['items'].remove(self.activated_item)
 
 			if self.activated_item == 'rebreather' and not self.scene.player.rebreather:
+				self.game.item_fx['collect'].play()
 				self.scene.rebreather_timer.start()
 				SAVE_DATA['items'].remove(self.activated_item)
 
 			if self.activated_item == 'envirosuit' and not self.scene.player.envirosuit:
+				self.game.item_fx['collect'].play()
 				self.scene.envirosuit_timer.start()
 				SAVE_DATA['items'].remove(self.activated_item)
 
 			if self.activated_item == 'adrenaline':
+				self.game.item_fx['collect'].play()
 				current_max = SAVE_DATA['max_health']
 				SAVE_DATA.update({'max_health':current_max + 1})
 				SAVE_DATA.update({'health':SAVE_DATA['max_health']})

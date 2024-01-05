@@ -1,0 +1,39 @@
+01. Outer Base - track07
+02. Installation - track05
+03. Comm Center - track00
+04. Lost Station (Secret Level) - track08
+05. Ammo Depot - track04
+06. Supply Station - track03
+07. Warehouse - track07
+08. Main Gate - track 04
+09. Detention Center - track02
+10. Security Complex - track04
+11. Torture Chambers - track01
+12. Guard House - track06
+13. Grid Control - track08
+14. Mine Entrance - track01
+15. Upper Mines - track00
+16. Borehole - track07
+17. Drilling Area - track03
+18. Lower Mines - track02
+19. Recieving Center - track 04
+20. Sudden Death (Secret Level) - track08
+21. Processing Plant - track06
+22. Power Plant - track02
+23. The Reactor - track07
+24. Cooling Facility - track03
+25. Toxic Waste Dump - track 04
+26. Pumping Station 1 - track05
+27. Pumping Station 2 - track01
+28. Big Gun - track08
+29. Outer Hangar - track00
+30. Comm Satellite (Secret Level) - track09
+31. Research Lab - track 04
+32. Inner Hangar - track02
+33. Launch Command - track07
+34. Outlands - track 04
+35. Outer Courts - track 04
+36. Lower Palace - track 04
+37. Upper Palace - track02
+38. Inner Chamber - track08
+39. Final Showdown - track09

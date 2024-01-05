@@ -1,4 +1,4 @@
-import pygame, threading, csv, math, random
+import pygame, threading, csv, math, random, time
 from math import atan2, degrees, pi
 from state import State
 from settings import *
@@ -21,6 +21,7 @@ class Scene(State):
 	def __init__(self, game, prev_level, current_scene, entry_point):
 		State.__init__(self, game)
 
+	
 		self.game = game
 		self.prev_level = prev_level
 		self.current_scene = current_scene
@@ -28,6 +29,9 @@ class Scene(State):
 		self.scene_size = self.get_scene_size()
 		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
 		
+		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
+			self.game.play_music(SCENE_DATA[self.current_scene]['track'])
+
 		if self.current_scene not in SAVE_DATA['scenes_completed']:
 			SAVE_DATA['scenes_completed'].append(self.current_scene)
 	
@@ -545,9 +549,16 @@ class Scene(State):
 				self.screenshaking = False
 				self.screenshake_timer = 0
 
+	def next_track(self):
+		if not pygame.mixer.music.get_busy():
+			self.game.track_index += 1
+			if self.game.track_index >= len(list(TRACKS.keys()))-1:
+				self.game.track_index = 0
+			self.game.play_music(self.game.track_index)
 
 	def update(self, dt):
-
+		self.next_track()
+		
 		# respawn if bug !?
 		if ACTIONS['r']:
 			self.respawn()
@@ -597,7 +608,7 @@ class Scene(State):
 					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
 					str('on ground: '+ str(self.player.state)),
 					str('breathe timer: '+ str(self.breathe_timer.timer)),
-					str('in_hazardous_liquid: '+ str(self.player.in_hazardous_liquid)),
+					str('track_index: '+ str(self.game.track_index)),
 					# str('PLAYER HEALTH: '+str(self.player.health)),
 					None])
 

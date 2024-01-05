@@ -1,4 +1,4 @@
-import pygame, sys, os, json, cProfile
+import pygame, sys, os, time, json, cProfile
 from pygame import mixer
 from os import walk
 from menu import PygameLogo
@@ -15,8 +15,9 @@ class Game:
         # pygame.mixer.music.set_volume(0.2)
         # pygame.mixer.music.play(-1, 0.2, 5000)
 
-        self.play_music('descent_into_cerberon')
-        self.stop_music()
+        # self.play_music('operation_overlord')
+
+        self.track_index = 0
 
         self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
         self.world_fx = self.import_sfx('audio/sfx/world') 
@@ -46,12 +47,14 @@ class Game:
         self.slot = None
         self.slot_data = self.get_slot_dict(4)
 
-    def play_music(self, track):
+    def play_music(self, start_index):
+        self.track_index = start_index
+        track = TRACKS[self.track_index]
         pygame.mixer.music.load(f'audio/music/tracks/{track}.mp3')
         pygame.mixer.music.set_volume(0.2)
-        pygame.mixer.music.play(-1, 0.2, 5000)
+        pygame.mixer.music.play(1, 0.2, 5000)
 
-    def stop_music(self, fadeout_time=100):
+    def stop_music(self, fadeout_time=1000):
         pygame.mixer.music.fadeout(fadeout_time)
 
     def import_sfx(self, path, volume=0.2):

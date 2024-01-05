@@ -37,8 +37,10 @@ class FadeSurf(pygame.sprite.Sprite):
 				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
 					#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
 					if SCENE_DATA[self.scene.current_scene]['unit'] == 'tutorial':
+						self.game.stop_music()
 						Intro(self.game, self.scene, self.scene.new_scene).enter_state()
 					else:
+						self.game.stop_music()
 						Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
 						#DemoEnd(self.game, self.scene, self.scene.new_scene).enter_state()
 				else:

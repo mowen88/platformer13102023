@@ -281,10 +281,10 @@
   <object id="236" name="6" gid="342" x="80" y="128" width="48" height="40"/>
  </objectgroup>
  <objectgroup id="14" name="liquid">
-  <object id="263" name="water_top" gid="76" x="704" y="560" width="16" height="16"/>
-  <object id="267" name="water_top" gid="76" x="720" y="560" width="16" height="16"/>
-  <object id="268" name="water_top" gid="76" x="736" y="560" width="16" height="16"/>
-  <object id="269" name="water_top" gid="76" x="752" y="560" width="16" height="16"/>
+  <object id="263" name="lava_top" gid="76" x="704" y="560" width="16" height="16"/>
+  <object id="267" name="lava_top" gid="76" x="720" y="560" width="16" height="16"/>
+  <object id="268" name="lava_top" gid="76" x="736" y="560" width="16" height="16"/>
+  <object id="269" name="lava_top" gid="76" x="752" y="560" width="16" height="16"/>
   <object id="270" name="lava_top" gid="76" x="768" y="560" width="16" height="16"/>
   <object id="271" name="lava_top" gid="76" x="784" y="560" width="16" height="16"/>
   <object id="272" name="lava_top" gid="76" x="800" y="560" width="16" height="16"/>

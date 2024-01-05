@@ -43,6 +43,7 @@ TUTORIALS = {
 		'door':'Press up at a door to enter',
 		}
 
+
 INTRO_TEXT = {
 			  0:['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'],
 			  1: ['Humanity launches operation overlord', 'to counter-attack Stroggos.'],
@@ -53,21 +54,22 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
-			   '0':{'unit':'tutorial', 'level':'tutorial', '1':'1', '3':'1', '6':'2'}, 
-  			   '1':{'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
-  			   '2':{'unit':'jail', 'level':'base', '2':'3','3':'3','7':'0'},
-  			   '3':{'unit':'base', 'level':'outer base', '4':'1','2':'2'},
+			   '0':{'track':7, 'unit':'tutorial', 'level':'tutorial', '1':'1', '3':'1', '6':'2'}, 
+  			   '1':{'track':1, 'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
+  			   '2':{'track':7, 'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
+  			   '3':{'track':7, 'unit':'base', 'level':'outer base', '4':'1','2':'2'},
   			   # Comm Center
-  			   
-
-
-  			   # UNIT 2 - BUNKER
+  			   }
+  			     			   # UNIT 2 - BUNKER
   			   # Ammo Depot
   			   #'3':{'unit':'bunker', 'level':'ammo depot', '1':'4','4':'4','3':'2'},
   			   #'4':{'unit':'bunker', 'level':'ammo depot', '1':'3','2':'3','3':'0'},
   			   # Warehouse
   			   # '5':{'unit':'bunker', 'level':'Warehouse', '2':'1','3':'0'},
-  			}
+  		
+
+TRACKS = {0:'operation_overlord', 1:'rage', 2:'kill_ratio',3:'march_of_the_stroggs', 4:'the_underworld',5:'quad_machine', 6:'big_gun',7:'descent_into_cerberon',8:'climb',9:'showdown'}
+
 
 AMMO_LIMITS = {'normal':{'infinite': 0, 'cells':200, 'shells':100, 'bullets':200, 'grenades':50, 'slugs':50, 'rockets':50},
 				'bandolier':{'infinite': 0, 'cells':250, 'shells':150, 'bullets':250, 'grenades':50, 'slugs':75, 'rockets':50},
