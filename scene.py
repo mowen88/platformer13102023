@@ -85,7 +85,6 @@ class Scene(State):
 
 		self.player.hitbox.topleft = self.start_pos
 
-
 	def get_save_point(self):
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
 			COMMIT_SAVE_DATA.update(SAVE_DATA)
@@ -114,12 +113,6 @@ class Scene(State):
 		self.game.stack.pop()
 		Scene(self.game, SCENE_DATA[SAVE_DATA['current_scene']]['level'], SAVE_DATA['current_scene'], SAVE_DATA['entry_pos']).enter_state()
 	
-	def respawn_if_bug(self):
-		if ACTIONS['r']:
-			self.game.stack.pop()
-			Scene(self.game, SCENE_DATA[self.current_scene]['level'], self.current_scene, self.entry_point).enter_state()
-			ACTIONS['r'] = False
-		
 	def get_scene_size(self):
 		with open(f'scenes/{self.current_scene}/{self.current_scene}_blocks.csv', newline='') as csvfile:
 		    reader = csv.reader(csvfile, delimiter=',')
@@ -554,7 +547,11 @@ class Scene(State):
 
 
 	def update(self, dt):
-		self.respawn_if_bug()
+
+		# respawn if bug !?
+		if ACTIONS['r']:
+			self.respawn()
+			ACTIONS['r'] = False
 
 		self.screenshake(dt)
 
