@@ -11,12 +11,20 @@ class Game:
         mixer.init()
         pygame.init()
 
-        pygame.mixer.music.load('audio/music/soundtrack.mp3')
-        pygame.mixer.music.set_volume(0.2)
-        pygame.mixer.music.play(-1, 0.2, 5000)
+        # pygame.mixer.music.load('audio/music/soundtrack.mp3')
+        # pygame.mixer.music.set_volume(0.2)
+        # pygame.mixer.music.play(-1, 0.2, 5000)
+
+        self.play_music('descent_into_cerberon')
+        self.stop_music()
+
+        self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
+        self.world_fx = self.import_sfx('audio/sfx/world') 
+        self.item_fx = self.import_sfx(f'audio/sfx/items')
+
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((RES))#, pygame.FULLSCREEN|pygame.SCALED)
+        self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
         self.font = pygame.font.Font(FONT, 9) #int(TILESIZE))
         self.ui_font = pygame.font.Font(FONT, 16) #int(TILESIZE)) 
         self.running = True
@@ -38,9 +46,13 @@ class Game:
         self.slot = None
         self.slot_data = self.get_slot_dict(4)
 
-        self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
-        self.world_fx = self.import_sfx('audio/sfx/world') 
-        self.item_fx = self.import_sfx(f'audio/sfx/items')
+    def play_music(self, track):
+        pygame.mixer.music.load(f'audio/music/tracks/{track}.mp3')
+        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.play(-1, 0.2, 5000)
+
+    def stop_music(self, fadeout_time=100):
+        pygame.mixer.music.fadeout(fadeout_time)
 
     def import_sfx(self, path, volume=0.2):
         sfx_dict = {}

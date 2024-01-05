@@ -22,7 +22,7 @@ class PygameLogo(State):
 		self.intro = Intro(self.game)
 
 	def go_to(self, state):
-		self.intro.enter_state()
+		MainMenu(self.game).enter_state()
 
 	def update(self, dt):
 		# if ACTIONS['space']:
@@ -158,7 +158,7 @@ class MainMenu(State):
 	def __init__(self, game):
 		State.__init__(self, game)
 
-		if len(self.game.stack) > 2:
+		if len(self.game.stack) > 1:
 			self.game.stack.pop()
 
 		self.game = game

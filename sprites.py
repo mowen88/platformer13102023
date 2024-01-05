@@ -2,7 +2,7 @@ import pygame, math
 from settings import *
 from message import Message
 from intermission import Intermission
-from demo_end import DemoEnd
+from demo_end import DemoEnd, Intro
 
 class FadeSurf(pygame.sprite.Sprite):
 	def __init__(self, game, scene, groups, pos, alpha = 255, z = LAYERS['foreground']):
@@ -37,9 +37,10 @@ class FadeSurf(pygame.sprite.Sprite):
 				if SCENE_DATA[self.scene.current_scene]['unit'] != SCENE_DATA[self.scene.new_scene]['unit']:
 					#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
 					if SCENE_DATA[self.scene.current_scene]['unit'] == 'tutorial':
-						DemoEnd(self.game, self.scene, self.scene.new_scene).enter_state()
+						Intro(self.game, self.scene, self.scene.new_scene).enter_state()
 					else:
 						Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
+						#DemoEnd(self.game, self.scene, self.scene.new_scene).enter_state()
 				else:
 					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
 		
