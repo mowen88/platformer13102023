@@ -309,18 +309,18 @@ class Player(pygame.sprite.Sprite):
 
 		#in / out water logic
 	    for sprite in self.scene.liquid_sprites:
+	    	if sprite.hitbox.left <= self.hitbox.centerx <= sprite.hitbox.right:
+		    	if self.hitbox.colliderect(sprite.hitbox):
+		    		if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
+		    			if 'top' in sprite.name:
+		    				self.game.world_fx['splash'].play()
+		    				self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
 
-	    	if self.hitbox.colliderect(sprite.hitbox):
-	    		if self.old_hitbox.bottom <= sprite.hitbox.top <= self.hitbox.bottom:
-	    			if 'top' in sprite.name:
-	    				self.game.world_fx['splash'].play()
-	    				self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-
-	    	elif self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
-	        	if 'top' in sprite.name:
-	        		self.game.world_fx['splash'].play()
-	        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
-	        		self.in_hazardous_liquid = False
+		    	elif self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom:
+		        	if 'top' in sprite.name:
+		        		self.game.world_fx['splash'].play()
+		        		self.scene.create_particle('splash', (self.hitbox.centerx, sprite.hitbox.centery - TILESIZE))
+		        		self.in_hazardous_liquid = False
 
 	    	if 'water' in sprite.name:
 		        if self.hitbox.colliderect(sprite.hitbox) and 'top' not in sprite.name:
@@ -363,6 +363,7 @@ class Player(pygame.sprite.Sprite):
 	    if self.underwater and not self.scene.rebreather_timer.running and not self.scene.envirosuit_timer.running:
 	    	if self.scene.breathe_timer.timer == self.scene.breathe_timer.duration:
 	    		self.reduce_health(self.drown_damage)
+	    		self.game.world_fx[random.choice(['drowning_0','drowning_1'])].play()
 	    		self.drown_damage += 2
 	    else:
 	    	self.scene.breathe_timer.stop()
@@ -550,7 +551,6 @@ class Player(pygame.sprite.Sprite):
 				ammo_type = CONSTANT_DATA['guns'][sprite.firer.gun]['ammo_type']
 				self.reduce_health(sprite.damage, ammo_type)
 				self.scene.create_particle('blood', sprite.rect.center)
-				self.game.world_fx[random.choice(['pain_0', 'pain_1'])].play()
 				sprite.kill()
 
 	def reduce_health(self, amount, ammo_type=False):
@@ -561,9 +561,15 @@ class Player(pygame.sprite.Sprite):
 			coefficient = armour_coefficients[SAVE_DATA['armour_type']][0] if ammo_type not in ['blaster', 'cells'] else armour_coefficients[SAVE_DATA['armour_type']][1]
 			armour_reduction = min(amount * coefficient, SAVE_DATA['armour'])
 
+
 			if self.underwater:
 				health_reduction = amount
 			else:
+				if amount < 20:
+					self.game.world_fx[random.choice(['pain_0', 'pain_1'])].play()
+				else:
+					self.game.world_fx[random.choice(['pain_2', 'pain_3'])].play()
+
 				health_reduction = amount - armour_reduction
 				SAVE_DATA['armour'] -= armour_reduction
 				if SAVE_DATA['armour'] < 0:
