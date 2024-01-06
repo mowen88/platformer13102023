@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="291">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="293">
  <editorsettings>
   <export target="0.csv" format="csv"/>
  </editorsettings>
@@ -264,6 +264,12 @@
   <object id="285" name="envirosuit_0" x="880" y="368">
    <point/>
   </object>
+  <object id="291" name="quad damage_0" x="864" y="400">
+   <point/>
+  </object>
+  <object id="292" name="invulnerability_0" x="848" y="400">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="8" name="entries">
   <object id="41" name="0" x="880" y="400">
@@ -281,23 +287,23 @@
   <object id="236" name="6" gid="342" x="80" y="128" width="48" height="40"/>
  </objectgroup>
  <objectgroup id="14" name="liquid">
-  <object id="263" name="lava_top" gid="76" x="704" y="560" width="16" height="16"/>
-  <object id="267" name="lava_top" gid="76" x="720" y="560" width="16" height="16"/>
-  <object id="268" name="lava_top" gid="76" x="736" y="560" width="16" height="16"/>
-  <object id="269" name="lava_top" gid="76" x="752" y="560" width="16" height="16"/>
-  <object id="270" name="lava_top" gid="76" x="768" y="560" width="16" height="16"/>
-  <object id="271" name="lava_top" gid="76" x="784" y="560" width="16" height="16"/>
-  <object id="272" name="lava_top" gid="76" x="800" y="560" width="16" height="16"/>
-  <object id="273" name="lava_top" gid="76" x="816" y="560" width="16" height="16"/>
-  <object id="274" name="lava_top" gid="76" x="832" y="560" width="16" height="16"/>
-  <object id="275" name="lava_top" gid="76" x="928" y="464" width="16" height="16"/>
-  <object id="276" name="lava_top" gid="76" x="944" y="464" width="16" height="16"/>
-  <object id="277" name="lava_top" gid="76" x="960" y="464" width="16" height="16"/>
-  <object id="278" name="lava_top" gid="76" x="976" y="464" width="16" height="16"/>
-  <object id="279" name="lava_top" gid="76" x="992" y="464" width="16" height="16"/>
-  <object id="281" name="lava" gid="80" x="960" y="480" width="16" height="16"/>
-  <object id="283" name="lava" gid="80" x="976" y="480" width="16" height="16"/>
-  <object id="284" name="lava" gid="80" x="992" y="480" width="16" height="16"/>
-  <object id="290" name="lava" gid="80" x="944" y="480" width="16" height="16"/>
+  <object id="263" name="water_top" gid="76" x="704" y="560" width="16" height="16"/>
+  <object id="267" name="water_top" gid="76" x="720" y="560" width="16" height="16"/>
+  <object id="268" name="water_top" gid="76" x="736" y="560" width="16" height="16"/>
+  <object id="269" name="water_top" gid="76" x="752" y="560" width="16" height="16"/>
+  <object id="270" name="water_top" gid="76" x="768" y="560" width="16" height="16"/>
+  <object id="271" name="water_top" gid="76" x="784" y="560" width="16" height="16"/>
+  <object id="272" name="water_top" gid="76" x="800" y="560" width="16" height="16"/>
+  <object id="273" name="water_top" gid="76" x="816" y="560" width="16" height="16"/>
+  <object id="274" name="water_top" gid="76" x="832" y="560" width="16" height="16"/>
+  <object id="275" name="water_top" gid="76" x="928" y="464" width="16" height="16"/>
+  <object id="276" name="water_top" gid="76" x="944" y="464" width="16" height="16"/>
+  <object id="277" name="water_top" gid="76" x="960" y="464" width="16" height="16"/>
+  <object id="278" name="water_top" gid="76" x="976" y="464" width="16" height="16"/>
+  <object id="279" name="water_top" gid="76" x="992" y="464" width="16" height="16"/>
+  <object id="281" name="water" gid="80" x="960" y="480" width="16" height="16"/>
+  <object id="283" name="water" gid="80" x="976" y="480" width="16" height="16"/>
+  <object id="284" name="water" gid="80" x="992" y="480" width="16" height="16"/>
+  <object id="290" name="water" gid="80" x="944" y="480" width="16" height="16"/>
  </objectgroup>
 </map>

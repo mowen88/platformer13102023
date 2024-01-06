@@ -323,12 +323,13 @@ class Player(pygame.sprite.Sprite):
 		        		self.in_hazardous_liquid = False
 
 	    	if 'water' in sprite.name:
-		        if self.hitbox.colliderect(sprite.hitbox) and 'top' not in sprite.name:
+		        if self.hitbox.colliderect(sprite.hitbox) and 'top' not in sprite.name or self.hitbox.colliderect(sprite.hitbox) and self.hitbox.top == sprite.hitbox.top:
 		            if not self.underwater:
 		                self.underwater = True
 		                self.scene.breathe_timer.start()
+
 		       
-		        elif self.old_hitbox.bottom >= sprite.hitbox.top >= self.hitbox.bottom: 
+		        elif self.hitbox.colliderect(sprite.hitbox) and 'top' in sprite.name and self.hitbox.top < sprite.hitbox.top: 
 	        		self.underwater = False
 
 	    	elif 'slime' in sprite.name or 'lava' in sprite.name:
