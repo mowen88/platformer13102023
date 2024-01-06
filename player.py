@@ -1,6 +1,7 @@
 import pygame, math, random
 from settings import *
 from message import Message
+from dialogue import Dialogue
 from player_fsm import Hold
 
 
@@ -300,9 +301,10 @@ class Player(pygame.sprite.Sprite):
 
 	def collide_tutorials(self):
 		for rect in self.scene.tutorial_sprites:
-			if self.hitbox.colliderect(rect.rect) and rect not in SAVE_DATA['killed_sprites']:
-				self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], rect.text, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5), 200, NEON_GREEN)
-				SAVE_DATA['killed_sprites'].append(rect.text)
+			if self.hitbox.colliderect(rect.rect):# and rect not in SAVE_DATA['killed_sprites']:
+				Dialogue(self.game, rect.text, WHITE, RES/2, True).enter_state()
+				#self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], rect.text, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5), 200, NEON_GREEN)
+				#SAVE_DATA['killed_sprites'].append(rect.text)
 				rect.kill()
 
 	def hit_liquid(self, dt):

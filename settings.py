@@ -35,14 +35,13 @@ DARK_BROWN = (23, 15, 11)
 LIGHT_GREY = (146,143,184)
 
 TUTORIALS = {
-		'fire':'Left click to fire, right click to jump',
-		'jump':'Right click to jump',
-		'double_jump':'Right click in air to double jump',
-		'crouch':'Hold down to crouch and right click to drop through platform',
-		'inventory':'Press enter to use use inventory and click item to use',
-		'door':'Press up at a door to enter',
+		'fire':['Left click to fire, right click to jump', 'left click to continue'],
+		'jump':['Right click to jump'],
+		'double_jump':['Right click in air to double jump'],
+		'crouch':['Hold down to crouch and right click to drop through platform'],
+		'inventory':['Press enter to use use inventory and click item to use'],
+		'door':['Press up at a door to enter'],
 		}
-
 
 INTRO_TEXT = {
 			  0:['Years have passed since the Strogg attacked', 'earth, harvesting humans, continuing to augment', 'themselves with the biological components', 'of all who stand in their way.'],

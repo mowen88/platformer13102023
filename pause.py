@@ -32,6 +32,7 @@ class PauseMenu(State):
 			pygame.draw.line(screen, NEON_GREEN, rect.midright, (WIDTH, rect.centery))
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
 			if ACTIONS['left_click']:
+				self.game.item_fx['menu'].play()
 				self.next_menu = next_menu
 		else:
 			self.game.render_text(current_menu, text_colour, self.game.font, pos)
