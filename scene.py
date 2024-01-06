@@ -602,15 +602,15 @@ class Scene(State):
 		self.hud.draw(screen)
 		self.fade_surf.draw(screen)
 
-		self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-					str('entry_point: '+ str(self.entry_point)), 
-					str('gun: '+ str(self.player.gun)),
-					str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-					str('on ground: '+ str(self.player.state)),
-					str('breathe timer: '+ str(self.breathe_timer.timer)),
-					str('track_index: '+ str(self.game.track_index)),
-					# str('PLAYER HEALTH: '+str(self.player.health)),
-					None])
+		# self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
+		# 			str('entry_point: '+ str(self.entry_point)), 
+		# 			str('gun: '+ str(self.player.gun)),
+		# 			str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
+		# 			str('on ground: '+ str(self.player.state)),
+		# 			str('breathe timer: '+ str(self.breathe_timer.timer)),
+		# 			str('track_index: '+ str(self.game.track_index)),
+		# 			# str('PLAYER HEALTH: '+str(self.player.health)),
+		# 			None])
 
 
 

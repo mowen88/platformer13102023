@@ -56,8 +56,6 @@ class Dialogue(State):
             else:
                 text_rect = text_surf.get_rect(topleft = (self.pos[0], y_position))
                 screen.blit(text_surf, text_rect)
-                  
-            
 
            # self.game.render_text(rendered_line, self.text_colour, self.game.ui_font, (self.center[0], y_position))
 
