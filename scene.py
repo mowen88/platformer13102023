@@ -89,6 +89,7 @@ class Scene(State):
 		self.thread.join()
 
 		self.player.hitbox.topleft = self.start_pos
+		self.drawn_sprites.offset = pygame.math.Vector2(self.player.rect.centerx - HALF_WIDTH, self.player.rect.centery - HALF_HEIGHT)
 
 	def get_save_point(self):
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:

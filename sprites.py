@@ -363,9 +363,17 @@ class Trigger(Door):
 		self.activated = False
 
 	def activate(self, dt):
+		# bullet hit button. Hitscan weapons are in scene class
+		for sprite in self.scene.bullet_sprites:
+			if sprite.hitbox.colliderect(self.hitbox):
+				self.activated = True
+				self.scene.create_particle(sprite.firer.gun, sprite.rect.center)
+				sprite.kill()
+				for barrier in self.scene.barrier_sprites:
+					if barrier.name == int(self.name.split("_")[1]):
+						barrier.activated = True
 
-		print(int(self.name.split("_")[1]))
-
+		# player collides with button and presses up
 		if self.rect.colliderect(self.scene.player.rect): 
 			if ACTIONS['up'] and 'trigger' in self.name:
 				self.activated = True
@@ -375,12 +383,12 @@ class Trigger(Door):
 			if self.frame_index >= len(self.frames) -1:
 				self.frame_index = len(self.frames) -1
 
-		self.image = self.frames[int(self.frame_index)]
-
 		if self.frame_index == len(self.frames) -1:
 			for barrier in self.scene.barrier_sprites:
 				if barrier.name == int(self.name.split("_")[1]):
 					barrier.activated = True
+
+		self.image = self.frames[int(self.frame_index)]
 
 	def update(self, dt):
 		self.activate(dt)
@@ -421,10 +429,14 @@ class Laser(Barrier):
 		self.activated = False
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.old_hitbox = self.hitbox.copy()
+		self.hum_sound = pygame.mixer.Sound('audio/sfx/world/laser_hum.wav')
 
 	def laser_hum(self):
+
 		if self.scene.audible_distance.contains(self.rect) and not self.activated:
-			self.game.world_fx['laser_hum'].play()
+			free_channel = pygame.mixer.find_channel()
+			if free_channel:
+				free_channel.play(self.hum_sound)
 
 	def open(self, dt):
 		if self.activated:

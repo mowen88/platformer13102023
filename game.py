@@ -19,6 +19,7 @@ class Game:
 
         self.track_index = 0
         self.music_on = True
+        pygame.mixer.set_num_channels(10)
 
         self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
         self.world_fx = self.import_sfx('audio/sfx/world') 

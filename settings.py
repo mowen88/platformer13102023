@@ -44,6 +44,10 @@ TUTORIALS = {
 		'button':['Press up at the button on your right to de-activate the laser'],
 		'inventory':['Press Tab or e key to open your inventory','Left click an item in the inventory to use it'],
 		'door':['Press up at a door to enter'],
+		'shoot_button':['Shoot the button to activate the door'],
+		'weapon':['Beware of the strogg on the platform above you ahead.', 'Use the mouse wheel to select weapons'],
+		'secret':['Shoot weak walls to reveal secret areas'],
+		'grenades':['We have a strogg captured up ahead...', 'Throw grenades over there and ensure they meet their fate']
 		}
 
 INTRO_TEXT = {
@@ -56,10 +60,10 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
-			   '0':{'track':7, 'unit':'tutorial', 'level':'tutorial', '1':'1', '3':'1', '6':'2'}, 
-			   '1':{'track':7, 'unit':'tutorial', 'level':'tutorial', '5':'0'},
+			   '0':{'track':5, 'unit':'tutorial', 'level':'tutorial', '1':'1', '3':'1', '6':'2'}, 
+			   '1':{'track':5, 'unit':'tutorial', 'level':'tutorial', '5':'0', '2':'2'},
   			   #'1':{'track':1, 'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
-  			   '2':{'track':1, 'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
+  			   '2':{'track':7, 'unit':'base', 'level':'outer base', '2':'3', '1':'3'},
   			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'1','2':'2'},
   			   # Comm Center
   			   }
@@ -84,7 +88,7 @@ HEALTH_DATA = {'stimpack': 2, 'first aid': 10, 'medkit': 25}
 ARMOUR_DATA = {'normal':[0,0],'shard':[2,250],'jacket':[25,50],'combat':[50, 100],'body':[100, 200]}
 
 AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
-			'grenades':5, 'slugs':0, 'rockets':0}
+			'grenades':0, 'slugs':0, 'rockets':0}
 
 COMMIT_AMMO_DATA = {'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':5, 'slugs':0, 'rockets':0}
