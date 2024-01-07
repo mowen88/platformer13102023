@@ -57,9 +57,10 @@ DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 SCENE_DATA = { # UNIT 1 - BASE
 			   # Outer Base
 			   '0':{'track':7, 'unit':'tutorial', 'level':'tutorial', '1':'1', '3':'1', '6':'2'}, 
-  			   '1':{'track':1, 'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
-  			   '2':{'track':7, 'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
-  			   '3':{'track':7, 'unit':'base', 'level':'outer base', '4':'1','2':'2'},
+			   '1':{'track':7, 'unit':'tutorial', 'level':'tutorial', '5':'0'},
+  			   #'1':{'track':1, 'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
+  			   '2':{'track':1, 'unit':'base', 'level':'outer base', '2':'3','3':'3','7':'0'},
+  			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'1','2':'2'},
   			   # Comm Center
   			   }
   			     			   # UNIT 2 - BUNKER
