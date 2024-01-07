@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
 		self.underwater_timer = self.max_underwater_time
 		self.drown_damage = 4
 		self.hazardous_liquid_timer = 0
-		self.hazardous_liquid_hurt_interval = 1200
+		self.hazardous_liquid_hurt_interval = 1500
 		self.in_hazardous_liquid = False
 		self.hazardous_liquid_type = None
 

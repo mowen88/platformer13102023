@@ -55,9 +55,9 @@ class Game:
         track = TRACKS[self.track_index]
         pygame.mixer.music.load(f'audio/music/tracks/{track}.mp3')
         pygame.mixer.music.set_volume(0.2)
-        pygame.mixer.music.play(1, 0.2, 5000)
+        pygame.mixer.music.play(1, 0.05, 5000)
 
-    def stop_music(self, fadeout_time=1000):
+    def stop_music(self, fadeout_time=500):
         pygame.mixer.music.fadeout(fadeout_time)
 
     def import_sfx(self, path, volume=0.2):

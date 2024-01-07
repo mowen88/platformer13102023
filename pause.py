@@ -48,6 +48,8 @@ class PauseMenu(State):
 			self.next_menu = None
 
 		elif self.next_menu == 'main_menu':
+			self.game.stop_music()
+			self.game.play_music(0)
 			self.next_menu = None
 
 			# timer reset and stop 

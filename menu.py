@@ -22,6 +22,7 @@ class PygameLogo(State):
 		self.intro = Intro(self.game)
 
 	def go_to(self, state):
+		self.game.play_music(self.game.track_index)
 		MainMenu(self.game).enter_state()
 
 	def update(self, dt):
@@ -229,6 +230,7 @@ class MainMenu(State):
 			StartGameMenu(self.game).enter_state()
  
 		else:
+			self.game.stop_music()
 			self.scene.enter_state()
 
 	def update(self, dt):
