@@ -429,14 +429,11 @@ class Laser(Barrier):
 		self.activated = False
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.old_hitbox = self.hitbox.copy()
-		self.hum_sound = pygame.mixer.Sound('audio/sfx/world/laser_hum.wav')
 
 	def laser_hum(self):
-
 		if self.scene.audible_distance.contains(self.rect) and not self.activated:
-			free_channel = pygame.mixer.find_channel()
-			if free_channel:
-				free_channel.play(self.hum_sound)
+			if not ACTIONS['left_click']:
+				self.game.world_fx['laser_hum'].play()
 
 	def open(self, dt):
 		if self.activated:
