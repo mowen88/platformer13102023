@@ -41,6 +41,7 @@ class Scene(State):
 		self.update_sprites = pygame.sprite.Group()
 		self.drawn_sprites = Camera(self.game, self)
 		self.visible_window = pygame.Rect(VISIBLE_WINDOW_RECT)
+		self.audible_distance = pygame.Rect(AUDIBLE_WINDOW_RECT)
 
 		self.bg_sprites = pygame.sprite.Group()
 		self.tutorial_sprites = pygame.sprite.Group()
@@ -171,7 +172,7 @@ class Scene(State):
 		
 		if 'ladders' in layers:
 			for x, y, surf in self.tmx_data.get_layer_by_name('ladders').tiles():
-				Tile([self.ladder_sprites, self.update_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['objects'])
+				Tile([self.ladder_sprites, self.drawn_sprites], (x * TILESIZE, y * TILESIZE), surf, LAYERS['objects'])
 
 		if 'tutorials' in layers:
 			for obj in self.tmx_data.get_layer_by_name('tutorials'):
@@ -581,6 +582,7 @@ class Scene(State):
 		self.player.envirosuit = True if self.envirosuit_timer.update(dt) else False
 
 		self.visible_window.center = self.player.rect.center
+		self.audible_distance.center = self.player.rect.center
 
 
 	def debug(self, debug_list):

@@ -292,10 +292,10 @@ class OnLadderIdle:
 	def state_logic(self, player):
 		keys = pygame.key.get_pressed()
 
-		if keys[pygame.K_UP]:
+		if keys[pygame.K_UP] or keys[pygame.K_w]:
 			player.acc.y = -player.acc_rate * 0.5
 			
-		elif keys[pygame.K_DOWN]:
+		elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
 			player.acc.y = player.acc_rate * 0.5
 			
 		else:
@@ -329,9 +329,9 @@ class OnLadderMove:
 	def state_logic(self, player):
 		keys = pygame.key.get_pressed()
 
-		if keys[pygame.K_UP]:
+		if keys[pygame.K_UP] or keys[pygame.K_w]:
 			player.acc.y = -player.acc_rate * 0.5
-		elif keys[pygame.K_DOWN]:
+		elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
 			player.acc.y = player.acc_rate * 0.5
 		else:
 			player.acc.y = 0

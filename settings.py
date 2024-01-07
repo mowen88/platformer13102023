@@ -5,6 +5,7 @@ TILESIZE = 16
 RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
 
 VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 2, HEIGHT * 2
+AUDIBLE_WINDOW_RECT = 0, 0, WIDTH, HEIGHT * 2
 
 HALF_WIDTH, HALF_HEIGHT = RES/2
 
@@ -35,11 +36,13 @@ DARK_BROWN = (23, 15, 11)
 LIGHT_GREY = (146,143,184)
 
 TUTORIALS = {
-		'fire':['Left click to fire, right click to jump', 'left click to continue'],
-		'jump':['Right click to jump'],
-		'double_jump':['Right click in air to double jump'],
-		'crouch':['Hold down to crouch and right click to drop through platform'],
-		'inventory':['Press enter to use use inventory and click item to use'],
+		'exit':['Press up when at the door to skip tutorial', 'Proceed to the right to continue'],
+		# 'fire':['Left click to fire, right click to jump', 'left click to continue'],
+		# 'jump':['Right click to jump'],
+		'jump':['Right click to jump','Right click again in air to double jump'],
+		'crouch':['Hold down to crouch and right click/jump to drop through platforms'],
+		'button':['Press up at the button on your right to de-activate the laser'],
+		'inventory':['Press Tab or e key to open your inventory','Left click an item in the inventory to use it'],
 		'door':['Press up at a door to enter'],
 		}
 

@@ -44,14 +44,15 @@ class Dialogue(State):
             rendered_line = self.lines[index][:self.char_indices[index]]
             y_position = start_y + self.line_spacing * index
             text_surf = self.game.font.render(str(rendered_line), False, self.text_colour)
-            black_surf = pygame.Surface((text_surf.get_width(), text_surf.get_height() + 2))
+            black_surf = pygame.Surface((text_surf.get_width() + 2, text_surf.get_height() + 2))
 
             text_surf.set_alpha(self.alpha)
             black_surf.set_alpha(self.alpha)
             
             if self.can_exit:
                 text_rect = text_surf.get_rect(midtop = (self.pos[0], y_position))
-                screen.blit(black_surf, text_rect)
+                if text_rect.width > 2 and text_rect.height > 2:
+                    screen.blit(black_surf, text_rect)
                 screen.blit(text_surf, text_rect)
             else:
                 text_rect = text_surf.get_rect(topleft = (self.pos[0], y_position))
@@ -61,7 +62,7 @@ class Dialogue(State):
 
     def fade_logic(self, dt):
 
-        if self.timer > 50:
+        if self.timer > 100:
             self.alpha -= 5 * dt
             if self.alpha <= 0:
                 self.exit_state()

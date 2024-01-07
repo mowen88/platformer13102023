@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
 		self.underwater_timer = self.max_underwater_time
 		self.drown_damage = 4
 		self.hazardous_liquid_timer = 0
-		self.hazardous_liquid_hurt_interval = 600
+		self.hazardous_liquid_hurt_interval = 1200
 		self.in_hazardous_liquid = False
 		self.hazardous_liquid_type = None
 
@@ -105,10 +105,10 @@ class Player(pygame.sprite.Sprite):
 	def input(self):
 		keys = pygame.key.get_pressed()
 		
-		if keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+		if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
 			self.acc.x = -self.acc_rate
 			
-		elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
+		elif (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and not (keys[pygame.K_LEFT] or keys[pygame.K_a]):
 			self.acc.x = self.acc_rate
 
 	def collect(self):
@@ -302,7 +302,7 @@ class Player(pygame.sprite.Sprite):
 	def collide_tutorials(self):
 		for rect in self.scene.tutorial_sprites:
 			if self.hitbox.colliderect(rect.rect):# and rect not in SAVE_DATA['killed_sprites']:
-				Dialogue(self.game, rect.text, WHITE, RES/2, True).enter_state()
+				Dialogue(self.game, rect.text, WHITE, (HALF_WIDTH, HALF_HEIGHT + TILESIZE *2), True).enter_state()
 				#self.scene.message = Message(self.game, self.scene, [self.scene.update_sprites], rect.text, (HALF_WIDTH, HEIGHT - TILESIZE * 1.5), 200, NEON_GREEN)
 				#SAVE_DATA['killed_sprites'].append(rect.text)
 				rect.kill()

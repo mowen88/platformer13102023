@@ -18,11 +18,11 @@ class Game:
         # self.play_music('operation_overlord')
 
         self.track_index = 0
+        self.music_on = True
 
         self.weapon_fx = self.import_sfx('audio/sfx/weapons') 
         self.world_fx = self.import_sfx('audio/sfx/world') 
         self.item_fx = self.import_sfx(f'audio/sfx/items')
-
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((RES), pygame.FULLSCREEN|pygame.SCALED)
@@ -46,6 +46,9 @@ class Game:
         self.timer = GameTimer(self)
         self.slot = None
         self.slot_data = self.get_slot_dict(4)
+
+    def toggle_music(self):
+        self.music_on = not self.music_on
 
     def play_music(self, start_index):
         self.track_index = start_index
@@ -143,13 +146,13 @@ class Game:
                     ACTIONS['tab'] = True
                 elif event.key == pygame.K_SPACE:
                     ACTIONS['space'] = True
-                elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     ACTIONS['left'] = True
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     ACTIONS['right'] = True
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     ACTIONS['up'] = True
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     ACTIONS['down'] = True
                 elif event.key == pygame.K_r:
                     ACTIONS['r'] = True
@@ -161,13 +164,13 @@ class Game:
                     ACTIONS['tab'] = False
                 elif event.key == pygame.K_SPACE:
                     ACTIONS['space'] = False 
-                elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     ACTIONS['left'] = False
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     ACTIONS['right'] = False
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     ACTIONS['up'] = False
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     ACTIONS['down'] = False
                 elif event.key == pygame.K_r:
                     ACTIONS['r'] = False

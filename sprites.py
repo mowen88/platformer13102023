@@ -392,11 +392,18 @@ class Barrier(Door):
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.old_hitbox = self.hitbox.copy()
 
+	def play_sfx(self, sound):
+		if len(self.frames) > 1 and self.play_sound:
+			self.game.world_fx[sound].play()
+			self.play_sound = False
+
 	def open(self, dt):
 		if self.activated:
+			self.play_sfx('button')
 			self.frame_index += 0.2 * dt
 			if self.frame_index >= len(self.frames) -1:
 				self.frame_index = len(self.frames) -1
+
 		self.image = self.frames[int(self.frame_index)]
 
 		if self.frame_index == len(self.frames) -1:
@@ -408,15 +415,20 @@ class Barrier(Door):
 		self.old_hitbox = self.hitbox.copy()
 		self.open(dt)
 
-class Laser(Door):
+class Laser(Barrier):
 	def __init__(self, game, scene, groups, pos, z, path, animation_type, name):
 		super().__init__(game, scene, groups, pos, z, path, animation_type, name)
 		self.activated = False
 		self.hitbox = self.rect.copy().inflate(0,0)
 		self.old_hitbox = self.hitbox.copy()
 
+	def laser_hum(self):
+		if self.scene.audible_distance.contains(self.rect) and not self.activated:
+			self.game.world_fx['laser_hum'].play()
+
 	def open(self, dt):
 		if self.activated:
+			self.play_sfx('laser_off')
 			self.frame_index += 0.2 * dt
 			if self.frame_index >= len(self.frames) -1:
 				self.frame_index = len(self.frames) -1
@@ -428,6 +440,7 @@ class Laser(Door):
 	def update(self, dt):
 		self.old_hitbox = self.hitbox.copy()
 		self.open(dt)
+		self.laser_hum()
 
 
 class Lever(pygame.sprite.Sprite):
