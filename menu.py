@@ -397,12 +397,12 @@ class Confirmation(MainMenu):
 		COMMIT_SAVE_DATA.update({
 		'current_scene':'0', 'entry_pos':'0', 'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
 		'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-		'items':[], 'guns_collected':['blaster', 'hand grenade'],
+		'items':[], 'guns_collected':['blaster'],
 		'keys_collected':[], 'killed_sprites':[], 'scenes_completed':[], 'time_elapsed': "00:00:00"
 		})
 		# 'time': "00:00:00"})
 		COMMIT_AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
-		'grenades':5, 'slugs':0, 'rockets':0})
+		'grenades':0, 'slugs':0, 'rockets':0})
 		self.game.write_data()
 
 	def update(self, dt):

@@ -66,10 +66,14 @@ class Intro(DemoEnd):
 	def __init__(self, game, scene, new_scene):
 		super().__init__(self, game, new_scene)
 
+
 		self.game = game
 		self.scene = scene
 		self.new_scene = new_scene
 		self.timer = 900
+
+		if len(self.game.stack) > 1:
+			self.game.stack.pop()
 
 		self.text_blocks = list(INTRO_TEXT.keys())
 

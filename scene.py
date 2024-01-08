@@ -29,6 +29,19 @@ class Scene(State):
 		self.scene_size = self.get_scene_size()
 		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
 		
+		if self.prev_level == 'tutorial':
+			SAVE_DATA.update({
+			'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
+			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
+			'items':[], 'guns_collected':['blaster'],
+			'keys_collected':[], 'killed_sprites':[]
+			})
+			# 'time': "00:00:00"})
+			AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
+			'grenades':0, 'slugs':0, 'rockets':0})
+
+			self.game.write_data()
+
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
 			self.game.play_music(SCENE_DATA[self.current_scene]['track'])
 

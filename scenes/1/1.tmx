@@ -204,7 +204,7 @@
   <object id="148" name="shotgun_0" x="816" y="408">
    <point/>
   </object>
-  <object id="149" name="grenades_0" x="416" y="432">
+  <object id="149" name="hand grenade_0" x="416" y="424">
    <point/>
   </object>
  </objectgroup>
