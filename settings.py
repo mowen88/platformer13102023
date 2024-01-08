@@ -36,7 +36,7 @@ DARK_BROWN = (23, 15, 11)
 LIGHT_GREY = (146,143,184)
 
 TUTORIALS = {
-		'exit':['Press up when at the door to skip tutorial', 'Proceed to the right to continue'],
+		'exit':['Press up at the door if you want to skip the tutorial...', 'Proceed to the right to continue with tutorial'],
 		# 'fire':['Left click to fire, right click to jump', 'left click to continue'],
 		# 'jump':['Right click to jump'],
 		'jump':['Right click to jump','Right click again in air to double jump'],
@@ -133,7 +133,7 @@ CONSTANT_DATA = {
 			},
 	'enemies' :{
 			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
-			'sg_guard': {'weapon':'shotgun', 'damage': 4, 'health': 40, 'telegraph_time': 25, 'cooldown': 80, 'burst_count': 1},
+			'sg_guard': {'weapon':'shotgun', 'damage': 4, 'health': 40, 'telegraph_time': 50, 'cooldown': 50, 'burst_count': 1},
 			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
 			'enforcer': {'weapon':'chain gun', 'damage': 3, 'health': 40, 'telegraph_time': 30, 'cooldown': 8, 'burst_count': 12},
 			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},

@@ -29,6 +29,7 @@ class Scene(State):
 		self.scene_size = self.get_scene_size()
 		SAVE_DATA.update({'current_scene': self.current_scene, 'entry_pos': self.entry_point})
 		
+		# empty equipment if coming from tutorial stage
 		if self.prev_level == 'tutorial':
 			SAVE_DATA.update({
 			'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
@@ -39,12 +40,13 @@ class Scene(State):
 			# 'time': "00:00:00"})
 			AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
 			'grenades':0, 'slugs':0, 'rockets':0})
-
 			self.game.write_data()
 
+		# play new music if it is a new level
 		if SCENE_DATA[self.current_scene]['level'] != self.prev_level:
 			self.game.play_music(SCENE_DATA[self.current_scene]['track'])
 
+		# log a new area for completion percentage
 		if self.current_scene not in SAVE_DATA['scenes_completed']:
 			SAVE_DATA['scenes_completed'].append(self.current_scene)
 	

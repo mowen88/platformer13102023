@@ -314,8 +314,11 @@ class SlotMenu(MainMenu):
 
 			percent_complete = f"{int(len(self.game.read_slot_progress(slot, 'scenes_completed'))/self.game.max_num_of_scenes * 100)} %"
 
-			buttons.update({f'save {slot}' + ' -- ' + str(self.game.read_slot_progress(slot, 'level')) +' -- '+ str(self.game.read_slot_progress(slot, 'time_elapsed'))\
-			+' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * (slot-1)), str(slot)]})
+			if percent_complete != "0 %":
+				buttons.update({f'save {slot}' + ' -- ' + str(self.game.read_slot_progress(slot, 'level')) +' -- '+ str(self.game.read_slot_progress(slot, 'time_elapsed'))\
+				+' -- '+ str(percent_complete) :[(HALF_WIDTH, start_y + self.padding * (slot-1)), str(slot)]})
+			else:
+				buttons.update({f'save {slot}' + ' -- ' + 'New Game':[(HALF_WIDTH, start_y + self.padding * (slot-1)), str(slot)]})
 		
 		buttons.update({'Back': [(HALF_WIDTH, start_y + 8 + self.padding * self.num_of_slots), 'main_menu']})
 		return buttons
