@@ -235,13 +235,13 @@ class Scene(State):
 					pygame.image.load('assets/platforms/1.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == '8': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/platforms/0.png').convert_alpha(), LAYERS['objects'])
-				if obj.name == 'red_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'red_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y - 8),\
 					pygame.image.load('assets/crates/red_crate.png').convert_alpha(), LAYERS['objects'])
-				if obj.name == 'blue_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'blue_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y - 8),\
 					pygame.image.load('assets/crates/blue_crate.png').convert_alpha(), LAYERS['objects'])
-				if obj.name == 'green_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'green_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y - 8),\
 					pygame.image.load('assets/crates/green_crate.png').convert_alpha(), LAYERS['objects'])
-				if obj.name == 'grey_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y),\
+				if obj.name == 'grey_crate': Platform(self, [self.platform_sprites, self.drawn_sprites], (obj.x, obj.y - 8),\
 					pygame.image.load('assets/crates/grey_crate.png').convert_alpha(), LAYERS['objects'])
 				if obj.name == 'red_small_crate': Platform(self, [self.platform_sprites,self.drawn_sprites], (obj.x, obj.y),\
 					pygame.image.load('assets/crates/red_small_crate.png').convert_alpha(), LAYERS['objects'])
