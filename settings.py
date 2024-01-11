@@ -2,7 +2,7 @@ import pygame
 
 TILESIZE = 16
 
-RES = WIDTH, HEIGHT = pygame.math.Vector2(400,225)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
+RES = WIDTH, HEIGHT = pygame.math.Vector2(400,224)#(384, 216)#(512, 288)#(320, 180)#(480, 270)#(640, 360)#(960, 540)#(512, 288)
 
 VISIBLE_WINDOW_RECT = 0, 0, WIDTH * 2, HEIGHT * 2
 AUDIBLE_WINDOW_RECT = 0, 0, WIDTH, HEIGHT * 2
@@ -64,7 +64,8 @@ SCENE_DATA = { # UNIT 1 - BASE
 			   '1':{'track':5, 'unit':'tutorial', 'level':'tutorial', '5':'0', '2':'2'},
   			   #'1':{'track':1, 'unit':'base', 'level':'outer base', '1':'0', '2':'2', '3':'0','4':'3'},
   			   '2':{'track':7, 'unit':'base', 'level':'outer base', '2':'3', '1':'3'},
-  			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'2','2':'2'},
+  			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'2','9':'4'},
+  			   '4':{'track':1, 'unit':'base', 'level':'outer base', '4':'3'},
   			   # Comm Center
   			   }
   			     			   # UNIT 2 - BUNKER
