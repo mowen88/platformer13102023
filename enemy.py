@@ -36,7 +36,7 @@ class Guard(pygame.sprite.Sprite):
 		self.on_ground = False
 		self.drop_through = False
 
-		self.data = CONSTANT_DATA['enemies'][self.name]
+		self.data = CONSTANT_DATA['enemies'][self.name.split("_")[0]]
 
 		self.burst_count = self.data['burst_count']
 		self.health = self.data['health']
@@ -47,7 +47,7 @@ class Guard(pygame.sprite.Sprite):
 		self.move = {'left':False, 'right':False}
 		self.cooldown = 0
 
-		self.fx = self.game.import_sfx(f'audio/sfx/{self.name}')
+		self.fx = self.game.import_sfx(f'audio/sfx/{self.name.split("_")[0]}')
 
 	def move_logic(self):
 		if self.move['right']:
@@ -81,7 +81,7 @@ class Guard(pygame.sprite.Sprite):
 
 	def import_images(self, animation_states):
 
-		path = f'assets/characters/{self.name}/'
+		path = f'assets/characters/{self.name.split("_")[0]}/'
 
 		for animation in animation_states.keys():
 			full_path = path + animation
@@ -188,6 +188,7 @@ class Guard(pygame.sprite.Sprite):
 		if self.health <= 0:
 			self.gun_sprite.kill()
 			self.scene.create_particle('chunk', self.rect.center)
+			SAVE_DATA['killed_sprites'].append(self.name)
 			self.kill()
 			#pass#self.alive = False
 

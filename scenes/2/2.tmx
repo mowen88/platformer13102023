@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="75" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="137">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="75" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="138">
  <editorsettings>
-  <export target="../3/3.csv" format="csv"/>
+  <export target="3.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="../../assets/tilesets/test.tsx"/>
  <tileset firstgid="73" source="../../assets/tilesets/doors.tsx"/>
@@ -192,10 +192,10 @@
  <objectgroup id="4" name="entities">
   <object id="105" name="collider" x="256" y="416" width="16" height="16"/>
   <object id="107" name="collider" x="0" y="416" width="16" height="16"/>
-  <object id="108" name="guard" x="112" y="384">
+  <object id="108" name="guard_1" x="112" y="384">
    <point/>
   </object>
-  <object id="118" name="guard" x="160" y="176">
+  <object id="118" name="guard_0" x="160" y="176">
    <point/>
   </object>
   <object id="119" name="collider" x="208" y="208" width="16" height="16"/>
@@ -203,6 +203,9 @@
  </objectgroup>
  <objectgroup id="8" name="pickups">
   <object id="117" name="adrenaline_0" x="768" y="384">
+   <point/>
+  </object>
+  <object id="137" name="jacket_0" x="356" y="172">
    <point/>
   </object>
  </objectgroup>

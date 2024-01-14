@@ -18,7 +18,6 @@ class FadeSurf(pygame.sprite.Sprite):
 		self.get_load_time_and_text()
 
 	def get_load_time_and_text(self):
-		
 			
 		if SCENE_DATA[self.scene.current_scene]['level'] != self.scene.prev_level:
 			self.timer = pygame.math.Vector2(self.scene.scene_size).magnitude()/5 # makes load time relative to zone size
@@ -43,8 +42,8 @@ class FadeSurf(pygame.sprite.Sprite):
 						Intro(self.game, self.scene, self.scene.new_scene).enter_state()
 					else:
 						self.game.stop_music()
-						Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
-						#DemoEnd(self.game, self.scene, self.scene.new_scene).enter_state()
+						#Intermission(self.game, self.scene, self.scene.new_scene).enter_state()
+						DemoEnd(self.game, self.scene, self.scene.new_scene).enter_state()
 				else:
 					self.scene.create_scene(self.scene.prev_level, self.scene.new_scene)
 		

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="50" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="118">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="50" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="120">
  <editorsettings>
   <export target="0.csv" format="csv"/>
  </editorsettings>
@@ -171,8 +171,8 @@
   <object id="114" name="slime" gid="86" x="336" y="144" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="6" name="exits">
-  <object id="17" name="3" gid="75" x="704" y="96" width="48" height="40"/>
   <object id="18" name="1" gid="73" x="32" y="416" width="48" height="40"/>
+  <object id="118" name="5" gid="77" x="704" y="96" width="48" height="40"/>
  </objectgroup>
  <objectgroup id="3" name="platforms">
   <object id="1" name="7" x="464" y="384">

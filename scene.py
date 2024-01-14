@@ -21,7 +21,6 @@ class Scene(State):
 	def __init__(self, game, prev_level, current_scene, entry_point):
 		State.__init__(self, game)
 
-	
 		self.game = game
 		self.prev_level = prev_level
 		self.current_scene = current_scene
@@ -34,8 +33,7 @@ class Scene(State):
 			SAVE_DATA.update({
 			'gun_index':0, 'ammo': 0, 'ammo_capacity':'normal',
 			'armour_type':'normal', 'armour':0, 'max_armour':0, 'shards': 0, 'stimpacks': 0, 'health':100, 'max_health':100,
-			'items':[], 'guns_collected':['blaster'],
-			'keys_collected':[], 'killed_sprites':[]
+			'guns_collected':['blaster'], 'killed_sprites':[]
 			})
 			# 'time': "00:00:00"})
 			AMMO_DATA.update({'infinite': 0, 'cells':0, 'shells':0, 'bullets':0,
@@ -49,6 +47,7 @@ class Scene(State):
 		# log a new area for completion percentage
 		if self.current_scene not in SAVE_DATA['scenes_completed']:
 			SAVE_DATA['scenes_completed'].append(self.current_scene)
+			self.game.completed_scenes = len(SAVE_DATA['scenes_completed'])
 	
 		self.screenshaking = False
 		self.screenshake_timer = 0
@@ -163,6 +162,7 @@ class Scene(State):
 	def create_scene_instances(self):
 
 		gun_list = list(CONSTANT_DATA['guns'].keys())
+		enemy_list = list(CONSTANT_DATA['enemies'].keys())
 		ammo_list = list(AMMO_DATA.keys())
 		armour_list = list(ARMOUR_DATA.keys())
 		health_list = list(HEALTH_DATA.keys())
@@ -273,7 +273,7 @@ class Scene(State):
 					#self.player.hitbox.topleft = (obj.x, obj.y)
 					self.start_pos = (obj.x, obj.y)
 
-		key_dict = {'3':'blue key'}
+		key_dict = {'5':'blue key'}
 		if 'exits' in layers:
 			for obj in self.tmx_data.get_layer_by_name('exits'):
 				for num in range(100):
@@ -293,14 +293,16 @@ class Scene(State):
 
 		if 'entities' in layers:
 			for obj in self.tmx_data.get_layer_by_name('entities'):
-				if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y), (obj.width, obj.height))
-				if obj.name == 'guard': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-				if obj.name == 'sg_guard':self.guard2 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-				if obj.name == 'gladiator':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-				if obj.name == 'enforcer':self.guard3 = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
-				#if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
-				#if obj.name == 'bg': self.bg = Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
-				
+				if obj.name not in SAVE_DATA['killed_sprites']:
+
+					if obj.name == 'collider': Collider([self.update_sprites, self.collision_sprites], (obj.x, obj.y), (obj.width, obj.height))
+					for num in range(100):
+						for enemy in enemy_list:
+							if obj.name == f'{enemy}_{num}': self.guard = Guard(self.game, self, [self.enemy_sprites, self.update_sprites, self.drawn_sprites], (obj.x, obj.y), obj.name, LAYERS['player'])
+
+						#if obj.name == 'lever': Lever(self.game, self, [self.update_sprites, self.drawn_sprites], (obj.x, obj.y), 'assets/objects/lever.png', LAYERS['player'])
+						#if obj.name == 'bg': self.bg = Tile([self.drawn_sprites], (obj.x -1, obj.y -1), pygame.image.load(f'scenes/{self.current_scene}/bg.png').convert_alpha(), LAYERS['background'])
+						
 		# create gun objects for the enemies and player
 		self.create_player_gun()
 		self.create_enemy_guns()
@@ -432,7 +434,7 @@ class Scene(State):
 			angle = math.atan2(pygame.mouse.get_pos()[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					pygame.mouse.get_pos()[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 		else:
-			gun_damage = CONSTANT_DATA['enemies'][sprite.name]['damage']
+			gun_damage = CONSTANT_DATA['enemies'][sprite.name.split("_")[0]]['damage']
 			angle = math.atan2(self.player.rect.centery-self.drawn_sprites.offset[1]-sprite.gun_sprite.rect.centery + self.drawn_sprites.offset[1],\
 					self.player.rect.centerx-self.drawn_sprites.offset[0]-sprite.gun_sprite.rect.centerx + self.drawn_sprites.offset[0])
 
@@ -621,12 +623,12 @@ class Scene(State):
 		self.fade_surf.draw(screen)
 
 		# self.debug([str('FPS: '+ str(round(self.game.clock.get_fps(), 2))),
-		# 			str('entry_point: '+ str(self.entry_point)), 
-		# 			str('gun: '+ str(self.player.gun)),
-		# 			str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
-		# 			str('on ground: '+ str(self.player.state)),
-		# 			str('breathe timer: '+ str(self.breathe_timer.timer)),
-		# 			str('track_index: '+ str(self.game.track_index)),
+		# 			str('entry_point: '+ str(SAVE_DATA['items'])), 
+		# 			# str('gun: '+ str(self.player.gun)),
+		# 			# str('unit: '+ str(SCENE_DATA[self.current_scene]['unit'])),
+		# 			# str('on ground: '+ str(self.player.state)),
+		# 			# str('breathe timer: '+ str(self.breathe_timer.timer)),
+		# 			# str('track_index: '+ str(self.game.track_index)),
 		# 			# str('PLAYER HEALTH: '+str(self.player.health)),
 		# 			None])
 

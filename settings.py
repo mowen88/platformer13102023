@@ -59,15 +59,17 @@ INTRO_TEXT = {
 DIALOGUE = {0:['This is a line of dialogue', 'and this is another line !']}
 
 SCENE_DATA = { #TUTORIAL
-			   '0':{'track':5, 'unit':'tutorial', 'level':'tutorial', '1':'2', '3':'1', '6':'2'}, 
+			   '0':{'track':5, 'unit':'tutorial', 'level':'tutorial', '1':'2', '5':'1', '6':'2'}, 
 			   '1':{'track':5, 'unit':'tutorial', 'level':'tutorial', '5':'0', '2':'2'},
   			   # UNIT 1 - BASE
 			   # Outer Base
   			   '2':{'track':7, 'unit':'base', 'level':'outer base', '1':'3', '6':'5'},
-  			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'2','9':'4'},
+  			   '3':{'track':1, 'unit':'base', 'level':'base', '4':'2','9':'4','3':'6'},
   			   '4':{'track':1, 'unit':'base', 'level':'outer base', '2':'5','4':'3'},
-  			   '5':{'track':1, 'unit':'base', 'level':'outer base', '2':'4','7':'2'},
-
+  			   '5':{'track':1, 'unit':'base', 'level':'jail', '2':'4','7':'2'},
+  			   '6':{'track':1, 'unit':'base', 'level':'outer base', '3':'3','8':'7'},
+  			   # end demo!
+  			   '7':{'track':8, 'unit':'bunker', 'level':'ammo depot', '3':'3','8':'7'}
 
   			   # Comm Center
   			   }
@@ -125,7 +127,7 @@ CONSTANT_DATA = {
 	'guns':{
 			'blaster': {'ammo_given': 0, 'ammo_used': 0, 'ammo_type': 'infinite', 'cooldown': 25, 'speed': 4, 'damage': 15, 'length':20, 'auto':False},
 			'shotgun': {'ammo_given': 20, 'ammo_used': 1, 'ammo_type': 'shells', 'cooldown': 80, 'speed': 0, 'damage': 6, 'length':25, 'auto':False},
-			'hand grenade': {'ammo_given': 5, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
+			'hand grenade': {'ammo_given': 2, 'ammo_used': 1, 'ammo_type': 'grenades','cooldown': 120, 'speed': 0, 'damage': 0, 'length':20, 'auto':False},
 			'machine gun': {'ammo_given': 50, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 8, 'speed': 0, 'damage': 2, 'length':20, 'auto':True},
 			'super shotgun': {'ammo_given': 10, 'ammo_used': 2, 'ammo_type': 'shells','cooldown': 80, 'speed': 0, 'damage': 8, 'length':25, 'auto':False},
 			'chain gun': {'ammo_given': 200, 'ammo_used': 1, 'ammo_type': 'bullets', 'cooldown': 10, 'speed': 0, 'damage': 4, 'length':22, 'auto':True},
@@ -137,8 +139,8 @@ CONSTANT_DATA = {
 			},
 	'enemies' :{
 			'guard':{'weapon': 'blaster', 'damage': 5, 'health': 30, 'telegraph_time': 25, 'cooldown': 60, 'burst_count': 3},
-			'sg_guard': {'weapon':'shotgun', 'damage': 4, 'health': 40, 'telegraph_time': 50, 'cooldown': 50, 'burst_count': 1},
-			'mg_guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
+			'sg guard': {'weapon':'shotgun', 'damage': 4, 'health': 40, 'telegraph_time': 50, 'cooldown': 50, 'burst_count': 1},
+			'mg guard': {'weapon':'machine gun', 'damage': 5, 'health': 40, 'telegraph_time': 25, 'cooldown': 8, 'burst_count': 8},
 			'enforcer': {'weapon':'chain gun', 'damage': 3, 'health': 40, 'telegraph_time': 30, 'cooldown': 8, 'burst_count': 12},
 			'gladiator': {'weapon':'railgun', 'damage': 40, 'health': 40, 'telegraph_time': 25, 'cooldown': 30, 'burst_count': 3},
 			},

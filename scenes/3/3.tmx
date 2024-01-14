@@ -118,12 +118,12 @@
   <object id="178" name="slime" gid="342" x="1104" y="208" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="entities">
-  <object id="136" name="guard" x="288" y="160">
+  <object id="136" name="guard_2" x="288" y="160">
    <point/>
   </object>
   <object id="137" name="collider" x="208" y="192" width="16" height="16"/>
   <object id="138" name="collider" x="464" y="192" width="16" height="16"/>
-  <object id="141" name="guard" x="432" y="160">
+  <object id="141" name="guard_3" x="432" y="160">
    <point/>
   </object>
  </objectgroup>
@@ -137,7 +137,7 @@
   <object id="181" name="first aid_0" x="344" y="208">
    <point/>
   </object>
-  <object id="182" name="first aid_1" x="372" y="160">
+  <object id="182" name="first aid_1" x="377" y="160">
    <point/>
   </object>
  </objectgroup>
