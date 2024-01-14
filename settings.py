@@ -64,10 +64,10 @@ SCENE_DATA = { #TUTORIAL
   			   # UNIT 1 - BASE
 			   # Outer Base
   			   '2':{'track':7, 'unit':'base', 'level':'outer base', '1':'3', '6':'5'},
-  			   '3':{'track':1, 'unit':'base', 'level':'base', '4':'2','9':'4','3':'6'},
+  			   '3':{'track':1, 'unit':'base', 'level':'outer base', '4':'2','9':'4','3':'6'},
   			   '4':{'track':1, 'unit':'base', 'level':'outer base', '2':'5','4':'3'},
-  			   '5':{'track':1, 'unit':'base', 'level':'jail', '2':'4','7':'2'},
-  			   '6':{'track':1, 'unit':'base', 'level':'outer base', '3':'3','8':'7'},
+  			   '5':{'track':1, 'unit':'base', 'level':'outer base', '2':'4','7':'2'},
+  			   '6':{'track':1, 'unit':'base', 'level':'base', '3':'3','8':'7'},
   			   # end demo!
   			   '7':{'track':8, 'unit':'bunker', 'level':'ammo depot', '3':'3','8':'7'}
 
